@@ -1,0 +1,18 @@
+services:
+  dev.frontend:
+    image: 'myapp.dev.frontend'
+    container_name: 'dev.frontend'
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    # commented out ports because we are using nginx reverse proxy
+    # ports:
+    #   - '3000:3000'
+    volumes:
+      - './:/usr/src/app'
+      - '/usr/src/app/node_modules'
+    environment:
+      - WDS_SOCKET_HOST=127.0.0.1
+      - WDS_SOCKET_PORT=0
+    env_file:
+      - .env.development
