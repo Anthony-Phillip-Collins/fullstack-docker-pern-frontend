@@ -1,12 +1,3 @@
-# addons:
-#   - plan: heroku-postgresql
-#     as: DATABASE
 build:
   docker:
-    web: .Dockerfile.prod
-# release:
-#   command:
-#     - ./deployment-tasks.sh
-#   image: worker
-# run:
-#   web: npm run dev
+    web: Dockerfile.prod
