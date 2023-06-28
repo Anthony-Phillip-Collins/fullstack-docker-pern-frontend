@@ -1,13 +1,13 @@
 services:
   dev.frontend:
-    image: 'myapp.dev.frontend'
+    image: fullstack-docker-pern.dev.frontend
     container_name: 'dev.frontend'
     build:
       context: .
       dockerfile: Dockerfile.dev
     # commented out ports because we are using nginx reverse proxy
-    ports:
-      - '3000:3000'
+    # ports:
+    #   - '3000:3000'
     volumes:
       - './:/usr/src/app'
       - '/usr/src/app/node_modules'

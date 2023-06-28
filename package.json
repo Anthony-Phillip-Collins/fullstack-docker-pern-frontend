@@ -1,6 +1,6 @@
 {
   "name": "fullstack-docker-pern-frontend",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "type": "module",
   "description": "Submodule for the frontend of the fullstack-docker-pern project",
   "scripts": {
