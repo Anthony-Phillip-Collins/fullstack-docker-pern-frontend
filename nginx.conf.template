@@ -13,7 +13,7 @@ server {
     
   # }
 
-  location / {
-      proxy_pass https://www.google.com/;
-  } 
+  # location / {
+  #     proxy_pass https://www.google.com/;
+  # } 
 }
