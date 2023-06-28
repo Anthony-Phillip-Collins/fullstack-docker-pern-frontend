@@ -1,65 +1,56 @@
-# Fullstack PERN - frontend git submodule
+# Fullstack Docker PERN - frontend
 
-Clone parent repo and follow instructions to run the fullstack app.
+This is a submodule of its parent project:  
+https://github.com/Anthony-Phillip-Collins/fullstack-docker-pern/
 
-```
-git clone https://github.com/Anthony-Phillip-Collins/fullstack-docker-pern.git
-```
+## Local development
 
-# Heroku
+To run the full project locally visit the [parent project](https://github.com/Anthony-Phillip-Collins/fullstack-docker-pern/) and follow the instructions of the [README.md](https://github.com/Anthony-Phillip-Collins/fullstack-docker-pern/blob/main/README.md).
 
-Create service
+## Deploy to Heroku
 
-```
-heroku create fullstack-docker-pern-frontend
-```
+Follow these steps to create an app on Heroku that serves the frontend.
 
-Add Buildpack
+1. Create an account with [Heroku](https://www.heroku.com) and log in via cli
 
-```
-heroku buildpacks:set heroku/nodejs
+```bash
+heroku login
 ```
 
-Add remote (should it not exist yet)
+2. Create app
 
-```
-git remote add heroku https://git.heroku.com/fullstack-docker-pern-frontend.git
-```
-
-login to container
-
-```
-heroku container:login
+```bash
+heroku create appname
 ```
 
-set stack to container
+3. Set stack to container
 
-```
-heroku stack:set container -a fullstack-docker-pern-frontend
+```bash
+heroku stack:set container -a appname
 ```
 
-push changes
+4. Open second terminal window for logging
 
+```bash
+heroku logs -t --app appname
 ```
+
+5. Update `VITE_API_BASE_URL` in _Dockerfile.prod_ with the url of the heroku app that was created with the [backend submodule](https://github.com/Anthony-Phillip-Collins/fullstack-docker-pern-backend). You can get the web url from the backend app:info like this `heroku apps:info -a backendAppName`
+
+```bash
+ENV VITE_API_BASE_URL=https://backendAppName-800d35caffaa.herokuapp.com/api
+```
+
+6. Commit changes
+
+7. Push to Heroku
+
+```bash
 git push heroku main
 ```
 
-### bugfixing
+8. Open app
 
-set port
-
-```
-heroku config:set PORT=80
-```
-
-add nginx buildpack
-
-```
-heroku buildpacks:add https://github.com/heroku/heroku-buildpack-nginx
-```
-
-ssh into container
-```
-heroku buildpacks:add heroku/exec
-heroku ps:exec
+```bash
+heroku open
 ```
