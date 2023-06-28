@@ -1,27 +1,19 @@
-# events is required, but defaults are ok
-# events { }
+server {
+  listen ${PORT};
 
-# A http server, listening at port 80
-http {
-  server {
-    listen ${PORT};
-
-    # # Requests starting with root (/) are handled
-    # location / {
-    #   # The following 3 lines are required for the hot loading to work (websocket).
-    #   proxy_http_version 1.1;
-    #   proxy_set_header Upgrade $http_upgrade;
-    #   proxy_set_header Connection 'upgrade';
-      
-    #   # Requests are directed to http://prod.frontend:80
-    #   proxy_pass http://prod.frontend:80;
-      
-    # }
-
-    location / {
-        proxy_pass https://www.google.com/;
-    }
+  # # Requests starting with root (/) are handled
+  # location / {
+  #   # The following 3 lines are required for the hot loading to work (websocket).
+  #   proxy_http_version 1.1;
+  #   proxy_set_header Upgrade $http_upgrade;
+  #   proxy_set_header Connection 'upgrade';
     
-  }
-  
+  #   # Requests are directed to http://prod.frontend:80
+  #   proxy_pass http://prod.frontend:80;
+    
+  # }
+
+  location / {
+      proxy_pass https://www.google.com/;
+  } 
 }
