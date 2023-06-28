@@ -1,9 +1,0 @@
-services:
-  prod.frontend:
-    image: 'myapp.prod.frontend'
-    container_name: 'prod.frontend'
-    build:
-      context: .
-      dockerfile: ./Dockerfile.prod
-    ports:
-      - '8080:80'

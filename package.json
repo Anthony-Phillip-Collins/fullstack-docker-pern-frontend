@@ -13,11 +13,7 @@
     "docker:dev:build": "docker compose -f docker-compose.dev.yml build",
     "docker:dev:build:nc": "npm run docker:dev:build -- --no-cache",
     "docker:dev:up": "docker compose -f docker-compose.dev.yml up",
-    "docker:dev:down": "docker compose -f docker-compose.dev.yml down",
-    "docker:prod:build": "docker compose -f docker-compose.prod.yml build",
-    "docker:prod:build:nc": "npm run docker:prod:build -- --no-cache",
-    "docker:prod:up": "docker compose -f docker-compose.prod.yml up",
-    "docker:prod:down": "docker compose -f docker-compose.prod.yml down"
+    "docker:dev:down": "docker compose -f docker-compose.dev.yml down"
   },
   "dependencies": {
     "axios": "^1.4.0",
