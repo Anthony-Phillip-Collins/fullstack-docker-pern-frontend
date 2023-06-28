@@ -1,5 +1,5 @@
 # events is required, but defaults are ok
-events { }
+# events { }
 
 # A http server, listening at port 80
 http {
