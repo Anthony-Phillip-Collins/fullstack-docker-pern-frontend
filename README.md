@@ -43,3 +43,11 @@ push changes
 ```
 git push heroku main
 ```
+
+### bugfixing
+
+add nginx buildpack
+
+```
+heroku buildpacks:add https://github.com/heroku/heroku-buildpack-nginx
+```
