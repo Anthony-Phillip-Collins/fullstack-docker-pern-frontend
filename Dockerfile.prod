@@ -7,7 +7,7 @@ COPY package-lock.json package-lock.json
 FROM base as build
 RUN npm ci
 ENV NODE_ENV=production
-# ENV VITE_API_BASE_URL=https://fullstack-docker-pern-backend-800d35caffaa.herokuapp.com/api
+ENV VITE_API_BASE_URL=https://fullstack-docker-pern-backend-800d35caffaa.herokuapp.com/api
 COPY . .
 RUN npm run build
 
