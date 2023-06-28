@@ -46,6 +46,12 @@ git push heroku main
 
 ### bugfixing
 
+set port
+
+```
+heroku config:set PORT=80
+```
+
 add nginx buildpack
 
 ```
