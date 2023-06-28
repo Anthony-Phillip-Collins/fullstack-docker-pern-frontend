@@ -35,7 +35,13 @@ heroku stack:set container -a appname
 heroku logs -t --app appname
 ```
 
-5. Update `VITE_API_BASE_URL` in _Dockerfile.prod_ with the url of the heroku app that was created with the [backend submodule](https://github.com/Anthony-Phillip-Collins/fullstack-docker-pern-backend). You can get the web url from the backend app:info like this `heroku apps:info -a backendAppName`
+5. Get the info of the backend app that was created with the [backend submodule](https://github.com/Anthony-Phillip-Collins/fullstack-docker-pern-backend) and copy the `Web URL`.
+
+```bash
+heroku apps:info -a backendAppName
+```
+
+5. Update `VITE_API_BASE_URL` in _Dockerfile.prod_ with the web url from the previous step and add _/api_ at the end. For example:
 
 ```bash
 ENV VITE_API_BASE_URL=https://backendAppName-800d35caffaa.herokuapp.com/api
