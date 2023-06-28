@@ -13,14 +13,15 @@ RUN npm run build
 
 FROM nginx:1.25.0-bullseye as prod
 
+# enable heroku exec, see https://devcenter.heroku.com/articles/exec#using-with-docker
 RUN apt-get update && apt-get install -y bash curl openssh-server iproute2 python
-
-ADD ./.profile.d /app/.profile.d
+ADD ./heroku-exec.sh /app/.profile.d/heroku-exec.sh
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
-# enable heroku exec, see https://devcenter.heroku.com/articles/exec#using-with-docker
+# copy template to receive env vars
 COPY nginx.conf.template /etc/nginx/templates/default.conf.template
 
+# change permissions for nginx user
 RUN chown -R nginx:nginx /usr/share/nginx/html && chmod -R 755 /usr/share/nginx/html && \
         chown -R nginx:nginx /var/cache/nginx && \
         chown -R nginx:nginx /var/log/nginx && \
