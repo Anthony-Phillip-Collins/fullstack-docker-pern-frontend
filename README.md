@@ -57,3 +57,8 @@ add nginx buildpack
 ```
 heroku buildpacks:add https://github.com/heroku/heroku-buildpack-nginx
 ```
+
+ssh into container
+```
+heroku ps:exec
+```
