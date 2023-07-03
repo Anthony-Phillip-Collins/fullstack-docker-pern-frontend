@@ -1,16 +1,16 @@
 import axios from 'axios';
-import { Blog } from '../types/blog.type';
 import constants from '../constants';
+import { BlogAttributes } from '../types/blog.type';
 
 const baseUrl = `${constants.API_BASE_URL}/blogs`;
 
 const getAll = async () => {
-  const { data } = await axios.get<Blog[]>(baseUrl);
+  const { data } = await axios.get<BlogAttributes[]>(baseUrl);
   return data;
 };
 
 const getById = async (id: string) => {
-  const { data } = await axios.get<Blog>(`${baseUrl}/${id}`);
+  const { data } = await axios.get<BlogAttributes>(`${baseUrl}/${id}`);
   return data;
 };
 

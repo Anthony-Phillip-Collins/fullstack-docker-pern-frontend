@@ -1,12 +1,12 @@
-import { Blog as BlogType } from '../../types/blog.type';
 import Blog from './Blog';
 import classNames from 'classnames/bind';
 import styles from './Blogs.module.css';
+import { BlogAttributes } from '../../types/blog.type';
 
 const cx = classNames.bind(styles);
 
 interface Props {
-  data: BlogType[];
+  data: BlogAttributes[];
   isLoading: boolean;
   isError?: boolean;
 }

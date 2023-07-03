@@ -1,11 +1,11 @@
-import { Blog } from '../../types/blog.type';
 import classNames from 'classnames/bind';
 import styles from './Blogs.module.css';
+import { BlogAttributes } from '../../types/blog.type';
 
 const cx = classNames.bind(styles);
 
 interface Props {
-  blog: Blog;
+  blog: BlogAttributes;
 }
 
 const Blog = ({ blog }: Props) => {

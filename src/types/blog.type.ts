@@ -1,9 +1,12 @@
-export interface Blog {
-  id: string;
+import { UserAttributes } from './user.type';
+
+export interface BlogAttributes {
+  id: number;
+  ownerId?: UserAttributes['id'];
+  title: string;
   author: string;
   url: string;
-  title: string;
   likes: number;
 }
-
-export type NewBlog = Omit<Blog, 'id'>;
+export type BlogCreation = Omit<BlogAttributes, 'id'>;
+export type BlogUpdate = Pick<BlogAttributes, 'likes'>;
