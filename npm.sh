@@ -7,7 +7,7 @@
 # It follows the pattern of npm.sh <container> <args>
 
 # Example:
-# ./npm.sh dev.backend install -D eslint
+# ./npm.sh dev.frontend install -D eslint
 
 container=$1
 args="${*:2}"

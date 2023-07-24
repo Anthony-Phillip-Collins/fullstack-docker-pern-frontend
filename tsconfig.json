@@ -23,7 +23,8 @@
     "noFallthroughCasesInSwitch": true
   },
   "include": [
-    "src"
+    "src",
+    "@types/styled-components/index.d.ts"
   ],
   "references": [
     {
