@@ -94,6 +94,7 @@ const global: Theme['global'] = {
   backgroundColor: colors.dark,
   color: colors.light,
   ...fonts.body,
+  fontFamily: "'Open Sans', sans-serif",
 };
 
 const theme: Theme = {

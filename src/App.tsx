@@ -1,19 +1,21 @@
 import { ThemeProvider } from 'styled-components';
-import BlogContainer from './components/Blogs/BlogContainer';
+import BlogsContainer from './components/Blogs/BlogsContainer';
+import LoginForm from './components/LoginForm/LoginForm';
 import PageHeader from './components/PageHeader/PageHeader';
 import { GlobalStyle } from './styles/global';
 import theme from './styles/theme';
 
-function App() {
+const App = () => {
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyle />
       <PageHeader />
       <main>
-        <BlogContainer />
+        <LoginForm />
+        <BlogsContainer />
       </main>
     </ThemeProvider>
   );
-}
+};
 
 export default App;

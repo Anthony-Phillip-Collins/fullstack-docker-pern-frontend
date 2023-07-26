@@ -1,24 +1,40 @@
 import axios from 'axios';
-import constants from '../constants';
-import { BlogAttributes } from '../types/blog.type';
+import { BlogAttributes, BlogCreation, BlogUpdate } from '../types/blog.type';
+import { getApiUrl } from './util';
+import { asyncHandler, authConfig } from './util/axiosUtil';
 
-const baseUrl = `${constants.API_BASE_URL}/blogs`;
+const baseUrl = getApiUrl('/blogs');
 
 const getAll = async () => {
-  const { data } = await axios.get<BlogAttributes[]>(baseUrl);
+  const promise = axios.get<BlogAttributes[]>(baseUrl);
+  const { data } = await asyncHandler(promise);
   return data;
 };
 
 const getById = async (id: string) => {
-  const { data } = await axios.get<BlogAttributes>(`${baseUrl}/${id}`);
+  const promise = axios.get<BlogAttributes>(`${baseUrl}/${id}`);
+  const { data } = await asyncHandler(promise);
   return data;
 };
 
-// const create = async (object: BlogFormValues) => {
-//   const { data } = await axios.post<Blog>(`${baseUrl}`, object);
-//   return data;
-// };
+const createOne = async (blog: BlogCreation) => {
+  const promise = axios.post<BlogAttributes>(baseUrl, blog, authConfig());
+  const { data } = await asyncHandler(promise);
+  return data;
+};
 
-const blogService = { getAll, getById };
+const updateOne = async (blogId: BlogAttributes['id'], update: BlogUpdate) => {
+  const promise = axios.put<BlogAttributes>(`${baseUrl}/${blogId}`, update, authConfig());
+  const { data } = await asyncHandler(promise);
+  return data;
+};
+
+const deleteOne = async (blogId: BlogAttributes['id']) => {
+  const promise = axios.delete<BlogAttributes>(`${baseUrl}/${blogId}`, authConfig());
+  const { data } = await asyncHandler(promise);
+  return data;
+};
+
+const blogService = { getAll, getById, createOne, updateOne, deleteOne };
 
 export default blogService;

@@ -24,7 +24,7 @@
   },
   "include": [
     "src",
-    "@types/styled-components/index.d.ts"
+    "@types"
   ],
   "references": [
     {

@@ -2,29 +2,26 @@ import { styled } from 'styled-components';
 import mixins from '../../styles/mixins';
 import { BlogAttributes } from '../../types/blog.type';
 import Container from '../Container/Container';
-import Blog from './Blog';
+import Blog, { BlogCallbacks } from './Blog';
 
-interface Props {
+interface Props extends BlogCallbacks {
   data: BlogAttributes[];
-  isLoading: boolean;
-  isError?: boolean;
 }
 
-const BlogList = ({ data, isLoading, isError = false }: Props) => {
-  if (isError) return <div>Something went wrong, check the console...</div>;
-  if (isLoading) return <div>Loading...</div>;
-
+const BlogList = ({ data, onUpdate, onDelete }: Props) => {
   return (
-    <Container>
-      <h1>Blogs</h1>
-      <List>
-        {data.map((blog) => (
-          <ListItem key={blog.id}>
-            <Blog blog={blog} />
-          </ListItem>
-        ))}
-      </List>
-    </Container>
+    data && (
+      <Container>
+        <h1>Blogs</h1>
+        <List>
+          {data.map((blog) => (
+            <ListItem key={blog.id}>
+              <Blog blog={blog} onUpdate={onUpdate} onDelete={onDelete} />
+            </ListItem>
+          ))}
+        </List>
+      </Container>
+    )
   );
 };
 

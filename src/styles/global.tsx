@@ -8,25 +8,14 @@ export const GlobalStyle = createGlobalStyle<{ $whiteColor?: boolean }>`
   body {
     margin: 0;
     padding: 0;
-    font-family: 'Open Sans', sans-serif;
-    font-size: 1.6rem;
-    line-height: 1.5;
     min-height: 100vh;
     font-synthesis: none;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     -webkit-text-size-adjust: 100%;
-    ${({
-      theme: {
-        global: { backgroundColor, color, fontSize, fontWeight, lineHeight },
-      },
-    }) => ({
-      backgroundColor,
-      color,
-      fontSize,
-      fontWeight,
-      lineHeight,
+    ${({ theme: { global } }) => ({
+      ...global,
     })}
   }
 

@@ -73,6 +73,7 @@ interface Global extends FontProps {
   backgroundColor: string;
   color: string;
   borderRadius: string;
+  fontFamily: string;
 }
 
 interface ThemeProps {

@@ -1,26 +1,20 @@
-import { useEffect, useState } from 'react';
-import { Blog } from '../types/blog.type';
-import blogService from '../services/blog.service';
+import { useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from '../app/hooks';
+import blogThunk from '../app/features/blog.slice';
 
 const useBlogs = () => {
-  const [data, setData] = useState<Blog[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [isError, setIsError] = useState<boolean>(false);
+  const blogs = useAppSelector(({ blogs }) => blogs);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    const fetchBlogs = async () => {
-      try {
-        const blogs = await blogService.getAll();
-        setData(blogs);
-        setIsLoading(false);
-      } catch (error) {
-        setIsError(true);
-      }
-    };
-    fetchBlogs();
-  }, []);
+    dispatch(blogThunk.fetchAll());
+  }, [dispatch]);
 
-  return { data, isLoading, isError };
+  return {
+    data: blogs.all,
+    loading: blogs.status === 'loading',
+    error: blogs.error,
+  };
 };
 
 export default useBlogs;
