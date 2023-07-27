@@ -34,7 +34,7 @@ export const Header = styled.header`
     padding: theme.spacing.lg,
   })};
 
-  > * {
+  > *:first-child {
     margin: 0;
     padding: 0;
     text-overflow: ellipsis;
