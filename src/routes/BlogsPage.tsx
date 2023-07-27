@@ -1,11 +1,11 @@
-import blogThunk from '../../app/features/blog.slice';
-import { useAppDispatch } from '../../app/hooks';
-import useBlogs from '../../hooks/useBlogs';
-import { BlogAttributes } from '../../types/blog.type';
-import BlogList from './BlogList';
-import Container from '../Container/Container';
+import blogThunk from '../app/features/blog.slice';
+import { useAppDispatch } from '../app/hooks';
+import BlogList from '../components/BlogList/BlogList';
+import Container from '../components/Container/Container';
+import useBlogs from '../hooks/useBlogs';
+import { BlogAttributes } from '../types/blog.type';
 
-const BlogContainer = () => {
+const BlogsPage = () => {
   const { data } = useBlogs();
 
   const dispatch = useAppDispatch();
@@ -26,4 +26,4 @@ const BlogContainer = () => {
   );
 };
 
-export default BlogContainer;
+export default BlogsPage;

@@ -1,7 +1,6 @@
 .editable {
   border: 1px dashed rgba(255, 255, 255, 0.5) !important;
   background-color: rgba(255, 255, 255, 0.1) !important;
-  outline: none;
   flex-grow: 1;
 
   &:focus {
