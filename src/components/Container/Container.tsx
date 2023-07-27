@@ -1,4 +1,4 @@
-import { styled } from 'styled-components';
+import { ContainerInner, StyledContainer } from './Container.styled';
 
 interface Props {
   children: React.ReactNode;
@@ -11,14 +11,5 @@ const Container = ({ children }: Props) => {
     </StyledContainer>
   );
 };
-
-const StyledContainer = styled.div`
-  width: 100%;
-`;
-
-const ContainerInner = styled.div`
-  margin: 0 auto;
-  padding: 0 1rem;
-`;
 
 export default Container;

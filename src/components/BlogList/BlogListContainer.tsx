@@ -2,7 +2,8 @@ import blogThunk from '../../app/features/blog.slice';
 import { useAppDispatch } from '../../app/hooks';
 import useBlogs from '../../hooks/useBlogs';
 import { BlogAttributes } from '../../types/blog.type';
-import Blogs from './Blogs';
+import BlogList from './BlogList';
+import Container from '../Container/Container';
 
 const BlogContainer = () => {
   const { data } = useBlogs();
@@ -17,7 +18,12 @@ const BlogContainer = () => {
     dispatch(blogThunk.deleteOne(blog.id));
   };
 
-  return <Blogs data={data} onUpdate={onUpdate} onDelete={onDelete} />;
+  return (
+    <Container>
+      <h1>Blogs</h1>
+      <BlogList data={data} onUpdate={onUpdate} onDelete={onDelete} />
+    </Container>
+  );
 };
 
 export default BlogContainer;

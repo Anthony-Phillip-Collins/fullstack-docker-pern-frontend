@@ -1,5 +1,5 @@
 import { ThemeProvider } from 'styled-components';
-import BlogsContainer from './components/Blogs/BlogsContainer';
+import BlogListContainer from './components/BlogList/BlogListContainer';
 import LoginForm from './components/LoginForm/LoginForm';
 import PageHeader from './components/PageHeader/PageHeader';
 import { GlobalStyle } from './styles/global';
@@ -12,7 +12,7 @@ const App = () => {
       <PageHeader />
       <main>
         <LoginForm />
-        <BlogsContainer />
+        <BlogListContainer />
       </main>
     </ThemeProvider>
   );

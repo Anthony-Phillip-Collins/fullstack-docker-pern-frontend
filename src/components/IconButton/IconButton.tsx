@@ -5,7 +5,7 @@ interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   iconProps: IconProps;
 }
 
-const IconButtonComp = ({ iconProps, ...props }: Props) => {
+const Button = ({ iconProps, ...props }: Props) => {
   return (
     <button {...props}>
       <IconShape {...iconProps} />
@@ -13,7 +13,7 @@ const IconButtonComp = ({ iconProps, ...props }: Props) => {
   );
 };
 
-const IconButton = styled(IconButtonComp)`
+const IconButton = styled(Button)`
   border: none;
   cursor: pointer;
   display: inline-block;
