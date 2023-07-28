@@ -4,12 +4,14 @@ import { Provider } from 'react-redux';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import store from './app/store.ts';
 import Root from './routes/Root.tsx';
-import BlogsPage from './routes/BlogsPage.tsx';
 import { ThemeProvider } from 'styled-components';
+import BlogsPage from './routes/blogs/index.tsx';
+import ErrorPage from './routes/ErrorPage.tsx';
+import UsersPage from './routes/users/index.tsx';
 import { GlobalStyle } from './styles/global.tsx';
 import theme from './styles/theme.tsx';
-import ErrorPage from './routes/ErrorPage.tsx';
-import UsersPage from './routes/UsersPage.tsx';
+import BlogPage from './routes/blogs/BlogPage.tsx';
+import UserPage from './routes/users/UserPage.tsx';
 
 const router = createBrowserRouter([
   {
@@ -26,8 +28,16 @@ const router = createBrowserRouter([
         element: <BlogsPage />,
       },
       {
+        path: '/blogs/:id',
+        element: <BlogPage />,
+      },
+      {
         path: '/users',
         element: <UsersPage />,
+      },
+      {
+        path: '/users/:id',
+        element: <UserPage />,
       },
     ],
   },

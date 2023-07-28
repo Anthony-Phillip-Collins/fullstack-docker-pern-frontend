@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from '../app/hooks';
 import blogThunk from '../app/features/blog.slice';
 
 const useBlogs = () => {
-  const blogs = useAppSelector(({ blogs }) => blogs);
+  const { all, status, error } = useAppSelector(({ blogs }) => blogs);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -11,9 +11,9 @@ const useBlogs = () => {
   }, [dispatch]);
 
   return {
-    data: blogs.all,
-    loading: blogs.status === 'loading',
-    error: blogs.error,
+    data: all,
+    loading: status === 'loading',
+    error,
   };
 };
 

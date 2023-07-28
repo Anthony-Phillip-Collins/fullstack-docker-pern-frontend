@@ -1,9 +1,9 @@
-import userThunk from '../app/features/user.slice';
-import { useAppDispatch } from '../app/hooks';
-import Container from '../components/Container/Container';
-import UserList from '../components/UserList/UserList';
-import useUsers from '../hooks/useUsers';
-import { UserAttributes } from '../types/user.type';
+import userThunk from '../../app/features/user.slice';
+import { useAppDispatch } from '../../app/hooks';
+import Container from '../../components/Container/Container';
+import UserList from '../../components/UserList/UserList';
+import useUsers from '../../hooks/useUsers';
+import { UserAttributes } from '../../types/user.type';
 
 const UsersPage = () => {
   const { data } = useUsers();

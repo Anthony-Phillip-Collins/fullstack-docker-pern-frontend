@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from '../app/hooks';
 import userThunk from '../app/features/user.slice';
 
 const useUsers = () => {
-  const users = useAppSelector(({ users }) => users);
+  const { all, status, error } = useAppSelector(({ users }) => users);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -11,9 +11,9 @@ const useUsers = () => {
   }, [dispatch]);
 
   return {
-    data: users.all,
-    loading: users.status === 'loading',
-    error: users.error,
+    data: all,
+    loading: status === 'loading',
+    error: error,
   };
 };
 

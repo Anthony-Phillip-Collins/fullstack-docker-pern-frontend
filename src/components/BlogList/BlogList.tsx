@@ -6,15 +6,17 @@ interface Props extends BlogCallbacks {
   data: BlogAttributes[];
 }
 
-const BlogList = ({ data, onUpdate, onDelete }: Props) => {
+const BlogList = ({ data, onSave, onDelete }: Props) => {
   return (
     data && (
       <StyledList>
-        {data.map((blog) => (
-          <ListItem key={blog.id}>
-            <Blog blog={blog} onUpdate={onUpdate} onDelete={onDelete} />
-          </ListItem>
-        ))}
+        {data.map((blog) => {
+          return (
+            <ListItem key={blog.id}>
+              <Blog blog={blog} onSave={onSave} onDelete={onDelete} />
+            </ListItem>
+          );
+        })}
       </StyledList>
     )
   );

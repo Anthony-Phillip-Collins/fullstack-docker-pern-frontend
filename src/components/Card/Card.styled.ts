@@ -1,5 +1,4 @@
 import { styled } from 'styled-components';
-import { CardInnerProps } from './Card';
 
 export const StyledCard = styled.article`
   position: relative;
@@ -14,7 +13,7 @@ export const StyledCard = styled.article`
 
 export const CardInner = styled.div.withConfig({
   shouldForwardProp: (prop) => !['warning'].includes(prop),
-})<CardInnerProps>`
+})<{ warning: boolean }>`
   width: 100%;
   display: flex;
   flex-direction: column;

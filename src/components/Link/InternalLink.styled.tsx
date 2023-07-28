@@ -1,11 +1,8 @@
-import { styled } from 'styled-components';
-import { TextLinkProps } from './TextLink';
+import { css } from 'styled-components';
 import { FontWeight } from '../../styles/types';
 import mixins from '../../styles/mixins';
 
-export const StyledTextLink = styled.a.withConfig({
-  shouldForwardProp: (prop) => !['truncate'].includes(prop),
-})<TextLinkProps>`
+export const linkStyles = css`
   position: relative;
   display: inline-block;
   text-decoration: none;
@@ -29,12 +26,6 @@ export const StyledTextLink = styled.a.withConfig({
 
   ${(props) => {
     const { theme } = props;
-    const truncate = !props.truncate
-      ? {}
-      : {
-          textOverflow: 'ellipsis',
-          overflow: 'hidden',
-        };
 
     return {
       ...theme.fonts.body,
@@ -44,7 +35,6 @@ export const StyledTextLink = styled.a.withConfig({
         backgroundColor: theme.global.color,
         ...mixins.transition('transform'),
       },
-      ...truncate,
     };
   }};
 `;

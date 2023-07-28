@@ -8,10 +8,6 @@ interface Common extends React.HTMLAttributes<HTMLElement> {
   children?: React.ReactNode;
 }
 
-export interface CardInnerProps {
-  warning?: boolean;
-}
-
 export interface CardCallbacks {
   onSave?: () => void;
   onDelete?: () => void;
@@ -23,14 +19,15 @@ type Props = CardCallbacks &
   Common & {
     header: React.ReactNode;
     warningProps?: WarningProps;
+    enableEdit?: boolean;
   };
 
-const Card = ({ children, header, warningProps, onSave, onDelete, onEdit, onWarning }: Props) => {
+const Card = ({ children, header, warningProps, enableEdit, onSave, onDelete, onEdit, onWarning }: Props) => {
   const [editable, setEditable] = useState(false);
   const [warning, setWarning] = useState(false);
 
   const tabIndex = { tabIndex: warning ? -1 : 0 };
-  const isEnabled = onDelete || onSave;
+  const isEnabled = enableEdit && (onDelete || onSave);
 
   const edit = (state: boolean) => {
     setEditable(state);
@@ -91,7 +88,7 @@ const Card = ({ children, header, warningProps, onSave, onDelete, onEdit, onWarn
 
         <Body>
           {children}
-          {editable && (
+          {isEnabled && editable && (
             <Edit>
               {onSave && (
                 <Button variant="primary" aria-label="Save user" onClick={saveHandler}>
