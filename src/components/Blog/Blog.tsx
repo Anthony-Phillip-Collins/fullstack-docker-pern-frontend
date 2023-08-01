@@ -1,35 +1,42 @@
 import { useRef, useState } from 'react';
-import authService from '../../services/auth.service';
 import { BlogAttributes, BlogUpdate } from '../../types/blog.type';
 import { dateToString } from '../../util';
+import Button from '../Button/Button';
 import Card from '../Card/Card';
 import Editable, { EditableRef } from '../Editable/Editable';
-import { BlogAuthor, BlogBody, BlogLikes, BlogLinkContainer } from './Blog.styled';
-import InternalLink from '../Link/InternalLink';
 import ExternalLink from '../Link/ExternalLink';
+import InternalLink from '../Link/InternalLink';
+import { BlogAuthor, BlogBody, BlogLikes, BlogLinkContainer } from './Blog.styled';
+
+interface Common extends React.HTMLAttributes<HTMLElement> {
+  children?: React.ReactNode;
+}
 
 export interface BlogCallbacks {
   onSave?: (blog: BlogAttributes) => void;
   onDelete?: (blog: BlogAttributes) => void;
+  onLike: (blog: BlogAttributes) => void;
+  onBookmark: (blog: BlogAttributes) => void;
 }
 
-interface Props extends BlogCallbacks {
+export type BlogProps = Common & {
   blog: BlogAttributes;
-}
+  canEdit?: boolean;
+  bookmarked?: boolean;
+  liked?: boolean;
+};
+
+type Props = BlogProps & BlogCallbacks;
 
 export interface BlogInnerProps {
   warning?: boolean;
 }
 
-const Blog = ({ blog, onSave, onDelete }: Props) => {
+const Blog = ({ children, blog, canEdit, bookmarked, liked, onSave, onDelete, onLike, onBookmark }: Props) => {
   const [editable, setEditable] = useState(false);
   const [warning, setWarning] = useState(false);
-  const auth = blog.owner?.username === authService.getUser()?.username;
 
-  console.log(!!(auth && (onSave || onDelete)), auth, onSave, onDelete);
-
-  const enableEdit = !!(auth && (onSave || onDelete));
-
+  const enableEdit = !!(canEdit && (onSave || onDelete));
   const tabIndex = { tabIndex: warning ? -1 : 0 };
 
   const title = useRef<EditableRef>(null);
@@ -61,6 +68,16 @@ const Blog = ({ blog, onSave, onDelete }: Props) => {
     onDelete && onDelete(blog);
   };
 
+  const likeHandler: React.MouseEventHandler = (e) => {
+    e.preventDefault();
+    onLike && onLike(blog);
+  };
+
+  const bookmarkHandler: React.MouseEventHandler = (e) => {
+    e.preventDefault();
+    onBookmark && onBookmark(blog);
+  };
+
   if (!blog) return null;
 
   const createdAt = dateToString(blog.createdAt);
@@ -79,7 +96,9 @@ const Blog = ({ blog, onSave, onDelete }: Props) => {
           by &nbsp;
           <Editable tagName="span" ref={author} initialValue={blog.author} disabled={!editable} />
         </BlogAuthor>
-        <BlogLikes>has {blog.likes} likes</BlogLikes>
+        <BlogLikes>
+          has <strong>{blog.likes}</strong> likes
+        </BlogLikes>
         {editable ? (
           <Editable tagName="span" ref={url} initialValue={blog.url} disabled={!editable} />
         ) : (
@@ -90,8 +109,18 @@ const Blog = ({ blog, onSave, onDelete }: Props) => {
           </BlogLinkContainer>
         )}
         <div>{createdAt && <div>created: {createdAt}</div>}</div>
-        <div>Owner?: {blog.owner && <InternalLink to={`/users/${blog.owner.id}`}>{blog.owner.name}</InternalLink>}</div>
+        <div>owner: {blog.owner && <InternalLink to={`/users/${blog.owner.id}`}>{blog.owner.name}</InternalLink>}</div>
         <Readers readers={blog.readers} />
+
+        <div>
+          <Button onClick={likeHandler}>Like</Button>
+        </div>
+
+        <div>
+          <Button onClick={bookmarkHandler}>{bookmarked ? 'remove bookmark' : 'add bookmark'}</Button>
+        </div>
+
+        {children}
       </BlogBody>
     </Card>
   );
@@ -100,16 +129,21 @@ const Blog = ({ blog, onSave, onDelete }: Props) => {
 type ReadersProps = Pick<BlogAttributes, 'readers'>;
 
 const Readers = ({ readers }: ReadersProps) => {
-  if (!readers || readers.length === 0) return 'No Readers';
-  return readers.map((reader, i) => (
-    <div key={i}>
-      Readers:{' '}
-      <div>
-        <div>Name:{reader.name}</div>
-        <div>Read:{reader.reading.read ? 'Yes' : 'No'}</div>
-      </div>
-    </div>
+  if (!readers || readers.length === 0) return null;
+  const items = readers.map((reader, i) => (
+    <li key={i}>
+      <span>
+        {reader.name} - {reader.reading.read ? 'has read it.' : 'hasn’t read it yet.'}
+      </span>
+    </li>
   ));
+
+  return (
+    <>
+      Readers:
+      <ul>{items}</ul>
+    </>
+  );
 };
 
 export default Blog;

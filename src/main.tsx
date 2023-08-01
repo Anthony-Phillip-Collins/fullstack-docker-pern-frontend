@@ -5,13 +5,13 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import store from './app/store.ts';
 import Root from './routes/Root.tsx';
 import { ThemeProvider } from 'styled-components';
-import BlogsPage from './routes/blogs/index.tsx';
+import BlogsPage from './routes/blogs/Blogs.page.tsx';
 import ErrorPage from './routes/ErrorPage.tsx';
-import UsersPage from './routes/users/index.tsx';
+import UsersPage from './routes/users/Users.page.tsx';
 import { GlobalStyle } from './styles/global.tsx';
 import theme from './styles/theme.tsx';
-import BlogPage from './routes/blogs/BlogPage.tsx';
-import UserPage from './routes/users/UserPage.tsx';
+import BlogPage from './routes/blogs/Blog.page.tsx';
+import UserPage from './routes/users/User.page.tsx';
 
 const router = createBrowserRouter([
   {
@@ -39,6 +39,7 @@ const router = createBrowserRouter([
         path: '/users/:id',
         element: <UserPage />,
       },
+      { path: '*', element: <h1>Not Found</h1> },
     ],
   },
 ]);

@@ -10,7 +10,7 @@ const UsersPage = () => {
 
   const dispatch = useAppDispatch();
 
-  const onUpdate = (user: UserAttributes) => {
+  const onSave = (user: UserAttributes) => {
     dispatch(userThunk.updateOne(user));
   };
 
@@ -21,7 +21,7 @@ const UsersPage = () => {
   return (
     <Container>
       <h1>Users</h1>
-      <UserList data={data} onUpdate={onUpdate} onDelete={onDelete} />
+      <UserList data={data} onSave={onSave} onDelete={onDelete} />
     </Container>
   );
 };

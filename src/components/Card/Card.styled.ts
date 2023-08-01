@@ -23,7 +23,7 @@ export const CardInner = styled.div.withConfig({
   })};
 `;
 
-export const Header = styled.header`
+export const Header = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: flex-start;

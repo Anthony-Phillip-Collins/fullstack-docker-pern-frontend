@@ -1,7 +1,10 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSelector, createSlice } from '@reduxjs/toolkit';
 
 import userService from '../../services/user.service';
-import { UserAttributes, UserCreateInput } from '../../types/user.type';
+import { BlogAttributes } from '../../types/blog.type';
+import { ReadingAttributes } from '../../types/reading.type';
+import { Readings, UserAttributes, UserCreateInput } from '../../types/user.type';
+import { RootState } from '../store';
 
 const fetchAll = createAsyncThunk('users/fetchAll', async () => {
   const response = await userService.getAll();
@@ -9,7 +12,7 @@ const fetchAll = createAsyncThunk('users/fetchAll', async () => {
 });
 
 const fetchOne = createAsyncThunk('users/fetchOne', async (id: UserAttributes['id']) => {
-  const response = await userService.getById(String(id));
+  const response = await userService.getById(id);
   return response;
 });
 
@@ -19,7 +22,7 @@ const createOne = createAsyncThunk('users/createOne', async (user: UserCreateInp
 });
 
 const updateOne = createAsyncThunk('users/updateOne', async (user: UserAttributes) => {
-  console.log('/////');
+  console.log('///// users/updateOne /////');
   console.log(user);
   console.log('/////');
 
@@ -70,6 +73,7 @@ export const userSlice = createSlice({
       state.status = 'failed';
       state.error = action.error.message;
     });
+
     builder.addCase(createOne.pending, (state) => {
       state.status = 'loading';
     });
@@ -105,6 +109,60 @@ export const userSlice = createSlice({
     });
   },
 });
+
+export const getAllUsers = (state: RootState) => state.users.all;
+
+export const getUserById = (state: RootState, userId: UserAttributes['id']) =>
+  getAllUsers(state).find((user) => user.id === userId);
+
+const populateReadingsToUser = (readings: ReadingAttributes[], blogs: BlogAttributes[], user: UserAttributes) => {
+  const readingsOfUser = (readings || []).filter((reading) => reading.userId === user.id);
+  const array: UserAttributes['readings'] = [];
+
+  readingsOfUser.forEach((reading) => {
+    const blog = blogs.find((blog) => blog.id === reading.blogId);
+    if (blog) {
+      const item: Readings = {
+        id: blog.id,
+        title: blog.title,
+        author: blog.author,
+        url: blog.url,
+        likes: blog.likes,
+        reading,
+      };
+      array.push(item);
+    }
+  });
+  const userPopulated: UserAttributes = {
+    ...user,
+    blogs,
+    readings: array,
+  };
+
+  return userPopulated;
+};
+
+const allBlogs = (state: RootState) => state.blogs.all;
+const allReadings = (state: RootState) => state.readings.all;
+
+export const getAllUsersPopulated = createSelector([getAllUsers, allBlogs, allReadings], (users, blogs, readings) => {
+  if (!users) {
+    return [];
+  }
+  return users.map((user) => {
+    return populateReadingsToUser(readings, blogs, user);
+  });
+});
+
+export const getOneUserPopulated = createSelector(
+  [getAllUsers, allBlogs, allReadings, getUserById],
+  (users, blogs, readings, user) => {
+    if (!users || !blogs || !readings || !user) {
+      return {} as UserAttributes;
+    }
+    return populateReadingsToUser(readings, blogs, user);
+  },
+);
 
 const userThunk = {
   fetchAll,

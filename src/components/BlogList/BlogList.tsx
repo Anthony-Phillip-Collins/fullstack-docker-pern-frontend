@@ -1,19 +1,24 @@
 import { BlogAttributes } from '../../types/blog.type';
-import Blog, { BlogCallbacks } from '../Blog/Blog';
+import BlogContainer from '../Blog/BlogContainer';
+import InternalLink from '../Link/InternalLink';
 import { ListItem, StyledList } from './BlogList.styled';
 
-interface Props extends BlogCallbacks {
+type Props = {
   data: BlogAttributes[];
-}
+};
 
-const BlogList = ({ data, onSave, onDelete }: Props) => {
+const BlogList = ({ data }: Props) => {
   return (
     data && (
       <StyledList>
         {data.map((blog) => {
           return (
             <ListItem key={blog.id}>
-              <Blog blog={blog} onSave={onSave} onDelete={onDelete} />
+              <BlogContainer blog={blog}>
+                <div>
+                  <InternalLink to={`/blogs/${blog.id}`}>Read more</InternalLink>
+                </div>
+              </BlogContainer>
             </ListItem>
           );
         })}

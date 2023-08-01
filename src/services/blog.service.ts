@@ -11,7 +11,7 @@ const getAll = async () => {
   return data;
 };
 
-const getById = async (id: string) => {
+const getById = async (id: BlogAttributes['id']) => {
   const promise = axios.get<BlogAttributes>(`${baseUrl}/${id}`);
   const { data } = await asyncHandler(promise);
   return data;

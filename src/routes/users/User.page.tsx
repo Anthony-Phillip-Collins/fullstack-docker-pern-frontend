@@ -25,7 +25,6 @@ const UserPage = () => {
 
   return (
     <Container>
-      <User user={data} />
       <User user={data} onSave={onSave} onDelete={onDelete} />
     </Container>
   );

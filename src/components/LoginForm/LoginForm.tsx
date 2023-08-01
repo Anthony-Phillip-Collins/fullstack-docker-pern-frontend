@@ -1,15 +1,17 @@
 import { useState } from 'react';
-import authService from '../../services/auth.service';
+import useAuth from '../../hooks/useAuth';
 
 const LoginForm = () => {
+  const { user, logIn } = useAuth();
   const [username, setUsername] = useState('admin@foobar.com');
   const [password, setPassword] = useState('letmein');
 
   const onSubmit: React.FormEventHandler = async (e) => {
     e.preventDefault();
     try {
-      const data = await authService.login({ username, password });
-      console.log(data);
+      // const data = await authService.logIn({ username, password });
+      const data = await logIn({ username, password });
+      console.log('??', user);
     } catch (e) {
       console.log(e);
     }

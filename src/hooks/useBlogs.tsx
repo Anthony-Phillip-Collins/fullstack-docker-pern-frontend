@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from '../app/hooks';
 import blogThunk from '../app/features/blog.slice';
+import { useAppDispatch, useAppSelector } from '../app/hooks';
 
 const useBlogs = () => {
-  const { all, status, error } = useAppSelector(({ blogs }) => blogs);
   const dispatch = useAppDispatch();
+  const { all, status, error } = useAppSelector(({ blogs }) => blogs);
 
   useEffect(() => {
     dispatch(blogThunk.fetchAll());

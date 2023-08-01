@@ -1,6 +1,11 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSelector, createSlice } from '@reduxjs/toolkit';
 import blogService from '../../services/blog.service';
-import { BlogAttributes, BlogUpdate } from '../../types/blog.type';
+import { BlogAttributes, BlogUpdate, ReadersAttributes } from '../../types/blog.type';
+import { ReadingAttributes } from '../../types/reading.type';
+import { UserAttributes } from '../../types/user.type';
+import { RootState } from '../store';
+import { getAllReadings } from './reading.slice';
+import { getAllUsers } from './user.slice';
 
 const fetchAll = createAsyncThunk('blogs/fetchAll', async () => {
   const response = await blogService.getAll();
@@ -8,7 +13,7 @@ const fetchAll = createAsyncThunk('blogs/fetchAll', async () => {
 });
 
 const fetchOne = createAsyncThunk('blogs/fetchOne', async (id: BlogAttributes['id']) => {
-  const response = await blogService.getById(String(id));
+  const response = await blogService.getById(id);
   return response;
 });
 
@@ -68,9 +73,9 @@ export const blogSlice = createSlice({
     builder.addCase(createOne.pending, (state) => {
       state.status = 'loading';
     });
-    builder.addCase(createOne.fulfilled, (state) => {
+    builder.addCase(createOne.fulfilled, (state, action) => {
       state.status = 'succeeded';
-      // state.one = action.payload;
+      state.one = action.payload;
     });
     builder.addCase(createOne.rejected, (state, action) => {
       state.status = 'failed';
@@ -82,6 +87,7 @@ export const blogSlice = createSlice({
     builder.addCase(updateOne.fulfilled, (state, action) => {
       state.status = 'succeeded';
       state.all = state.all.map((blog) => (blog.id === action.payload.id ? { ...blog, ...action.payload } : blog));
+      state.one = action.payload;
     });
     builder.addCase(updateOne.rejected, (state, action) => {
       state.status = 'failed';
@@ -100,6 +106,109 @@ export const blogSlice = createSlice({
     });
   },
 });
+
+export const getAllBlogs = (state: RootState): BlogAttributes[] => state.blogs.all;
+
+export const getBlogById = (state: RootState, id: BlogAttributes['id']) =>
+  getAllBlogs(state).find((blog) => blog.id === id);
+
+const populateReadersToBlog = (readings: ReadingAttributes[], users: UserAttributes[], blog: BlogAttributes) => {
+  const readers = [] as BlogAttributes['readers'];
+  readings
+    .filter((reading) => reading.blogId === blog.id)
+    .forEach((reading) => {
+      const user = users.find((user) => user.id === reading.userId);
+      if (user) {
+        const item: ReadersAttributes = {
+          name: user.name,
+          reading: {
+            read: reading.read,
+          },
+        };
+        if (readers) {
+          readers.push(item);
+        }
+      }
+    });
+
+  const blogPopulated: BlogAttributes = {
+    ...blog,
+    readers,
+  };
+
+  return blogPopulated;
+};
+
+export const getAllBlogsPopulated = createSelector(
+  [getAllBlogs, getAllUsers, getAllReadings],
+  (blogs, users, readings) => {
+    if (!blogs || !users || !readings) {
+      return [];
+    }
+    return blogs.map((blog) => {
+      return populateReadersToBlog(readings, users, blog);
+    });
+  },
+);
+
+export const getOneBlogPopulated = createSelector(
+  [getAllReadings, getAllUsers, getBlogById],
+  (readings, users, blog) => {
+    if (!users || !readings || !blog) {
+      return {} as BlogAttributes;
+    }
+    return populateReadersToBlog(readings, users, blog);
+  },
+);
+
+// const populateReadingsToUser = (readings: ReadingAttributes[], blogs: BlogAttributes[], user: UserAttributes) => {
+//   const readingsOfUser = (readings || []).filter((reading) => reading.userId === user.id);
+//   const array: UserAttributes['readings'] = [];
+
+//   readingsOfUser.forEach((reading) => {
+//     const blog = blogs.find((blog) => blog.id === reading.blogId);
+//     if (blog) {
+//       const item: Readings = {
+//         id: blog.id,
+//         title: blog.title,
+//         author: blog.author,
+//         url: blog.url,
+//         likes: blog.likes,
+//         reading,
+//       };
+//       array.push(item);
+//     }
+//   });
+//   const userPopulated: UserAttributes = {
+//     ...user,
+//     blogs,
+//     readings: array,
+//   };
+
+//   return userPopulated;
+// };
+
+// export const getAllUsersPopulated = createSelector(
+//   [getAllUsers, getAllBlogs, getAllReadings],
+//   (users, blogs, readings) => {
+//     if (!users) {
+//       return [];
+//     }
+//     return users.map((user) => {
+//       return populateReadingsToUser(readings, blogs, user);
+//     });
+//   },
+// );
+
+// export const getOneUserPopulated = createSelector(
+//   [getAllUsers, getAllBlogs, getAllReadings, getUserById],
+//   (users, blogs, readings, user) => {
+//     if (!users || !blogs || !readings || !user) {
+//       return {} as UserAttributes;
+//     }
+//     return populateReadingsToUser(readings, blogs, user);
+//   },
+// );
 
 const blogThunk = {
   fetchAll,

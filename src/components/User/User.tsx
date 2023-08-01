@@ -3,16 +3,21 @@ import { UserAttributes, UserUpdateAsAdminInput } from '../../types/user.type';
 import Card from '../Card/Card';
 import Editable, { EditableRef } from '../Editable/Editable';
 
+interface Common extends React.HTMLAttributes<HTMLElement> {
+  children?: React.ReactNode;
+}
+
 export interface UserCallbacks {
   onSave?: (user: UserAttributes) => void;
   onDelete?: (user: UserAttributes) => void;
 }
 
-interface Props extends UserCallbacks {
-  user: UserAttributes;
-}
+type Props = UserCallbacks &
+  Common & {
+    user: UserAttributes;
+  };
 
-const User = ({ user, onSave, onDelete }: Props) => {
+const User = ({ children, user, onSave, onDelete }: Props) => {
   const [editable, setEditable] = useState(false);
 
   const name = useRef<EditableRef>(null);
@@ -35,7 +40,7 @@ const User = ({ user, onSave, onDelete }: Props) => {
   };
 
   if (!user) return null;
-
+  console.log(user);
   return (
     <Card
       onSave={onSave && saveHandler}
@@ -72,6 +77,7 @@ const User = ({ user, onSave, onDelete }: Props) => {
           </>
         )}
       </div>
+      {children}
     </Card>
   );
 };

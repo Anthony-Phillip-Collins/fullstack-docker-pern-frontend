@@ -14,13 +14,13 @@ export const linkStyles = css`
     display: block;
     position: absolute;
     bottom: 0.3rem;
-    transform: scaleX(0) translateX(50%);
+    transform: scaleX(1) translateX(0%);
   }
 
   &:hover,
   &:focus {
     &::after {
-      transform: scaleX(1) translateX(0%);
+      transform: scaleX(0) translateX(50%);
     }
   }
 
@@ -29,7 +29,7 @@ export const linkStyles = css`
 
     return {
       ...theme.fonts.body,
-      fontWeight: FontWeight.medium,
+      fontWeight: FontWeight.bold,
       color: theme.global.color,
       '&::after': {
         backgroundColor: theme.global.color,

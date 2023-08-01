@@ -1,21 +1,25 @@
 import { useEffect } from 'react';
-import userThunk from '../app/features/user.slice';
+import userThunk, { getOneUserPopulated } from '../app/features/user.slice';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { UserAttributes } from '../types/user.type';
 
-const useBlogById = (id: UserAttributes['id']) => {
-  const { one, status, error } = useAppSelector(({ users }) => users);
+const useUserById = (id: UserAttributes['id']) => {
   const dispatch = useAppDispatch();
+  const { status, error } = useAppSelector(({ users }) => users);
+  const data = useAppSelector((state) => {
+    const id = state.users.one?.id;
+    return id ? getOneUserPopulated(state, id) : state.users.one;
+  });
 
   useEffect(() => {
     dispatch(userThunk.fetchOne(id));
   }, [dispatch, id]);
 
   return {
-    data: one,
+    data,
     loading: status === 'loading',
     error,
   };
 };
 
-export default useBlogById;
+export default useUserById;
