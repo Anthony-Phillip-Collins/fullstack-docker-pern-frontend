@@ -27,6 +27,8 @@ interface Colors {
   danger: string;
   dangerVariant: string;
   textOnDanger: string;
+  success: string;
+  textOnSuccess: string;
   light: string;
   dark: string;
   grey: string;

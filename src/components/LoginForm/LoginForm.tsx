@@ -14,7 +14,6 @@ const LoginForm = () => {
       await logIn({ username, password });
       notify({ message: 'Login successful' });
     } catch (error) {
-      console.log(error);
       notify({ error });
     }
   };

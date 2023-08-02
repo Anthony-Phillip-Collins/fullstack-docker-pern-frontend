@@ -25,6 +25,8 @@ const colors: Theme['colors'] = {
   danger: '#b71c1c',
   dangerVariant: '#d32f2f',
   textOnDanger: colorsShared.light,
+  success: '#2e7d32',
+  textOnSuccess: colorsShared.light,
   ...colorsShared,
 };
 

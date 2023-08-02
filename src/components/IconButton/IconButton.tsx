@@ -2,11 +2,12 @@ import { styled } from 'styled-components';
 import IconShape, { IconProps } from '../IconShape/IconShape';
 import mixins from '../../styles/mixins';
 
-interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface IconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   iconProps: IconProps;
+  noBorder?: boolean;
 }
 
-const Button = ({ iconProps, ...props }: Props) => {
+const Button = ({ iconProps, ...props }: IconButtonProps) => {
   return (
     <button {...props}>
       <IconShape {...iconProps} />
@@ -14,14 +15,15 @@ const Button = ({ iconProps, ...props }: Props) => {
   );
 };
 
-const IconButton = styled(Button)`
+const IconButton = styled(Button).withConfig({
+  shouldForwardProp: (prop) => !['noBorder'].includes(prop),
+})<IconButtonProps>`
   cursor: pointer;
   display: inline-block;
   background-color: transparent;
   padding: 0.6rem;
   color: inherit;
   border-style: solid;
-  border-width: 0.2rem;
   border-color: rgba(255, 255, 255, 0.5);
   border-radius: 50%;
   display: flex;
@@ -36,7 +38,8 @@ const IconButton = styled(Button)`
     border-color: white;
   }
 
-  ${() => ({
+  ${({ noBorder }) => ({
+    borderWidth: noBorder ? '0' : '0.2rem',
     ...mixins.transition('border-color'),
   })};
 `;

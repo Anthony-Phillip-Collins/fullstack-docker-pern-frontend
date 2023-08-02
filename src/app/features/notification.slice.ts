@@ -10,6 +10,7 @@ const initialState: NotificationType = {
 };
 
 let timeoutId: ReturnType<typeof setTimeout>;
+const delay = 3000;
 
 export const notificationSlice = createSlice({
   name: 'notification',
@@ -21,7 +22,7 @@ export const notificationSlice = createSlice({
       state.error = error;
 
       clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => store.dispatch(clearNotification()), 1000);
+      timeoutId = setTimeout(() => store.dispatch(clearNotification()), delay);
     },
     clearNotification: (state) => {
       state.message = initialState.message;
