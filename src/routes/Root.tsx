@@ -1,12 +1,13 @@
 import { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import blogThunk from '../app/features/blog.slice';
+import readingThunk from '../app/features/reading.slice';
 import userThunk from '../app/features/user.slice';
 import { useAppDispatch } from '../app/hooks';
 import LoginForm from '../components/LoginForm/LoginForm';
 import Nav from '../components/Nav/Nav';
+import NotificationContainer from '../components/Notification/NotificationContainer';
 import useAuth from '../hooks/useAuth';
-import readingThunk from '../app/features/reading.slice';
 
 const Root = () => {
   const { init } = useAuth();
@@ -24,6 +25,7 @@ const Root = () => {
       <LoginForm />
       <Nav />
       <Outlet />
+      <NotificationContainer />
     </>
   );
 };

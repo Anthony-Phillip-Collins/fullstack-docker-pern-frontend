@@ -1,12 +1,12 @@
 import { useRef, useState } from 'react';
 import { BlogAttributes, BlogUpdate } from '../../types/blog.type';
 import { dateToString } from '../../util';
-import Button from '../Button/Button';
 import Card from '../Card/Card';
 import Editable, { EditableRef } from '../Editable/Editable';
+import IconButton from '../IconButton/IconButton';
 import ExternalLink from '../Link/ExternalLink';
 import InternalLink from '../Link/InternalLink';
-import { BlogAuthor, BlogBody, BlogLikes, BlogLinkContainer } from './Blog.styled';
+import { BlogAuthor, BlogBody, BlogLikes, BlogLinkContainer, IconControls } from './Blog.styled';
 
 interface Common extends React.HTMLAttributes<HTMLElement> {
   children?: React.ReactNode;
@@ -81,6 +81,7 @@ const Blog = ({ children, blog, canEdit, bookmarked, liked, onSave, onDelete, on
   if (!blog) return null;
 
   const createdAt = dateToString(blog.createdAt);
+  const updatedAt = dateToString(blog.updatedAt);
 
   return (
     <Card
@@ -108,17 +109,37 @@ const Blog = ({ children, blog, canEdit, bookmarked, liked, onSave, onDelete, on
             </ExternalLink>
           </BlogLinkContainer>
         )}
-        <div>{createdAt && <div>created: {createdAt}</div>}</div>
+
         <div>owner: {blog.owner && <InternalLink to={`/users/${blog.owner.id}`}>{blog.owner.name}</InternalLink>}</div>
+
+        <div>{createdAt && <div>created: {createdAt}</div>}</div>
+
+        <div>{updatedAt && <div>updated: {updatedAt}</div>}</div>
+
         <Readers readers={blog.readers} />
 
-        <div>
-          <Button onClick={likeHandler}>Like</Button>
-        </div>
-
-        <div>
-          <Button onClick={bookmarkHandler}>{bookmarked ? 'remove bookmark' : 'add bookmark'}</Button>
-        </div>
+        <IconControls>
+          {liked ? (
+            <IconButton iconProps={{ icon: 'unlike' }} onClick={likeHandler} aria-label="Remove like" {...tabIndex} />
+          ) : (
+            <IconButton iconProps={{ icon: 'like' }} onClick={likeHandler} aria-label="Add like" {...tabIndex} />
+          )}
+          {bookmarked ? (
+            <IconButton
+              iconProps={{ icon: 'unbookmark' }}
+              onClick={bookmarkHandler}
+              aria-label="Remove bookmark"
+              {...tabIndex}
+            />
+          ) : (
+            <IconButton
+              iconProps={{ icon: 'bookmark' }}
+              onClick={bookmarkHandler}
+              aria-label="Add bookmark"
+              {...tabIndex}
+            />
+          )}
+        </IconControls>
 
         {children}
       </BlogBody>
@@ -129,7 +150,10 @@ const Blog = ({ children, blog, canEdit, bookmarked, liked, onSave, onDelete, on
 type ReadersProps = Pick<BlogAttributes, 'readers'>;
 
 const Readers = ({ readers }: ReadersProps) => {
-  if (!readers || readers.length === 0) return null;
+  if (!readers || readers.length === 0) {
+    return null;
+  }
+
   const items = readers.map((reader, i) => (
     <li key={i}>
       <span>

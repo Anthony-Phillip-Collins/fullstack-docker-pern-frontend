@@ -64,6 +64,6 @@ export const Edit = styled.footer`
   display: flex;
   justify-content: space-between;
   ${({ theme }) => ({
-    marginTop: theme.spacing.lg,
+    marginTop: theme.spacing.xl,
   })};
 `;

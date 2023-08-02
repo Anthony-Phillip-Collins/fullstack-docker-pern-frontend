@@ -1,8 +1,8 @@
 import { useCallback, useState } from 'react';
 import authThunk from '../app/features/auth.slice';
+import { getOneUserPopulated } from '../app/features/user.slice';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { UserCreateInput, UserLogin } from '../types/user.type';
-import { getOneUserPopulated } from '../app/features/user.slice';
 
 const useAuth = () => {
   const dispatch = useAppDispatch();
@@ -14,19 +14,19 @@ const useAuth = () => {
   });
 
   const logIn = async (credentials: UserLogin) => {
-    return dispatch(authThunk.logIn(credentials));
+    return dispatch(authThunk.logIn(credentials)).unwrap();
   };
 
   const logOut = async () => {
-    return dispatch(authThunk.logOut());
+    return dispatch(authThunk.logOut()).unwrap();
   };
 
   const signUp = async (credentials: UserCreateInput) => {
-    return dispatch(authThunk.signUp(credentials));
+    return dispatch(authThunk.signUp(credentials)).unwrap();
   };
 
   const refresh = async () => {
-    return dispatch(authThunk.refresh());
+    return dispatch(authThunk.refresh()).unwrap();
   };
 
   const init = useCallback(async () => {

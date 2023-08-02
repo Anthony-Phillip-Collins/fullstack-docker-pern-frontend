@@ -57,16 +57,6 @@ const BlogContainer = ({ children, blog, ...props }: BlogProps) => {
   return (
     <Blog {...blogProps} canEdit={canEdit} bookmarked={!!bookmarked}>
       {children}
-      {blog.readers && (
-        <div>
-          <h3>Readers:</h3>
-          <ul>
-            {blog.readers.map((reader) => {
-              return <li key={reader.name}>{reader.name}</li>;
-            })}
-          </ul>
-        </div>
-      )}
     </Blog>
   );
 };

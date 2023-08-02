@@ -62,19 +62,9 @@ const Card = ({ children, header, warningProps, enableEdit, onSave, onDelete, on
   };
 
   const headerIconButton = editable ? (
-    <IconButton
-      iconProps={{ icon: 'cancel', size: 'xl' }}
-      onClick={() => edit(false)}
-      aria-label="Cancel edit"
-      {...tabIndex}
-    />
+    <IconButton iconProps={{ icon: 'editOff' }} onClick={() => edit(false)} aria-label="Cancel edit" {...tabIndex} />
   ) : (
-    <IconButton
-      iconProps={{ icon: 'edit', size: 'xl' }}
-      onClick={() => edit(true)}
-      aria-label="Edit user"
-      {...tabIndex}
-    />
+    <IconButton iconProps={{ icon: 'edit' }} onClick={() => edit(true)} aria-label="Edit" {...tabIndex} />
   );
 
   return (
@@ -91,12 +81,12 @@ const Card = ({ children, header, warningProps, enableEdit, onSave, onDelete, on
           {isEnabled && editable && (
             <Edit>
               {onSave && (
-                <Button variant="primary" aria-label="Save user" onClick={saveHandler}>
+                <Button variant="primary" aria-label="Save" onClick={saveHandler}>
                   Save
                 </Button>
               )}
               {onDelete && (
-                <Button variant="danger" aria-label="Delete user" onClick={deleteHandler}>
+                <Button variant="danger" aria-label="Delete" onClick={deleteHandler}>
                   Delete
                 </Button>
               )}

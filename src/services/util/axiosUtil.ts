@@ -1,4 +1,4 @@
-import { isAxiosError } from 'axios';
+import { parseError } from '../../types/utils/parsers/error.parser';
 import authService from '../auth.service';
 
 export const authConfig = () => {
@@ -12,7 +12,6 @@ export const asyncHandler = async <T>(promise: Promise<T>) => {
     const data = await promise;
     return data;
   } catch (error: unknown) {
-    const defaultError = new Error('Something went wrong');
-    throw isAxiosError(error) ? error.response?.data.error || defaultError : error;
+    throw parseError(error);
   }
 };

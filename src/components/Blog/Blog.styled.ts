@@ -24,3 +24,15 @@ export const BlogLikes = styled.p`
   margin: 0;
   padding: 0;
 `;
+
+export const IconControls = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  ${({ theme }) => ({
+    paddingTop: theme.spacing.md,
+    ['> *']: {
+      marginRight: theme.spacing.xl,
+    },
+  })}
+`;

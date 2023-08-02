@@ -1,8 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { blogSlice } from './features/blog.slice';
-import { userSlice } from './features/user.slice';
 import { authSlice } from './features/auth.slice';
+import { blogSlice } from './features/blog.slice';
+import { notificationSlice } from './features/notification.slice';
 import { readingSlice } from './features/reading.slice';
+import { userSlice } from './features/user.slice';
 
 const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ const store = configureStore({
     users: userSlice.reducer,
     auth: authSlice.reducer,
     readings: readingSlice.reducer,
+    notification: notificationSlice.reducer,
   },
 });
 

@@ -108,6 +108,7 @@ export const blogSlice = createSlice({
 });
 
 export const getAllBlogs = (state: RootState): BlogAttributes[] => state.blogs.all;
+export const getOneBlog = (state: RootState): BlogAttributes => state.blogs.one;
 
 export const getBlogById = (state: RootState, id: BlogAttributes['id']) =>
   getAllBlogs(state).find((blog) => blog.id === id);
@@ -152,63 +153,15 @@ export const getAllBlogsPopulated = createSelector(
 );
 
 export const getOneBlogPopulated = createSelector(
-  [getAllReadings, getAllUsers, getBlogById],
+  [getAllReadings, getAllUsers, getOneBlog],
   (readings, users, blog) => {
     if (!users || !readings || !blog) {
       return {} as BlogAttributes;
     }
+    console.log('ONE BLOG', blog);
     return populateReadersToBlog(readings, users, blog);
   },
 );
-
-// const populateReadingsToUser = (readings: ReadingAttributes[], blogs: BlogAttributes[], user: UserAttributes) => {
-//   const readingsOfUser = (readings || []).filter((reading) => reading.userId === user.id);
-//   const array: UserAttributes['readings'] = [];
-
-//   readingsOfUser.forEach((reading) => {
-//     const blog = blogs.find((blog) => blog.id === reading.blogId);
-//     if (blog) {
-//       const item: Readings = {
-//         id: blog.id,
-//         title: blog.title,
-//         author: blog.author,
-//         url: blog.url,
-//         likes: blog.likes,
-//         reading,
-//       };
-//       array.push(item);
-//     }
-//   });
-//   const userPopulated: UserAttributes = {
-//     ...user,
-//     blogs,
-//     readings: array,
-//   };
-
-//   return userPopulated;
-// };
-
-// export const getAllUsersPopulated = createSelector(
-//   [getAllUsers, getAllBlogs, getAllReadings],
-//   (users, blogs, readings) => {
-//     if (!users) {
-//       return [];
-//     }
-//     return users.map((user) => {
-//       return populateReadingsToUser(readings, blogs, user);
-//     });
-//   },
-// );
-
-// export const getOneUserPopulated = createSelector(
-//   [getAllUsers, getAllBlogs, getAllReadings, getUserById],
-//   (users, blogs, readings, user) => {
-//     if (!users || !blogs || !readings || !user) {
-//       return {} as UserAttributes;
-//     }
-//     return populateReadingsToUser(readings, blogs, user);
-//   },
-// );
 
 const blogThunk = {
   fetchAll,
