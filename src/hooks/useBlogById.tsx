@@ -8,7 +8,7 @@ const useBlogById = (id: BlogAttributes['id']) => {
   const { status, error } = useAppSelector(({ blogs }) => blogs);
   const data = useAppSelector((state) => {
     const id = state.blogs.one?.id;
-    return id ? getOneBlogPopulated(state, id) : state.blogs.one;
+    return id ? getOneBlogPopulated(state) : state.blogs.one;
   });
 
   useEffect(() => {

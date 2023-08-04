@@ -21,6 +21,7 @@ const signUp = createAsyncThunk('auth/signUp', async (userData: UserCreateInput)
 
 const refresh = createAsyncThunk('auth/refresh', async () => {
   // Add a delay to minimise invalidation on rapid refresh
+  // Need to find a better way to do this
   await new Promise((resolve) => setTimeout(resolve, 1000));
 
   await authService.refresh();

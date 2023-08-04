@@ -12,13 +12,7 @@ const Nav = () => {
           <InternalLink to={`/blogs`}>Blogs</InternalLink>
         </li>
         <li>
-          <InternalLink to={`/blogs/1`}>Single Blog</InternalLink>
-        </li>
-        <li>
           <InternalLink to={`/users`}>Users</InternalLink>
-        </li>
-        <li>
-          <InternalLink to={`/users/1`}>Single User</InternalLink>
         </li>
       </List>
     </nav>

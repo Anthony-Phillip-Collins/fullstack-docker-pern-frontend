@@ -7,6 +7,7 @@ import IconButton from '../IconButton/IconButton';
 import ExternalLink from '../Link/ExternalLink';
 import InternalLink from '../Link/InternalLink';
 import { BlogAuthor, BlogBody, BlogLikes, BlogLinkContainer, IconControls } from './Blog.styled';
+import { Tooltip } from 'react-tooltip';
 
 interface Common extends React.HTMLAttributes<HTMLElement> {
   children?: React.ReactNode;
@@ -83,6 +84,11 @@ const Blog = ({ children, blog, canEdit, bookmarked, liked, onSave, onDelete, on
   const createdAt = dateToString(blog.createdAt);
   const updatedAt = dateToString(blog.updatedAt);
 
+  const bookmarkConfig = {
+    id: `bookmark${blog.id}`,
+    label: bookmarked ? 'Remove bookmark' : 'Add bookmark',
+  };
+
   return (
     <Card
       enableEdit={enableEdit}
@@ -91,6 +97,7 @@ const Blog = ({ children, blog, canEdit, bookmarked, liked, onSave, onDelete, on
       onEdit={setEditable}
       onWarning={setWarning}
       header={<Editable tagName="h2" ref={title} initialValue={blog.title} disabled={!editable} />}
+      id={blog.id.toString()}
     >
       <BlogBody>
         <BlogAuthor>
@@ -125,20 +132,27 @@ const Blog = ({ children, blog, canEdit, bookmarked, liked, onSave, onDelete, on
             <IconButton iconProps={{ icon: 'like' }} onClick={likeHandler} aria-label="Add like" {...tabIndex} />
           )}
           {bookmarked ? (
-            <IconButton
-              iconProps={{ icon: 'unbookmark' }}
-              onClick={bookmarkHandler}
-              aria-label="Remove bookmark"
-              {...tabIndex}
-            />
+            <>
+              <IconButton
+                iconProps={{ icon: 'unbookmark' }}
+                onClick={bookmarkHandler}
+                aria-label={bookmarkConfig.label}
+                data-tooltip-id={bookmarkConfig.id}
+                {...tabIndex}
+              />
+            </>
           ) : (
-            <IconButton
-              iconProps={{ icon: 'bookmark' }}
-              onClick={bookmarkHandler}
-              aria-label="Add bookmark"
-              {...tabIndex}
-            />
+            <>
+              <IconButton
+                iconProps={{ icon: 'bookmark' }}
+                onClick={bookmarkHandler}
+                aria-label={bookmarkConfig.label}
+                data-tooltip-id={bookmarkConfig.id}
+                {...tabIndex}
+              />
+            </>
           )}
+          <Tooltip id={bookmarkConfig.id} place="top" variant="dark" content={bookmarkConfig.label} />
         </IconControls>
 
         {children}

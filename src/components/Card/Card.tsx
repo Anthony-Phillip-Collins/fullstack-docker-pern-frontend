@@ -3,6 +3,7 @@ import Button from '../Button/Button';
 import { Body, CardInner, Edit, Header, StyledCard } from '../Card/Card.styled';
 import IconButton from '../IconButton/IconButton';
 import CardWarning, { WarningProps } from './Card.Warning';
+import { Tooltip } from 'react-tooltip';
 
 interface Common extends React.HTMLAttributes<HTMLElement> {
   children?: React.ReactNode;
@@ -20,9 +21,10 @@ type Props = CardCallbacks &
     header: React.ReactNode;
     warningProps?: WarningProps;
     enableEdit?: boolean;
+    uid?: string;
   };
 
-const Card = ({ children, header, warningProps, enableEdit, onSave, onDelete, onEdit, onWarning }: Props) => {
+const Card = ({ children, header, warningProps, enableEdit, uid, onSave, onDelete, onEdit, onWarning }: Props) => {
   const [editable, setEditable] = useState(false);
   const [warning, setWarning] = useState(false);
 
@@ -61,12 +63,33 @@ const Card = ({ children, header, warningProps, enableEdit, onSave, onDelete, on
     onDelete && onDelete();
   };
 
-  const headerIconButton = editable ? (
-    <IconButton iconProps={{ icon: 'editOff' }} onClick={() => edit(false)} aria-label="Cancel edit" {...tabIndex} />
-  ) : (
-    <IconButton iconProps={{ icon: 'edit' }} onClick={() => edit(true)} aria-label="Edit" {...tabIndex} />
-  );
+  const editConfig = {
+    id: `edit-card-${uid || ''}`,
+    label: editable ? `Cancel edit` : `Edit`,
+  };
 
+  const headerIconButton = (
+    <>
+      {editable ? (
+        <IconButton
+          iconProps={{ icon: 'editOff' }}
+          onClick={() => edit(false)}
+          aria-label={editConfig.label}
+          data-tooltip-id={editConfig.id}
+          {...tabIndex}
+        />
+      ) : (
+        <IconButton
+          iconProps={{ icon: 'edit' }}
+          onClick={() => edit(true)}
+          aria-label={editConfig.label}
+          data-tooltip-id={editConfig.id}
+          {...tabIndex}
+        />
+      )}
+      {uid && <Tooltip id={editConfig.id} place="bottom" variant="dark" content={editConfig.label} />}
+    </>
+  );
   return (
     <StyledCard>
       {warning && <CardWarning onConfirm={deleteForRealHandler} onCancel={cancelHandler} {...warningProps} />}

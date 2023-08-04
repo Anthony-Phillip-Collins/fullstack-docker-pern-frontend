@@ -6,16 +6,11 @@ const LoginForm = () => {
   const { user, logIn } = useAuth();
   const [username, setUsername] = useState('admin@foobar.com');
   const [password, setPassword] = useState('letmein');
-  const { notify } = useNotification();
+  const { notifyAsync } = useNotification();
 
   const onSubmit: React.FormEventHandler = async (e) => {
     e.preventDefault();
-    try {
-      await logIn({ username, password });
-      notify({ message: 'Login successful' });
-    } catch (error) {
-      notify({ error });
-    }
+    notifyAsync(logIn({ username, password }), 'Logged in.');
   };
 
   return (

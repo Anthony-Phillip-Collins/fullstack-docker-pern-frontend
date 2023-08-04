@@ -18,7 +18,6 @@ const fetchOne = createAsyncThunk('readings/fetchOne', async (id: ReadingAttribu
 
 const createOne = createAsyncThunk('readings/createOne', async (reading: ReadingCreation) => {
   const response = await readingService.createOne(reading);
-  // thunkApi.dispatch(authThunk.refresh());
   return response;
 });
 
@@ -31,16 +30,8 @@ const updateOne = createAsyncThunk('readings/updateOne', async (reading: Reading
   return response;
 });
 
-const deleteOne = createAsyncThunk('readings/deleteOne', async (id: ReadingAttributes['id'], thunkApi) => {
-  // const state = thunkApi.getState() as RootState;
-  // const blogId = state.readings.all.find((reading: ReadingAttributes) => reading.id === id)?.blogId;
-
+const deleteOne = createAsyncThunk('readings/deleteOne', async (id: ReadingAttributes['id']) => {
   await readingService.deleteOne(id);
-
-  // if (blogId) {
-  //   thunkApi.dispatch(blogThunk.fetchOne(blogId));
-  // }
-
   return id;
 });
 

@@ -1,18 +1,24 @@
 import { styled } from 'styled-components';
-import { NotificationType } from '../../types/notification.type';
 import { FontWeight } from '../../styles/types';
+import { NotificationInnerProps } from './Notification';
 
-export const StyledNotification = styled.div.withConfig({
-  shouldForwardProp: (prop) => !['error'].includes(prop),
-})<Pick<NotificationType, 'error'>>`
+export const StyledNotification = styled.div`
   position: absolute;
   right: 0;
   bottom: 0;
+  overflow: hidden;
   display: flex;
+  justify-content: flex-end;
+`;
+
+export const NotificationInner = styled.div.withConfig({
+  shouldForwardProp: (prop) => !['error', 'show', 'offsetX'].includes(prop),
+})<NotificationInnerProps>`
+  display: inline-flex;
   align-items: center;
   justify-content: center;
 
-  ${({ theme, error }) => {
+  ${({ theme, error, offsetX }) => {
     const errorStyles = error
       ? {
           color: theme.colors.textOnDanger,
@@ -24,6 +30,7 @@ export const StyledNotification = styled.div.withConfig({
         };
     const borderRadius = theme.global.borderRadius;
     return {
+      transform: `translateX(${offsetX}px)`,
       fontSize: theme.fonts.body.fontSize,
       fontWeight: FontWeight.medium,
       borderRadius: `${borderRadius} 0 0 ${borderRadius}`,
@@ -33,7 +40,6 @@ export const StyledNotification = styled.div.withConfig({
     };
   }}
 `;
-
 export const Message = styled.span`
   margin-right: ${({ theme }) => theme.spacing.md};
 `;

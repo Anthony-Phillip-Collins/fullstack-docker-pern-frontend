@@ -7,8 +7,24 @@ const useNotification = () => {
   const dispatch = useAppDispatch();
   const notification = useAppSelector(({ notification }) => notification);
 
-  const notify = (props: NotificationType) => {
-    dispatch(setNotification(props));
+  const notify = (props: NotificationType | string) => {
+    const notification = typeof props === 'string' ? { message: props } : props;
+    dispatch(setNotification(notification));
+  };
+
+  const notifyAsync = async (promise: Promise<unknown>, message: string): Promise<typeof promise> => {
+    try {
+      let payload;
+      if ('unwrap' in promise && promise.unwrap instanceof Function) {
+        payload = await promise.unwrap();
+      } else {
+        payload = await promise;
+      }
+      notify(message);
+      return payload;
+    } catch (error) {
+      notify({ error });
+    }
   };
 
   const clear = useCallback(() => {
@@ -18,6 +34,7 @@ const useNotification = () => {
   return {
     notification,
     notify,
+    notifyAsync,
     clear,
   };
 };
