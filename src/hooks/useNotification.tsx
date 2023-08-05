@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import { clearNotification, setNotification } from '../app/features/notification.slice';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { NotificationType } from '../types/notification.type';
@@ -9,7 +8,10 @@ const useNotification = () => {
 
   const notify = (props: NotificationType | string) => {
     const notification = typeof props === 'string' ? { message: props } : props;
-    dispatch(setNotification(notification));
+    clear();
+    setTimeout(() => {
+      dispatch(setNotification(notification));
+    }, 100);
   };
 
   const notifyAsync = async (promise: Promise<unknown>, message: string): Promise<typeof promise> => {
@@ -27,9 +29,9 @@ const useNotification = () => {
     }
   };
 
-  const clear = useCallback(() => {
+  const clear = () => {
     dispatch(clearNotification());
-  }, [dispatch]);
+  };
 
   return {
     notification,
