@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import blogThunk from '../../app/features/blog.slice';
 import readingThunk from '../../app/features/reading.slice';
 import { useAppDispatch } from '../../app/hooks';
@@ -9,6 +10,7 @@ import { ReadingCreation } from '../../types/reading.type';
 import Blog, { BlogProps } from './Blog';
 
 const BlogContainer = ({ children, blog, ...props }: BlogProps) => {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { user } = useAuth();
   const { notify, notifyAsync } = useNotification();
@@ -49,6 +51,10 @@ const BlogContainer = ({ children, blog, ...props }: BlogProps) => {
     }
   };
 
+  const onMore = (data: BlogAttributes) => {
+    navigate(`/blogs/${data.id}`);
+  };
+
   const blogProps = {
     ...props,
     blog,
@@ -56,6 +62,7 @@ const BlogContainer = ({ children, blog, ...props }: BlogProps) => {
     onDelete,
     onLike,
     onBookmark,
+    onMore,
   };
 
   if (!blog) return null;

@@ -13,7 +13,7 @@ const BlogPage = () => {
 
   return (
     <Container>
-      <BlogContainer blog={blog} />
+      <BlogContainer blog={blog} single={true} />
     </Container>
   );
 };

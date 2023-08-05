@@ -18,6 +18,7 @@ export interface BlogCallbacks {
   onDelete?: (blog: BlogAttributes) => void;
   onLike: (blog: BlogAttributes) => void;
   onBookmark: (blog: BlogAttributes) => void;
+  onMore: (blog: BlogAttributes) => void;
 }
 
 export type BlogProps = Common & {
@@ -25,6 +26,7 @@ export type BlogProps = Common & {
   canEdit?: boolean;
   bookmarked?: boolean;
   liked?: boolean;
+  single?: boolean;
 };
 
 type Props = BlogProps & BlogCallbacks;
@@ -33,7 +35,19 @@ export interface BlogInnerProps {
   warning?: boolean;
 }
 
-const Blog = ({ children, blog, canEdit, bookmarked, liked, onSave, onDelete, onLike, onBookmark }: Props) => {
+const Blog = ({
+  children,
+  blog,
+  canEdit,
+  bookmarked,
+  liked,
+  single,
+  onSave,
+  onDelete,
+  onLike,
+  onBookmark,
+  onMore,
+}: Props) => {
   const [editable, setEditable] = useState(false);
   const [warning, setWarning] = useState(false);
 
@@ -71,12 +85,17 @@ const Blog = ({ children, blog, canEdit, bookmarked, liked, onSave, onDelete, on
 
   const likeHandler: React.MouseEventHandler = (e) => {
     e.preventDefault();
-    onLike && onLike(blog);
+    onLike(blog);
   };
 
   const bookmarkHandler: React.MouseEventHandler = (e) => {
     e.preventDefault();
-    onBookmark && onBookmark(blog);
+    onBookmark(blog);
+  };
+
+  const moreHandler: React.MouseEventHandler = (e) => {
+    e.preventDefault();
+    onMore(blog);
   };
 
   if (!blog) return null;
@@ -84,9 +103,19 @@ const Blog = ({ children, blog, canEdit, bookmarked, liked, onSave, onDelete, on
   const createdAt = dateToString(blog.createdAt);
   const updatedAt = dateToString(blog.updatedAt);
 
+  const likeConfig = {
+    id: `like${blog.id}`,
+    label: liked ? 'Remove like' : 'Add like',
+  };
+
   const bookmarkConfig = {
     id: `bookmark${blog.id}`,
     label: bookmarked ? 'Remove bookmark' : 'Add bookmark',
+  };
+
+  const moreConfig = {
+    id: `more${blog.id}`,
+    label: 'Read more',
   };
 
   return (
@@ -97,7 +126,7 @@ const Blog = ({ children, blog, canEdit, bookmarked, liked, onSave, onDelete, on
       onEdit={setEditable}
       onWarning={setWarning}
       header={<Editable tagName="h2" ref={title} initialValue={blog.title} disabled={!editable} />}
-      uid={blog.id.toString()}
+      uid={`${blog.id}`}
     >
       <BlogBody>
         <BlogAuthor>
@@ -126,11 +155,13 @@ const Blog = ({ children, blog, canEdit, bookmarked, liked, onSave, onDelete, on
         <Readers readers={blog.readers} />
 
         <IconControls>
-          {liked ? (
-            <IconButton iconProps={{ icon: 'unlike' }} onClick={likeHandler} aria-label="Remove like" {...tabIndex} />
-          ) : (
-            <IconButton iconProps={{ icon: 'like' }} onClick={likeHandler} aria-label="Add like" {...tabIndex} />
-          )}
+          <IconButton
+            iconProps={{ icon: liked ? 'unlike' : 'like' }}
+            onClick={likeHandler}
+            aria-label={likeConfig.label}
+            data-tooltip-id={likeConfig.id}
+            {...tabIndex}
+          />
 
           <IconButton
             iconProps={{ icon: bookmarked ? 'unbookmark' : 'bookmark' }}
@@ -139,6 +170,21 @@ const Blog = ({ children, blog, canEdit, bookmarked, liked, onSave, onDelete, on
             data-tooltip-id={bookmarkConfig.id}
             {...tabIndex}
           />
+
+          {!single && (
+            <>
+              <IconButton
+                iconProps={{ icon: 'more' }}
+                onClick={moreHandler}
+                aria-label={moreConfig.label}
+                data-tooltip-id={moreConfig.id}
+                {...tabIndex}
+              />
+              <Tooltip id={moreConfig.id} place="top" variant="dark" content={moreConfig.label} />
+            </>
+          )}
+
+          <Tooltip id={likeConfig.id} place="top" variant="dark" content={likeConfig.label} />
           <Tooltip id={bookmarkConfig.id} place="top" variant="dark" content={bookmarkConfig.label} />
         </IconControls>
 

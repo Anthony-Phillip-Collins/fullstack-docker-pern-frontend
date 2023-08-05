@@ -30,7 +30,7 @@ export const IconControls = styled.div`
   flex-direction: row;
   justify-content: flex-start;
   ${({ theme }) => ({
-    paddingTop: theme.spacing.md,
+    paddingTop: theme.spacing.lg,
     ['> *']: {
       marginRight: theme.spacing.xl,
     },

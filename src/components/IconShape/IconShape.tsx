@@ -1,7 +1,12 @@
-import { MdOutlineEdit as EditIcon, MdOutlineEditOff as EditOffIcon } from 'react-icons/md';
+import { AiFillHeart as HeartFill, AiOutlineHeart as HeartOutline } from 'react-icons/ai';
+import {
+  FiCheck as CheckIcon,
+  FiChevronRight as ChevronRightIcon,
+  FiMinus as MinusIcon,
+  FiPlus as PlusIcon,
+} from 'react-icons/fi';
 import { IoMdClose as CloseIcon } from 'react-icons/io';
-import { FiPlus as PlusIcon, FiMinus as MinusIcon, FiCheck as CheckIcon } from 'react-icons/fi';
-import { AiOutlineHeart as HeartOutline, AiFillHeart as HeartFill } from 'react-icons/ai';
+import { MdOutlineEdit as EditIcon, MdOutlineEditOff as EditOffIcon, MdMoreHoriz as MoreIcon } from 'react-icons/md';
 import { styled } from 'styled-components';
 import mixins from '../../styles/mixins';
 import theme from '../../styles/theme';
@@ -16,6 +21,8 @@ const icons = {
   unbookmark: CheckIcon,
   like: HeartOutline,
   unlike: HeartFill,
+  chevronRight: ChevronRightIcon,
+  more: MoreIcon,
 };
 
 export interface IconProps extends React.SVGAttributes<SVGElement> {
