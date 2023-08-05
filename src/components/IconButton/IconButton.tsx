@@ -1,17 +1,26 @@
+import { ITooltip, Tooltip } from 'react-tooltip';
 import { styled } from 'styled-components';
-import IconShape, { IconProps } from '../IconShape/IconShape';
 import mixins from '../../styles/mixins';
+import IconShape, { IconProps } from '../IconShape/IconShape';
 
 interface IconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   iconProps: IconProps;
+  tooltipProps?: ITooltip;
+  tooltipId?: string;
+  label?: string;
   noBorder?: boolean;
 }
 
-const Button = ({ iconProps, ...props }: IconButtonProps) => {
+const Button = (props: IconButtonProps) => {
+  const { iconProps, tooltipProps, tooltipId, label, ...rest } = props;
   return (
-    <button {...props}>
-      <IconShape {...iconProps} />
-    </button>
+    <>
+      <button aria-label={label} data-tooltip-id={tooltipId} {...rest}>
+        <IconShape {...iconProps} />
+      </button>
+
+      {tooltipId && <Tooltip id={tooltipId} place="top" variant="dark" content={label} {...tooltipProps} />}
+    </>
   );
 };
 

@@ -7,7 +7,6 @@ import IconButton from '../IconButton/IconButton';
 import ExternalLink from '../Link/ExternalLink';
 import InternalLink from '../Link/InternalLink';
 import { BlogAuthor, BlogBody, BlogLikes, BlogLinkContainer, IconControls } from './Blog.styled';
-import { Tooltip } from 'react-tooltip';
 
 interface Common extends React.HTMLAttributes<HTMLElement> {
   children?: React.ReactNode;
@@ -103,21 +102,6 @@ const Blog = ({
   const createdAt = dateToString(blog.createdAt);
   const updatedAt = dateToString(blog.updatedAt);
 
-  const likeConfig = {
-    id: `like${blog.id}`,
-    label: liked ? 'Remove like' : 'Add like',
-  };
-
-  const bookmarkConfig = {
-    id: `bookmark${blog.id}`,
-    label: bookmarked ? 'Remove bookmark' : 'Add bookmark',
-  };
-
-  const moreConfig = {
-    id: `more${blog.id}`,
-    label: 'Read more',
-  };
-
   return (
     <Card
       enableEdit={enableEdit}
@@ -158,34 +142,28 @@ const Blog = ({
           <IconButton
             iconProps={{ icon: liked ? 'unlike' : 'like' }}
             onClick={likeHandler}
-            aria-label={likeConfig.label}
-            data-tooltip-id={likeConfig.id}
+            label={liked ? 'Remove like' : 'Add like'}
+            tooltipId={`like${blog.id}`}
             {...tabIndex}
           />
 
           <IconButton
             iconProps={{ icon: bookmarked ? 'unbookmark' : 'bookmark' }}
             onClick={bookmarkHandler}
-            aria-label={bookmarkConfig.label}
-            data-tooltip-id={bookmarkConfig.id}
+            label={bookmarked ? 'Remove bookmark' : 'Add bookmark'}
+            tooltipId={`bookmark${blog.id}`}
             {...tabIndex}
           />
 
           {!single && (
-            <>
-              <IconButton
-                iconProps={{ icon: 'more' }}
-                onClick={moreHandler}
-                aria-label={moreConfig.label}
-                data-tooltip-id={moreConfig.id}
-                {...tabIndex}
-              />
-              <Tooltip id={moreConfig.id} place="top" variant="dark" content={moreConfig.label} />
-            </>
+            <IconButton
+              iconProps={{ icon: 'more' }}
+              onClick={moreHandler}
+              label="Read more"
+              tooltipId={`more${blog.id}`}
+              {...tabIndex}
+            />
           )}
-
-          <Tooltip id={likeConfig.id} place="top" variant="dark" content={likeConfig.label} />
-          <Tooltip id={bookmarkConfig.id} place="top" variant="dark" content={bookmarkConfig.label} />
         </IconControls>
 
         {children}

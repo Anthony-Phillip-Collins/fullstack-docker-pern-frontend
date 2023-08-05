@@ -63,11 +63,6 @@ const Card = ({ children, header, warningProps, enableEdit, uid, onSave, onDelet
     onDelete && onDelete();
   };
 
-  const editConfig = {
-    id: `edit-card-${uid || ''}`,
-    label: editable ? `Cancel edit` : `Edit`,
-  };
-
   return (
     <StyledCard>
       {warning && <CardWarning onConfirm={deleteForRealHandler} onCancel={cancelHandler} {...warningProps} />}
@@ -75,16 +70,13 @@ const Card = ({ children, header, warningProps, enableEdit, uid, onSave, onDelet
         <Header>
           {header}
           {isEnabled && (
-            <>
-              <IconButton
-                iconProps={{ icon: editable ? 'editOff' : 'edit' }}
-                onClick={() => edit(!editable)}
-                aria-label={editConfig.label}
-                data-tooltip-id={editConfig.id}
-                {...tabIndex}
-              />
-              {uid && <Tooltip id={editConfig.id} place="bottom" variant="dark" content={editConfig.label} />}
-            </>
+            <IconButton
+              iconProps={{ icon: editable ? 'editOff' : 'edit' }}
+              onClick={() => edit(editable ? false : true)}
+              label={editable ? `Cancel editing card` : `Edit card`}
+              tooltipId={uid && `edit-card-${uid}`}
+              {...tabIndex}
+            />
           )}
         </Header>
 

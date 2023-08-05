@@ -158,7 +158,6 @@ export const getOneBlogPopulated = createSelector(
     if (!users || !readings || !blog) {
       return {} as BlogAttributes;
     }
-    console.log('ONE BLOG', blog);
     return populateReadersToBlog(readings, users, blog);
   },
 );
