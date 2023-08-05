@@ -97,7 +97,7 @@ const Blog = ({ children, blog, canEdit, bookmarked, liked, onSave, onDelete, on
       onEdit={setEditable}
       onWarning={setWarning}
       header={<Editable tagName="h2" ref={title} initialValue={blog.title} disabled={!editable} />}
-      id={blog.id.toString()}
+      uid={blog.id.toString()}
     >
       <BlogBody>
         <BlogAuthor>
@@ -131,27 +131,14 @@ const Blog = ({ children, blog, canEdit, bookmarked, liked, onSave, onDelete, on
           ) : (
             <IconButton iconProps={{ icon: 'like' }} onClick={likeHandler} aria-label="Add like" {...tabIndex} />
           )}
-          {bookmarked ? (
-            <>
-              <IconButton
-                iconProps={{ icon: 'unbookmark' }}
-                onClick={bookmarkHandler}
-                aria-label={bookmarkConfig.label}
-                data-tooltip-id={bookmarkConfig.id}
-                {...tabIndex}
-              />
-            </>
-          ) : (
-            <>
-              <IconButton
-                iconProps={{ icon: 'bookmark' }}
-                onClick={bookmarkHandler}
-                aria-label={bookmarkConfig.label}
-                data-tooltip-id={bookmarkConfig.id}
-                {...tabIndex}
-              />
-            </>
-          )}
+
+          <IconButton
+            iconProps={{ icon: bookmarked ? 'unbookmark' : 'bookmark' }}
+            onClick={bookmarkHandler}
+            aria-label={bookmarkConfig.label}
+            data-tooltip-id={bookmarkConfig.id}
+            {...tabIndex}
+          />
           <Tooltip id={bookmarkConfig.id} place="top" variant="dark" content={bookmarkConfig.label} />
         </IconControls>
 
