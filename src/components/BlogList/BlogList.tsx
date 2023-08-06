@@ -1,6 +1,6 @@
 import { BlogAttributes } from '../../types/blog.type';
 import BlogContainer from '../Blog/BlogContainer';
-import { ListItem, StyledList } from './BlogList.styled';
+import Grid from '../Grid/Grid';
 
 type Props = {
   data: BlogAttributes[];
@@ -9,15 +9,15 @@ type Props = {
 const BlogList = ({ data }: Props) => {
   return (
     data && (
-      <StyledList>
+      <Grid>
         {data.map((blog) => {
           return (
-            <ListItem key={blog.id}>
+            <Grid.Item key={blog.id}>
               <BlogContainer blog={blog} />
-            </ListItem>
+            </Grid.Item>
           );
         })}
-      </StyledList>
+      </Grid>
     )
   );
 };

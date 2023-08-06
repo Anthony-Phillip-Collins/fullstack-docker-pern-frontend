@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSelector, createSlice } from '@reduxjs/toolkit';
 import blogService from '../../services/blog.service';
-import { BlogAttributes, BlogUpdate, ReadersAttributes } from '../../types/blog.type';
+import { BlogAttributes, BlogCreation, BlogUpdate, ReadersAttributes } from '../../types/blog.type';
 import { ReadingAttributes } from '../../types/reading.type';
 import { UserAttributes } from '../../types/user.type';
 import { RootState } from '../store';
@@ -17,7 +17,7 @@ const fetchOne = createAsyncThunk('blogs/fetchOne', async (id: BlogAttributes['i
   return response;
 });
 
-const createOne = createAsyncThunk('blogs/createOne', async (blog: BlogAttributes) => {
+const createOne = createAsyncThunk('blogs/createOne', async (blog: BlogCreation) => {
   const response = await blogService.createOne(blog);
   return response;
 });
@@ -75,7 +75,7 @@ export const blogSlice = createSlice({
     });
     builder.addCase(createOne.fulfilled, (state, action) => {
       state.status = 'succeeded';
-      state.one = action.payload;
+      state.all.push(action.payload);
     });
     builder.addCase(createOne.rejected, (state, action) => {
       state.status = 'failed';

@@ -5,9 +5,9 @@ export const StyledCard = styled.article`
   display: flex;
   flex-basis: 100%;
   overflow: hidden;
-  margin: 0.5rem;
   ${({ theme }) => ({
     borderRadius: theme.global.borderRadius,
+    margin: theme.spacing.md,
   })};
 `;
 

@@ -40,7 +40,7 @@ const User = ({ children, user, onSave, onDelete }: Props) => {
   };
 
   if (!user) return null;
-  console.log(user);
+
   return (
     <Card
       onSave={onSave && saveHandler}

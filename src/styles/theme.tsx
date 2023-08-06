@@ -23,7 +23,7 @@ const colors: Theme['colors'] = {
   secondaryVariant: '#2e7d32',
   textOnSecondary: colorsShared.light,
   danger: '#b71c1c',
-  dangerVariant: '#d32f2f',
+  dangerVariant: '#ff0000',
   textOnDanger: colorsShared.light,
   success: '#2e7d32',
   textOnSuccess: colorsShared.light,

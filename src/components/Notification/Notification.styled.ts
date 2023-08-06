@@ -8,7 +8,7 @@ const slideIn = keyframes`
 `;
 
 export const StyledNotification = styled.div`
-  position: absolute;
+  position: fixed;
   right: 0;
   bottom: 0;
   overflow: hidden;
@@ -20,7 +20,7 @@ export const NotificationInner = styled.div.withConfig({
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  animation: ${slideIn} 0.4s ease-out forwards;
+  animation: ${slideIn} 0.2s ease-out forwards;
 
   ${({ theme, error }) => {
     const borderRadius = theme.global.borderRadius;

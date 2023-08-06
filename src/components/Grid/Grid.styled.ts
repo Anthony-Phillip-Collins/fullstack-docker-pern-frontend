@@ -3,16 +3,18 @@ import mixins from '../../styles/mixins';
 
 const { media } = mixins;
 
-export const StyledList = styled.ul`
+export const StyledGrid = styled.ul`
   display: flex;
   justify-content: flex-start;
   flex-wrap: wrap;
   padding: 0;
-  margin: -0.5rem;
   list-style: none;
+  ${({ theme }) => ({
+    margin: `0 -${theme.spacing.md}`,
+  })}
 `;
 
-export const ListItem = styled.li`
+export const GridItem = styled.li`
   display: flex;
   flex-basis: 100%;
   max-width: 100%;

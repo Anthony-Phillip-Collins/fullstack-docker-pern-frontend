@@ -10,7 +10,7 @@ const initialState: NotificationType = {
 };
 
 let timeoutId: ReturnType<typeof setTimeout>;
-const delay = 3000;
+const delay = 5000;
 
 export const notificationSlice = createSlice({
   name: 'notification',
