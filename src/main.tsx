@@ -12,6 +12,7 @@ import { GlobalStyle } from './styles/global.tsx';
 import theme from './styles/theme.tsx';
 import BlogPage from './routes/blogs/Blog.page.tsx';
 import UserPage from './routes/users/User.page.tsx';
+import BookmarksPage from './routes/bookmarks/Bookmarks.page.tsx';
 
 const router = createBrowserRouter([
   {
@@ -38,6 +39,10 @@ const router = createBrowserRouter([
       {
         path: '/users/:id',
         element: <UserPage />,
+      },
+      {
+        path: '/bookmarks',
+        element: <BookmarksPage />,
       },
       { path: '*', element: <h1>Not Found</h1> },
     ],

@@ -1,12 +1,12 @@
 import { ContainerInner, StyledContainer } from './Container.styled';
 
-interface Props {
+interface Props extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
 }
 
-const Container = ({ children }: Props) => {
+const Container = ({ children, ...props }: Props) => {
   return (
-    <StyledContainer>
+    <StyledContainer {...props}>
       <ContainerInner>{children}</ContainerInner>
     </StyledContainer>
   );

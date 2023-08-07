@@ -1,12 +1,12 @@
 import { useRef, useState } from 'react';
+import { BlogFormRef } from '../../components/BlogForm/BlogForm';
 import BlogFormContainer from '../../components/BlogForm/BlogFormContainer';
 import BlogList from '../../components/BlogList/BlogList';
 import Container from '../../components/Container/Container';
 import Expander, { ExpanderRef } from '../../components/Expander/Expander';
 import IconButton from '../../components/IconButton/IconButton';
+import PageTitle from '../../components/PageTitle/PageTitle';
 import useBlogs from '../../hooks/useBlogs';
-import BlogsHeading from '../../components/BlogsHeading/BlogsHeading';
-import { BlogFormRef } from '../../components/BlogForm/BlogForm';
 
 const BlogsPage = () => {
   const { data } = useBlogs();
@@ -33,7 +33,7 @@ const BlogsPage = () => {
 
   return (
     <Container>
-      <BlogsHeading title="Blogs">
+      <PageTitle title="Blogs">
         <IconButton
           iconProps={{ icon: open ? 'minus' : 'plus' }}
           onClick={toggle}
@@ -41,7 +41,7 @@ const BlogsPage = () => {
           tooltipId={`add-blog`}
           tooltipProps={{ place: 'right' }}
         />
-      </BlogsHeading>
+      </PageTitle>
       <Expander open={open} ref={expander}>
         <BlogFormContainer onLayout={onLayout} onCancel={onCancel} ref={blogForm} />
       </Expander>

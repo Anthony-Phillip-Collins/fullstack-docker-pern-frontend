@@ -4,6 +4,7 @@ import { BlogAttributes, BlogCreation, BlogUpdate, ReadersAttributes } from '../
 import { ReadingAttributes } from '../../types/reading.type';
 import { UserAttributes } from '../../types/user.type';
 import { RootState } from '../store';
+import { getAuthUser } from './auth.slice';
 import { getAllReadings } from './reading.slice';
 import { getAllUsers } from './user.slice';
 
@@ -159,6 +160,20 @@ export const getOneBlogPopulated = createSelector(
       return {} as BlogAttributes;
     }
     return populateReadersToBlog(readings, users, blog);
+  },
+);
+
+export const getBookmarksOfAuthUser = createSelector(
+  [getAllBlogsPopulated, getAllReadings, getAuthUser],
+  (blogs, readings, user) => {
+    if (!user || !blogs || !readings) {
+      return [];
+    }
+    return blogs.filter((blog) => {
+      return readings.find((bookmark) => {
+        return user.id === bookmark.userId && blog.id === bookmark.blogId;
+      });
+    });
   },
 );
 

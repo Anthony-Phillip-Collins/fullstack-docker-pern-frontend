@@ -12,6 +12,9 @@ const Nav = () => {
           <InternalLink to={`/blogs`}>Blogs</InternalLink>
         </li>
         <li>
+          <InternalLink to={`/bookmarks`}>Bookmarks</InternalLink>
+        </li>
+        <li>
           <InternalLink to={`/users`}>Users</InternalLink>
         </li>
       </List>

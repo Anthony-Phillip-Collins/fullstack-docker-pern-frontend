@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import authService from '../../services/auth.service';
 import { UserAttributes, UserCreateInput, UserLogin } from '../../types/user.type';
+import { RootState } from '../store';
 
 const logIn = createAsyncThunk('auth/logIn', async (credentials: UserLogin) => {
   await authService.logIn(credentials);
@@ -85,6 +86,8 @@ export const authSlice = createSlice({
       });
   },
 });
+
+export const getAuthUser = (state: RootState) => state.auth.user;
 
 const authThunk = { logIn, logOut, signUp, refresh };
 
