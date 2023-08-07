@@ -1,30 +1,39 @@
 import { styled } from 'styled-components';
 import mixins from '../../styles/mixins';
+import { GridItemProps, GridProps } from './Grid';
+import theme from '../../styles/theme';
 
-const { media } = mixins;
+const gap = theme.spacing.md;
 
-export const StyledGrid = styled.ul`
+export const StyledGrid = styled.ul<GridProps>`
   display: flex;
   justify-content: flex-start;
   flex-wrap: wrap;
   padding: 0;
   list-style: none;
-  ${({ theme }) => ({
-    margin: `0 -${theme.spacing.md}`,
+  ${() => ({
+    margin: `-${gap}`,
   })}
 `;
 
-export const GridItem = styled.li`
+export const StyledGridItem = styled.li<GridItemProps>`
   display: flex;
   flex-basis: 100%;
   max-width: 100%;
 
-  ${media.md`
-    flex-basis: calc(100% / 2);
-    max-width: calc(100% / 2);
-  `}
-  ${media.xl`
-    flex-basis: calc(100% / 3);
-    max-width: calc(100% / 3);
-  `}
+  ${() => {
+    return {
+      margin: gap,
+
+      ...mixins.media.md({
+        flexBasis: `calc((100% / 2 - ${gap} * 2))`,
+        maxWidth: `calc((100% / 2 - ${gap} * 2))`,
+      }),
+
+      ...mixins.media.lg({
+        flexBasis: `calc((100% / 3 - ${gap} * 2))`,
+        maxWidth: `calc((100% / 3 - ${gap} * 2))`,
+      }),
+    };
+  }}
 `;

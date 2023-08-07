@@ -92,7 +92,7 @@ const transitions: Theme['transitions'] = {
 };
 
 const global: Theme['global'] = {
-  borderRadius: '0.3rem',
+  borderRadius: '0.4rem',
   backgroundColor: colors.dark,
   color: colors.light,
   ...fonts.body,

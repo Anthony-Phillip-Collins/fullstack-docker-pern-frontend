@@ -7,7 +7,6 @@ export const StyledCard = styled.article`
   overflow: hidden;
   ${({ theme }) => ({
     borderRadius: theme.global.borderRadius,
-    margin: theme.spacing.md,
   })};
 `;
 
