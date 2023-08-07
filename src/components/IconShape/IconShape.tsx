@@ -1,4 +1,5 @@
 import { AiFillHeart as HeartFill, AiOutlineHeart as HeartOutline } from 'react-icons/ai';
+import { CiRead as ReadIcon, CiUnread as UnreadIcon } from 'react-icons/ci';
 import {
   FiCheck as CheckIcon,
   FiChevronRight as ChevronRightIcon,
@@ -23,6 +24,8 @@ const icons = {
   unlike: HeartFill,
   chevronRight: ChevronRightIcon,
   more: MoreIcon,
+  read: ReadIcon,
+  unread: UnreadIcon,
 };
 
 export interface IconProps extends React.SVGAttributes<SVGElement> {

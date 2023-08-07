@@ -1,6 +1,5 @@
 import { useCallback, useState } from 'react';
-import authThunk from '../app/features/auth.slice';
-import { getOneUserPopulated } from '../app/features/user.slice';
+import authThunk, { getAuthUser } from '../app/features/auth.slice';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { UserCreateInput, UserLogin } from '../types/user.type';
 
@@ -8,10 +7,8 @@ const useAuth = () => {
   const dispatch = useAppDispatch();
   const [initDone, setInitDone] = useState(false);
   const { status, error } = useAppSelector(({ auth }) => auth);
-  const user = useAppSelector((state) => {
-    const id = state.auth?.user?.id;
-    return id ? getOneUserPopulated(state, id) : null;
-  });
+
+  const user = useAppSelector((state) => getAuthUser(state));
 
   const logIn = async (credentials: UserLogin) => {
     return dispatch(authThunk.logIn(credentials)).unwrap();

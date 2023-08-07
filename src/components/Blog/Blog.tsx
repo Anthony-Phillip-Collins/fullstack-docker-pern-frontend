@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import { BlogAttributes, BlogUpdate } from '../../types/blog.type';
+import { Readings, UserAttributes } from '../../types/user.type';
 import { dateToString } from '../../util';
 import Card from '../Card/Card';
 import Editable, { EditableRef } from '../Editable/Editable';
@@ -17,11 +18,13 @@ export interface BlogCallbacks {
   onDelete?: (blog: BlogAttributes) => void;
   onLike: (blog: BlogAttributes) => void;
   onBookmark: (blog: BlogAttributes) => void;
+  onRead: (reading: Readings) => void;
   onMore: (blog: BlogAttributes) => void;
 }
 
 export type BlogProps = Common & {
   blog: BlogAttributes;
+  user?: UserAttributes | null;
   canEdit?: boolean;
   bookmarked?: boolean;
   liked?: boolean;
@@ -36,6 +39,7 @@ export interface BlogInnerProps {
 
 const Blog = ({
   children,
+  user,
   blog,
   canEdit,
   bookmarked,
@@ -45,6 +49,7 @@ const Blog = ({
   onDelete,
   onLike,
   onBookmark,
+  onRead,
   onMore,
 }: Props) => {
   const [editable, setEditable] = useState(false);
@@ -92,6 +97,11 @@ const Blog = ({
     onBookmark(blog);
   };
 
+  const readHandler: React.MouseEventHandler = (e) => {
+    e.preventDefault();
+    onRead && reading && onRead(reading);
+  };
+
   const moreHandler: React.MouseEventHandler = (e) => {
     e.preventDefault();
     onMore(blog);
@@ -101,6 +111,7 @@ const Blog = ({
 
   const createdAt = dateToString(blog.createdAt);
   const updatedAt = dateToString(blog.updatedAt);
+  const reading = user?.readings?.find((reading) => reading.id === blog.id);
 
   return (
     <Card
@@ -155,6 +166,16 @@ const Blog = ({
             {...tabIndex}
           />
 
+          {reading && (
+            <IconButton
+              iconProps={{ icon: reading.reading.read ? 'read' : 'unread' }}
+              onClick={readHandler}
+              label={reading.reading.read ? 'Mark as unread' : 'Mark as read'}
+              tooltipId={`read${blog.id}`}
+              {...tabIndex}
+            />
+          )}
+
           {!single && (
             <IconButton
               iconProps={{ icon: 'more' }}
@@ -167,6 +188,8 @@ const Blog = ({
         </IconControls>
 
         {children}
+
+        {reading?.reading.read}
       </BlogBody>
     </Card>
   );

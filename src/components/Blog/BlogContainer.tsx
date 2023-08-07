@@ -5,8 +5,9 @@ import { useAppDispatch } from '../../app/hooks';
 import useAuth from '../../hooks/useAuth';
 import useNotification from '../../hooks/useNotification';
 import { BlogAttributes } from '../../types/blog.type';
-import { ReadingCreation } from '../../types/reading.type';
+import { ReadingAttributes, ReadingCreation } from '../../types/reading.type';
 
+import { Readings } from '../../types/user.type';
 import Blog, { BlogProps } from './Blog';
 
 const BlogContainer = ({ children, blog, ...props }: BlogProps) => {
@@ -51,6 +52,26 @@ const BlogContainer = ({ children, blog, ...props }: BlogProps) => {
     }
   };
 
+  const onRead = async (data: Readings) => {
+    if (!user) {
+      notify({ error: 'You need to be logged in to mark a blog as read.' });
+      return;
+    }
+
+    const reading = data.reading;
+
+    const update: ReadingAttributes = {
+      ...reading,
+      read: !reading.read,
+      userId: user.id,
+      blogId: data.id,
+    };
+
+    await notifyAsync(
+      dispatch(readingThunk.updateOne(update)),
+      `${data.title} marked as ${update.read ? 'read' : 'unread'}.`,
+    );
+  };
   const onMore = (data: BlogAttributes) => {
     navigate(`/blogs/${data.id}`);
   };
@@ -62,13 +83,14 @@ const BlogContainer = ({ children, blog, ...props }: BlogProps) => {
     onDelete,
     onLike,
     onBookmark,
+    onRead,
     onMore,
   };
 
   if (!blog) return null;
 
   return (
-    <Blog {...blogProps} canEdit={canEdit} bookmarked={!!bookmarked}>
+    <Blog {...blogProps} canEdit={canEdit} bookmarked={!!bookmarked} user={user}>
       {children}
     </Blog>
   );

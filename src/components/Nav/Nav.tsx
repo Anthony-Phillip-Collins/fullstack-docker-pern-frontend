@@ -1,22 +1,50 @@
 import { styled } from 'styled-components';
 import InternalLink from '../Link/InternalLink';
+import useAuth from '../../hooks/useAuth';
+
+interface NavItem {
+  to: string;
+  label: string;
+  auth?: boolean;
+}
 
 const Nav = () => {
+  const { user } = useAuth();
+
+  const items: NavItem[] = [
+    {
+      to: `/`,
+      label: `Home`,
+    },
+    {
+      to: `/blogs`,
+      label: `Blogs`,
+    },
+    {
+      to: `/bookmarks`,
+      label: `Bookmarks`,
+      auth: true,
+    },
+    {
+      to: `/users`,
+      label: `Users`,
+    },
+  ];
+
   return (
     <nav>
       <List>
-        <li>
-          <InternalLink to={`/`}>Home</InternalLink>
-        </li>
-        <li>
-          <InternalLink to={`/blogs`}>Blogs</InternalLink>
-        </li>
-        <li>
-          <InternalLink to={`/bookmarks`}>Bookmarks</InternalLink>
-        </li>
-        <li>
-          <InternalLink to={`/users`}>Users</InternalLink>
-        </li>
+        {items.map(({ auth, to, label }) => {
+          if (auth && !user) {
+            return null;
+          }
+
+          return (
+            <li key={to}>
+              <InternalLink to={to}>{label}</InternalLink>
+            </li>
+          );
+        })}
       </List>
     </nav>
   );
