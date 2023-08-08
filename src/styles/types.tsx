@@ -31,6 +31,7 @@ interface Colors {
   textOnSuccess: string;
   light: string;
   dark: string;
+  darkVariant: string;
   grey: string;
   greyVariant: string;
 }

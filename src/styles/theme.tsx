@@ -11,6 +11,7 @@ const spacing: Theme['spacing'] = {
 const colorsShared = {
   light: '#eceff1',
   dark: '#263238',
+  darkVariant: '#171e21',
   grey: '#455a64',
   greyVariant: '#607d8b',
 };

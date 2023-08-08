@@ -4,7 +4,9 @@ const Nav = styled.nav`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem;
+  ${({ theme }) => ({
+    padding: `${theme.spacing.xl} 0`,
+  })}
 `;
 
 const List = styled.ul`
