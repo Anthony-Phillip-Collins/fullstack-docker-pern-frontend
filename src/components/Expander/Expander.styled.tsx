@@ -1,7 +1,7 @@
 import { styled } from 'styled-components';
 import mixins from '../../styles/mixins';
 
-export const ExpanderWrapper = styled.div`
+const Expander = styled.div`
   max-height: 0;
   overflow: hidden;
   ${() => ({
@@ -9,8 +9,15 @@ export const ExpanderWrapper = styled.div`
   })};
 `;
 
-export const ExpanderInner = styled.div`
+const Inner = styled.div`
   ${({ theme }) => ({
     paddingBottom: `${theme.spacing.xxl}`,
   })}
 `;
+
+const ExpanderStyled = {
+  Expander,
+  Inner,
+};
+
+export default ExpanderStyled;

@@ -91,6 +91,10 @@ const transitions: Theme['transitions'] = {
   timingFunction: 'ease-out',
 };
 
+const page: Theme['page'] = {
+  maxWidth: '1200px',
+};
+
 const global: Theme['global'] = {
   borderRadius: '0.4rem',
   backgroundColor: colors.dark,
@@ -114,6 +118,7 @@ const theme: Theme = {
   fonts,
   icons,
   transitions,
+  page,
   global,
 };
 

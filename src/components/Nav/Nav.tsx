@@ -1,12 +1,16 @@
-import { styled } from 'styled-components';
-import InternalLink from '../Link/InternalLink';
 import useAuth from '../../hooks/useAuth';
+import Container from '../Container/Container';
+import InternalLink from '../Link/InternalLink';
+import LoginForm from '../LoginForm/LoginForm';
+import NavStyled from './Nav.styled';
 
 interface NavItem {
   to: string;
   label: string;
   auth?: boolean;
 }
+
+const Styled = NavStyled;
 
 const Nav = () => {
   const { user } = useAuth();
@@ -32,32 +36,26 @@ const Nav = () => {
   ];
 
   return (
-    <nav>
-      <List>
-        {items.map(({ auth, to, label }) => {
-          if (auth && !user) {
-            return null;
-          }
+    <Container>
+      <Styled.Nav>
+        <Styled.List>
+          {items.map(({ auth, to, label }) => {
+            if (auth && !user) {
+              return null;
+            }
 
-          return (
-            <li key={to}>
-              <InternalLink to={to}>{label}</InternalLink>
-            </li>
-          );
-        })}
-      </List>
-    </nav>
+            return (
+              <Styled.ListItem key={to}>
+                <InternalLink to={to}>{label}</InternalLink>
+              </Styled.ListItem>
+            );
+          })}
+        </Styled.List>
+
+        <LoginForm />
+      </Styled.Nav>
+    </Container>
   );
 };
-
-const List = styled.ul`
-  background-color: ${(props) => props.theme.colors.grey};
-  display: flex;
-  list-style: none;
-
-  li {
-    padding: 1rem;
-  }
-`;
 
 export default Nav;

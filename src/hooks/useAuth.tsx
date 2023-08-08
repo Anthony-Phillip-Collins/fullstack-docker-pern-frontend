@@ -1,5 +1,7 @@
+// import { useCallback, useState } from 'react';
 import { useCallback, useState } from 'react';
-import authThunk, { getAuthUser } from '../app/features/auth.slice';
+import authThunk from '../app/features/auth.slice';
+import { getAuthUserPopulated } from '../app/features/user.slice';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { UserCreateInput, UserLogin } from '../types/user.type';
 
@@ -8,7 +10,7 @@ const useAuth = () => {
   const [initDone, setInitDone] = useState(false);
   const { status, error } = useAppSelector(({ auth }) => auth);
 
-  const user = useAppSelector((state) => getAuthUser(state));
+  const user = useAppSelector((state) => getAuthUserPopulated(state));
 
   const logIn = async (credentials: UserLogin) => {
     return dispatch(authThunk.logIn(credentials)).unwrap();
@@ -22,13 +24,9 @@ const useAuth = () => {
     return dispatch(authThunk.signUp(credentials)).unwrap();
   };
 
-  const refresh = async () => {
-    return dispatch(authThunk.refresh()).unwrap();
-  };
-
   const init = useCallback(async () => {
     if (!initDone) {
-      dispatch(authThunk.refresh());
+      dispatch(authThunk.fetchAuthUser());
     }
     setInitDone(true);
   }, [dispatch, initDone]);
@@ -40,7 +38,6 @@ const useAuth = () => {
     logIn,
     logOut,
     signUp,
-    refresh,
     init,
   };
 };

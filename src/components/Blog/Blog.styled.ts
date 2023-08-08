@@ -1,17 +1,17 @@
 import { styled } from 'styled-components';
 
-export const BlogBody = styled.div`
+const Body = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
 `;
 
-export const BlogAuthor = styled.div`
+const Author = styled.div`
   display: flex;
   flex-direction: row;
 `;
 
-export const BlogLinkContainer = styled.div`
+const LinkContainer = styled.div`
   display: flex;
   flex-direction: row;
 
@@ -20,12 +20,12 @@ export const BlogLinkContainer = styled.div`
   }
 `;
 
-export const BlogLikes = styled.p`
+const Likes = styled.p`
   margin: 0;
   padding: 0;
 `;
 
-export const IconControls = styled.div`
+const IconControls = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -36,3 +36,13 @@ export const IconControls = styled.div`
     },
   })}
 `;
+
+const BlogStyled = {
+  Body,
+  Author,
+  LinkContainer,
+  Likes,
+  IconControls,
+};
+
+export default BlogStyled;

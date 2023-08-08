@@ -1,6 +1,7 @@
 import { styled } from 'styled-components';
+import { CardInnerProps } from './Card';
 
-export const StyledCard = styled.article`
+const Card = styled.article`
   position: relative;
   display: flex;
   flex-basis: 100%;
@@ -10,9 +11,9 @@ export const StyledCard = styled.article`
   })};
 `;
 
-export const CardInner = styled.div.withConfig({
+const Inner = styled.div.withConfig({
   shouldForwardProp: (prop) => !['warning'].includes(prop),
-})<{ warning: boolean }>`
+})<CardInnerProps>`
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -22,7 +23,7 @@ export const CardInner = styled.div.withConfig({
   })};
 `;
 
-export const Header = styled.div`
+const Header = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -48,7 +49,7 @@ export const Header = styled.div`
   }
 `;
 
-export const Body = styled.div`
+const Body = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -59,10 +60,20 @@ export const Body = styled.div`
   })};
 `;
 
-export const Edit = styled.footer`
+const Edit = styled.footer`
   display: flex;
   justify-content: space-between;
   ${({ theme }) => ({
     marginTop: theme.spacing.xl,
   })};
 `;
+
+const CardStyled = {
+  Card,
+  Inner,
+  Header,
+  Body,
+  Edit,
+};
+
+export default CardStyled;

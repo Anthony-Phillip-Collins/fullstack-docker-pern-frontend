@@ -1,4 +1,4 @@
-import { FormFooter, InputError, InputLabel, InputWrapper, LabelText, StyledForm, StyledInput } from './Form.styled';
+import FormStyled from './Form.styled';
 
 /* Form */
 
@@ -7,41 +7,46 @@ interface Props extends React.FormHTMLAttributes<HTMLFormElement> {
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
 }
 
+const Styled = FormStyled;
+
 const Form = ({ children, onSubmit }: Props) => {
   return (
     <>
-      <StyledForm onSubmit={onSubmit}>{children}</StyledForm>
+      <Styled.Form onSubmit={onSubmit}>{children}</Styled.Form>
     </>
   );
 };
 
 /* Input */
 
-export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  label: string;
+export interface InputFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
   name: string;
   value: string;
   error?: string;
+}
+
+interface InputProps extends InputFieldProps {
+  label: string;
   setValue: (value: string) => void;
 }
 
 const Input = ({ label, name, value, error, setValue, ...rest }: InputProps) => {
   return (
-    <InputWrapper>
-      <InputLabel>
-        <LabelText>{label}</LabelText>
-        <StyledInput
+    <Styled.InputWrapper>
+      <Styled.InputLabel>
+        <Styled.LabelText>{label}</Styled.LabelText>
+        <Styled.Input
           type="text"
           value={value}
           onChange={(e) => setValue(e.target.value)}
           name={name}
-          error={!!error}
+          error={error}
           autoComplete="off"
           {...rest}
         />
-      </InputLabel>
-      {error && <InputError>{error}</InputError>}
-    </InputWrapper>
+      </Styled.InputLabel>
+      {error && <Styled.InputError>{error}</Styled.InputError>}
+    </Styled.InputWrapper>
   );
 };
 
@@ -52,7 +57,7 @@ interface FooterProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const Footer = ({ children }: FooterProps) => {
-  return <FormFooter>{children}</FormFooter>;
+  return <Styled.Footer>{children}</Styled.Footer>;
 };
 
 Form.Input = Input;

@@ -1,6 +1,6 @@
 import { styled } from 'styled-components';
 
-export const StyledWarning = styled.div`
+const Warning = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -12,7 +12,7 @@ export const StyledWarning = styled.div`
   z-index: 1;
 `;
 
-export const WarningInnner = styled.div`
+const Inner = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -22,11 +22,11 @@ export const WarningInnner = styled.div`
   })};
 `;
 
-export const WarningHeader = styled.p`
+const Header = styled.p`
   margin-top: 0;
 `;
 
-export const WarningBody = styled.div`
+const Body = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -38,3 +38,12 @@ export const WarningBody = styled.div`
     margin-right: ${({ theme }) => theme.spacing.xl};
   }
 `;
+
+const CardWarningStyled = {
+  Warning,
+  Inner,
+  Header,
+  Body,
+};
+
+export default CardWarningStyled;

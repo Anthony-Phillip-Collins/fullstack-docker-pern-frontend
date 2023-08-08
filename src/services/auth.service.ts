@@ -2,7 +2,8 @@ import axios from 'axios';
 import { UserCreateInput, UserLogin, UserWithToken } from '../types/user.type';
 import userService from './user.service';
 import { getApiUrl } from './util';
-import { asyncHandler } from './util/axiosUtil';
+import { asyncHandler, asyncHandlerAuth, authConfig } from './util/axiosUtil';
+
 const baseUrl = getApiUrl('/auth');
 
 const StorageKey = 'blogsAppUser';
@@ -27,14 +28,24 @@ const getAuthUser = async () => {
   if (!cache) {
     return null;
   }
-  console.log('authservice getAuthUser');
-  const user = await userService.getById(cache.id);
-  return user;
+
+  try {
+    const user = await userService.getById(cache.id);
+    return user;
+  } catch (error) {
+    await refresh();
+    const cache = getUser();
+    if (!cache) {
+      return null;
+    }
+    const user = await userService.getById(cache.id);
+    return user;
+  }
 };
 
 const refresh = async () => {
-  console.log('authservice refresh');
   const refreshToken = getUser()?.refreshToken;
+
   if (!refreshToken) {
     return null;
   }
@@ -44,8 +55,8 @@ const refresh = async () => {
     setUser(data);
     return data;
   } catch (error) {
-    console.log('E_R_R_R_O_R:', error);
     removeUser();
+    throw error;
   }
 };
 
@@ -56,11 +67,8 @@ const logIn = async (credentials: UserLogin) => {
 };
 
 const logOut = async () => {
-  try {
-    await asyncHandler(axios.post(`${baseUrl}/logout`));
-  } catch (error) {
-    console.log('E_R_R_R_O_R:', error);
-  }
+  const promise = () => axios.post(`${baseUrl}/logout`, null, authConfig());
+  await asyncHandlerAuth(promise);
   removeUser();
   return null;
 };

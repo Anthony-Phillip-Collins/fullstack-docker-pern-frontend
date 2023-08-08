@@ -1,10 +1,24 @@
 import { styled } from 'styled-components';
 
-export const StyledContainer = styled.div`
-  width: 100%;
+const Container = styled.div`
+  /* width: 100%; */
+  border: 2px solid red;
+  ${({ theme }) => ({
+    padding: `0 ${theme.spacing.xl}`,
+  })}
 `;
 
-export const ContainerInner = styled.div`
+const Inner = styled.div`
   margin: 0 auto;
-  padding: 0 1rem;
+  border: 2px solid lime;
+  ${({ theme }) => ({
+    maxWidth: theme.page.maxWidth,
+  })}
 `;
+
+const ContainerStyled = {
+  Container,
+  Inner,
+};
+
+export default ContainerStyled;

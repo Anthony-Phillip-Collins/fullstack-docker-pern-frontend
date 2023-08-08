@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { BlogAttributes, BlogCreation, BlogUpdate } from '../types/blog.type';
 import { getApiUrl } from './util';
-import { asyncHandler, authConfig } from './util/axiosUtil';
+import { asyncHandler, asyncHandlerAuth, authConfig } from './util/axiosUtil';
 
 const baseUrl = getApiUrl('/blogs');
 
@@ -18,20 +18,20 @@ const getById = async (id: BlogAttributes['id']) => {
 };
 
 const createOne = async (blog: BlogCreation) => {
-  const promise = axios.post<BlogAttributes>(baseUrl, blog, authConfig());
-  const { data } = await asyncHandler(promise);
+  const promise = () => axios.post<BlogAttributes>(baseUrl, blog, authConfig());
+  const { data } = await asyncHandlerAuth(promise);
   return data;
 };
 
 const updateOne = async (blogId: BlogAttributes['id'], update: BlogUpdate) => {
-  const promise = axios.put<BlogAttributes>(`${baseUrl}/${blogId}`, update, authConfig());
-  const { data } = await asyncHandler(promise);
+  const promise = () => axios.put<BlogAttributes>(`${baseUrl}/${blogId}`, update, authConfig());
+  const { data } = await asyncHandlerAuth(promise);
   return data;
 };
 
 const deleteOne = async (blogId: BlogAttributes['id']) => {
-  const promise = axios.delete<BlogAttributes>(`${baseUrl}/${blogId}`, authConfig());
-  const { data } = await asyncHandler(promise);
+  const promise = () => axios.delete<BlogAttributes>(`${baseUrl}/${blogId}`, authConfig());
+  const { data } = await asyncHandlerAuth(promise);
   return data;
 };
 

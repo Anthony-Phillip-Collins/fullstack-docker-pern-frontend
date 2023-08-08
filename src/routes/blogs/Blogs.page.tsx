@@ -7,9 +7,11 @@ import Expander, { ExpanderRef } from '../../components/Expander/Expander';
 import IconButton from '../../components/IconButton/IconButton';
 import PageTitle from '../../components/PageTitle/PageTitle';
 import useBlogs from '../../hooks/useBlogs';
+import useAuth from '../../hooks/useAuth';
 
 const BlogsPage = () => {
   const { data } = useBlogs();
+  const { user } = useAuth();
   const [open, setOpen] = useState(false);
   const expander = useRef<ExpanderRef>(null);
   const blogForm = useRef<BlogFormRef>(null);
@@ -34,13 +36,15 @@ const BlogsPage = () => {
   return (
     <Container>
       <PageTitle title="Blogs">
-        <IconButton
-          iconProps={{ icon: open ? 'minus' : 'plus' }}
-          onClick={toggle}
-          label={open ? 'Cancel' : 'Add blog'}
-          tooltipId={`add-blog`}
-          tooltipProps={{ place: 'right' }}
-        />
+        {user && (
+          <IconButton
+            iconProps={{ icon: open ? 'minus' : 'plus' }}
+            onClick={toggle}
+            label={open ? 'Cancel' : 'Add blog'}
+            tooltipId={`add-blog`}
+            tooltipProps={{ place: 'right' }}
+          />
+        )}
       </PageTitle>
       <Expander open={open} ref={expander}>
         <BlogFormContainer onLayout={onLayout} onCancel={onCancel} ref={blogForm} />

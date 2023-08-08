@@ -7,7 +7,7 @@ import Editable, { EditableRef } from '../Editable/Editable';
 import IconButton from '../IconButton/IconButton';
 import ExternalLink from '../Link/ExternalLink';
 import InternalLink from '../Link/InternalLink';
-import { BlogAuthor, BlogBody, BlogLikes, BlogLinkContainer, IconControls } from './Blog.styled';
+import BlogStyled from './Blog.styled';
 
 interface Common extends React.HTMLAttributes<HTMLElement> {
   children?: React.ReactNode;
@@ -36,6 +36,8 @@ type Props = BlogProps & BlogCallbacks;
 export interface BlogInnerProps {
   warning?: boolean;
 }
+
+const Styled = BlogStyled;
 
 const Blog = ({
   children,
@@ -123,22 +125,22 @@ const Blog = ({
       header={<Editable tagName="h2" ref={title} initialValue={blog.title} disabled={!editable} />}
       uid={`${blog.id}`}
     >
-      <BlogBody>
-        <BlogAuthor>
+      <Styled.Body>
+        <Styled.Author>
           by &nbsp;
           <Editable tagName="span" ref={author} initialValue={blog.author} disabled={!editable} />
-        </BlogAuthor>
-        <BlogLikes>
+        </Styled.Author>
+        <Styled.Likes>
           has <strong>{blog.likes}</strong> likes
-        </BlogLikes>
+        </Styled.Likes>
         {editable ? (
           <Editable tagName="span" ref={url} initialValue={blog.url} disabled={!editable} />
         ) : (
-          <BlogLinkContainer>
+          <Styled.LinkContainer>
             <ExternalLink href={blog.url} truncate {...tabIndex}>
               {blog.url}
             </ExternalLink>
-          </BlogLinkContainer>
+          </Styled.LinkContainer>
         )}
 
         <div>owner: {blog.owner && <InternalLink to={`/users/${blog.owner.id}`}>{blog.owner.name}</InternalLink>}</div>
@@ -149,7 +151,7 @@ const Blog = ({
 
         <Readers readers={blog.readers} />
 
-        <IconControls>
+        <Styled.IconControls>
           <IconButton
             iconProps={{ icon: liked ? 'unlike' : 'like' }}
             onClick={likeHandler}
@@ -185,12 +187,12 @@ const Blog = ({
               {...tabIndex}
             />
           )}
-        </IconControls>
+        </Styled.IconControls>
 
         {children}
 
         {reading?.reading.read}
-      </BlogBody>
+      </Styled.Body>
     </Card>
   );
 };

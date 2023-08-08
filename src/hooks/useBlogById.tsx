@@ -6,10 +6,7 @@ import { BlogAttributes } from '../types/blog.type';
 const useBlogById = (id: BlogAttributes['id']) => {
   const dispatch = useAppDispatch();
   const { status, error } = useAppSelector(({ blogs }) => blogs);
-  const data = useAppSelector((state) => {
-    const id = state.blogs.one?.id;
-    return id ? getOneBlogPopulated(state) : state.blogs.one;
-  });
+  const data = useAppSelector((state) => getOneBlogPopulated(state));
 
   useEffect(() => {
     dispatch(blogThunk.fetchOne(id));

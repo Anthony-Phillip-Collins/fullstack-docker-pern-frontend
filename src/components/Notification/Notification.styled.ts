@@ -7,14 +7,14 @@ const slideIn = keyframes`
   to { transform: translate(0%); }
 `;
 
-export const StyledNotification = styled.div`
+const Notification = styled.div`
   position: fixed;
   right: 0;
   bottom: 0;
   overflow: hidden;
 `;
 
-export const NotificationInner = styled.div.withConfig({
+const Inner = styled.div.withConfig({
   shouldForwardProp: (prop) => !['error'].includes(prop),
 })<NotificationInnerProps>`
   display: inline-flex;
@@ -45,6 +45,14 @@ export const NotificationInner = styled.div.withConfig({
   }};
 `;
 
-export const Message = styled.span`
+const Message = styled.span`
   margin-right: ${({ theme }) => theme.spacing.md};
 `;
+
+const NotificationStyled = {
+  Notification,
+  Inner,
+  Message,
+};
+
+export default NotificationStyled;

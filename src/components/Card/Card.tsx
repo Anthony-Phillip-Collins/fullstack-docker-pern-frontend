@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import Button from '../Button/Button';
-import { Body, CardInner, Edit, Header, StyledCard } from '../Card/Card.styled';
+import CardStyled from '../Card/Card.styled';
 import IconButton from '../IconButton/IconButton';
 import CardWarning, { WarningProps } from './Card.Warning';
-import { Tooltip } from 'react-tooltip';
 
 interface Common extends React.HTMLAttributes<HTMLElement> {
   children?: React.ReactNode;
@@ -23,6 +22,12 @@ type Props = CardCallbacks &
     enableEdit?: boolean;
     uid?: string;
   };
+
+export interface CardInnerProps {
+  warning?: boolean;
+}
+
+const Styled = CardStyled;
 
 const Card = ({ children, header, warningProps, enableEdit, uid, onSave, onDelete, onEdit, onWarning }: Props) => {
   const [editable, setEditable] = useState(false);
@@ -64,10 +69,10 @@ const Card = ({ children, header, warningProps, enableEdit, uid, onSave, onDelet
   };
 
   return (
-    <StyledCard>
+    <Styled.Card>
       {warning && <CardWarning onConfirm={deleteForRealHandler} onCancel={cancelHandler} {...warningProps} />}
-      <CardInner warning={warning}>
-        <Header>
+      <Styled.Inner warning={warning}>
+        <Styled.Header>
           {header}
           {isEnabled && (
             <IconButton
@@ -78,12 +83,12 @@ const Card = ({ children, header, warningProps, enableEdit, uid, onSave, onDelet
               {...tabIndex}
             />
           )}
-        </Header>
+        </Styled.Header>
 
-        <Body>
+        <Styled.Body>
           {children}
           {isEnabled && editable && (
-            <Edit>
+            <Styled.Edit>
               {onSave && (
                 <Button variant="primary" aria-label="Save" onClick={saveHandler}>
                   Save
@@ -94,11 +99,11 @@ const Card = ({ children, header, warningProps, enableEdit, uid, onSave, onDelet
                   Delete
                 </Button>
               )}
-            </Edit>
+            </Styled.Edit>
           )}
-        </Body>
-      </CardInner>
-    </StyledCard>
+        </Styled.Body>
+      </Styled.Inner>
+    </Styled.Card>
   );
 };
 

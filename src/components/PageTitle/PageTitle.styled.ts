@@ -1,11 +1,23 @@
 import { styled } from 'styled-components';
 
-export const StyledPageTitleContainer = styled.div`
+const Wrapper = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: center;
 `;
 
-export const StyledPageTitle = styled.h1`
+const Title = styled.h1`
   margin-right: ${({ theme }) => theme.spacing.xl};
 `;
+
+const Children = styled.div`
+  margin-top: 1rem;
+`;
+
+const PageTitleStyled = {
+  Wrapper,
+  Title,
+  Children,
+};
+
+export default PageTitleStyled;

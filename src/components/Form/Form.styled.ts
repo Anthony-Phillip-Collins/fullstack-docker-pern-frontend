@@ -1,15 +1,16 @@
 import { styled } from 'styled-components';
 import mixins from '../../styles/mixins';
 import { FontWeight } from '../../styles/types';
+import { InputFieldProps } from './Form';
 
-export const StyledForm = styled.form`
+const Form = styled.form`
   display: flex;
   flex-direction: column;
   margin: 0 auto;
   max-width: 400px;
 `;
 
-export const InputWrapper = styled.div`
+const InputWrapper = styled.div`
   display: flex;
   flex-direction: column;
   ${({ theme }) => ({
@@ -17,9 +18,9 @@ export const InputWrapper = styled.div`
   })};
 `;
 
-export const StyledInput = styled.input.withConfig({
+const Input = styled.input.withConfig({
   shouldForwardProp: (prop) => !['error'].includes(prop),
-})<{ error: boolean }>`
+})<InputFieldProps>`
   background-color: transparent;
   border-width: 0.1rem;
   border-style: solid;
@@ -38,7 +39,7 @@ export const StyledInput = styled.input.withConfig({
   })};
 `;
 
-export const InputLabel = styled.label`
+const InputLabel = styled.label`
   display: inline-flex;
   flex-direction: column;
   ${() => ({
@@ -46,13 +47,13 @@ export const InputLabel = styled.label`
   })};
 `;
 
-export const LabelText = styled.span`
+const LabelText = styled.span`
   ${({ theme }) => ({
     marginBottom: theme.spacing.md,
   })};
 `;
 
-export const InputError = styled.span`
+const InputError = styled.span`
   ${({ theme }) => ({
     color: theme.colors.dangerVariant,
     marginTop: theme.spacing.md,
@@ -60,7 +61,7 @@ export const InputError = styled.span`
   })};
 `;
 
-export const FormFooter = styled.div`
+const Footer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -68,3 +69,15 @@ export const FormFooter = styled.div`
     marginTop: theme.spacing.lg,
   })};
 `;
+
+const FormStyled = {
+  Form,
+  InputWrapper,
+  Input,
+  InputLabel,
+  LabelText,
+  InputError,
+  Footer,
+};
+
+export default FormStyled;

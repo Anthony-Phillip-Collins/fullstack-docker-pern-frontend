@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { getApiUrl } from './util';
-import { asyncHandler, authConfig } from './util/axiosUtil';
+import { asyncHandler, asyncHandlerAuth, authConfig } from './util/axiosUtil';
 import { ReadingAttributes, ReadingCreation, ReadingUpdate } from '../types/reading.type';
 
 const baseUrl = getApiUrl('/readings');
@@ -18,20 +18,20 @@ const getById = async (id: ReadingAttributes['id']) => {
 };
 
 const createOne = async (reading: ReadingCreation) => {
-  const promise = axios.post<ReadingAttributes>(baseUrl, reading, authConfig());
-  const { data } = await asyncHandler(promise);
+  const promise = () => axios.post<ReadingAttributes>(baseUrl, reading, authConfig());
+  const { data } = await asyncHandlerAuth(promise);
   return data;
 };
 
 const updateOne = async (readingId: ReadingAttributes['id'], update: ReadingUpdate) => {
-  const promise = axios.put<ReadingAttributes>(`${baseUrl}/${readingId}`, update, authConfig());
-  const { data } = await asyncHandler(promise);
+  const promise = () => axios.put<ReadingAttributes>(`${baseUrl}/${readingId}`, update, authConfig());
+  const { data } = await asyncHandlerAuth(promise);
   return data;
 };
 
 const deleteOne = async (readingId: ReadingAttributes['id']) => {
-  const promise = axios.delete<ReadingAttributes>(`${baseUrl}/${readingId}`, authConfig());
-  const { data } = await asyncHandler(promise);
+  const promise = () => axios.delete<ReadingAttributes>(`${baseUrl}/${readingId}`, authConfig());
+  const { data } = await asyncHandlerAuth(promise);
   return data;
 };
 

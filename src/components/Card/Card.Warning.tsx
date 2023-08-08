@@ -1,14 +1,5 @@
 import Button from '../Button/Button';
-import { StyledWarning, WarningBody, WarningHeader, WarningInnner } from './Card.Warning.styled';
-
-// interface Common extends React.HTMLAttributes<HTMLElement> {
-//   children?: React.ReactNode;
-// }
-
-// interface WarningCallbacks {
-//   onConfirm: () => void;
-//   onCancel: () => void;
-// }
+import CardWarningStyled from './Card.Warning.styled';
 
 export interface WarningProps {
   confirmButtonText?: string;
@@ -20,6 +11,8 @@ type Props = WarningProps & {
   onConfirm: () => void;
   onCancel: () => void;
 };
+
+const Styled = CardWarningStyled;
 
 const CardWarning = ({ message, confirmButtonText, cancelButtonText, onConfirm, onCancel }: Props) => {
   const deleteHandler: React.MouseEventHandler = (e) => {
@@ -33,10 +26,10 @@ const CardWarning = ({ message, confirmButtonText, cancelButtonText, onConfirm, 
   };
 
   return (
-    <StyledWarning>
-      <WarningInnner>
-        <WarningHeader>{message || 'Are you sure you want to proceed?'}</WarningHeader>
-        <WarningBody>
+    <Styled.Warning>
+      <Styled.Inner>
+        <Styled.Header>{message || 'Are you sure you want to proceed?'}</Styled.Header>
+        <Styled.Body>
           <Button
             variant="primary"
             aria-label="Delete for real"
@@ -53,9 +46,9 @@ const CardWarning = ({ message, confirmButtonText, cancelButtonText, onConfirm, 
           >
             {cancelButtonText || 'Nope'}
           </Button>
-        </WarningBody>
-      </WarningInnner>
-    </StyledWarning>
+        </Styled.Body>
+      </Styled.Inner>
+    </Styled.Warning>
   );
 };
 

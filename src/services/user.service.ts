@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { UserAttributes, UserCreateInput, UserUpdateAsAdminInput } from '../types/user.type';
 import { getApiUrl } from './util';
-import { asyncHandler, authConfig } from './util/axiosUtil';
+import { asyncHandler, asyncHandlerAuth, authConfig } from './util/axiosUtil';
 
 const baseUrl = getApiUrl('/users');
 
@@ -18,20 +18,20 @@ const getById = async (id: UserAttributes['id']) => {
 };
 
 const createOne = async (user: UserCreateInput) => {
-  const promise = axios.post<UserAttributes>(baseUrl, user, authConfig());
-  const { data } = await asyncHandler(promise);
+  const promise = () => axios.post<UserAttributes>(baseUrl, user, authConfig());
+  const { data } = await asyncHandlerAuth(promise);
   return data;
 };
 
 const updateOne = async (userId: UserAttributes['id'], update: UserUpdateAsAdminInput) => {
-  const promise = axios.put<UserAttributes>(`${baseUrl}/${userId}`, update, authConfig());
-  const { data } = await asyncHandler(promise);
+  const promise = () => axios.put<UserAttributes>(`${baseUrl}/${userId}`, update, authConfig());
+  const { data } = await asyncHandlerAuth(promise);
   return data;
 };
 
 const deleteOne = async (userId: UserAttributes['id']) => {
-  const promise = axios.delete<UserAttributes>(`${baseUrl}/${userId}`, authConfig());
-  const { data } = await asyncHandler(promise);
+  const promise = () => axios.delete<UserAttributes>(`${baseUrl}/${userId}`, authConfig());
+  const { data } = await asyncHandlerAuth(promise);
   return data;
 };
 

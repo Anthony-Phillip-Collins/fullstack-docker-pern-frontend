@@ -1,10 +1,10 @@
-import { StyledExternalLink } from './ExternalLink.styled';
+import { ExternalLinkStyled } from './ExternalLink.styled';
 
 export interface ExternalLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   children: React.ReactNode;
   truncate?: boolean;
 }
 
-const ExternalLink = (props: ExternalLinkProps) => <StyledExternalLink {...props} target="_blank" />;
+const ExternalLink = (props: ExternalLinkProps) => <ExternalLinkStyled {...props} target="_blank" />;
 
 export default ExternalLink;

@@ -20,14 +20,9 @@ const signUp = createAsyncThunk('auth/signUp', async (userData: UserCreateInput)
   return user;
 });
 
-const refresh = createAsyncThunk('auth/refresh', async () => {
-  // Add a delay to minimise invalidation on rapid refresh
-  // Need to find a better way to do this
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-
-  await authService.refresh();
-  const user = await authService.getAuthUser();
-  return user;
+const fetchAuthUser = createAsyncThunk('auth/getAuthUser', async () => {
+  const response = await authService.getAuthUser();
+  return response;
 });
 
 export const authSlice = createSlice({
@@ -56,7 +51,7 @@ export const authSlice = createSlice({
       })
       .addCase(logOut.fulfilled, (state) => {
         state.status = 'idle';
-        state.user = {} as UserAttributes;
+        state.user = null;
       })
       .addCase(logOut.rejected, (state, action) => {
         state.status = 'idle';
@@ -73,14 +68,14 @@ export const authSlice = createSlice({
         state.status = 'idle';
         state.error = action.error.message;
       })
-      .addCase(refresh.pending, (state) => {
+      .addCase(fetchAuthUser.pending, (state) => {
         state.status = 'loading';
       })
-      .addCase(refresh.fulfilled, (state, action) => {
+      .addCase(fetchAuthUser.fulfilled, (state, action) => {
         state.status = 'idle';
         state.user = action.payload;
       })
-      .addCase(refresh.rejected, (state, action) => {
+      .addCase(fetchAuthUser.rejected, (state, action) => {
         state.status = 'idle';
         state.error = action.error.message;
       });
@@ -89,6 +84,6 @@ export const authSlice = createSlice({
 
 export const getAuthUser = (state: RootState) => state.auth.user;
 
-const authThunk = { logIn, logOut, signUp, refresh };
+const authThunk = { logIn, logOut, signUp, fetchAuthUser };
 
 export default authThunk;

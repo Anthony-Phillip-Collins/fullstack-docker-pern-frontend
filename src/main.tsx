@@ -6,7 +6,7 @@ import store from './app/store.ts';
 import Root from './routes/Root.tsx';
 import { ThemeProvider } from 'styled-components';
 import BlogsPage from './routes/blogs/Blogs.page.tsx';
-import ErrorPage from './routes/ErrorPage.tsx';
+import ErrorPage from './routes/Error.page.tsx';
 import UsersPage from './routes/users/Users.page.tsx';
 import { GlobalStyle } from './styles/global.tsx';
 import theme from './styles/theme.tsx';

@@ -78,6 +78,10 @@ interface Global extends FontProps {
   fontFamily: string;
 }
 
+interface Page {
+  maxWidth: string;
+}
+
 interface ThemeProps {
   color: string;
   backgroundColor: string;
@@ -92,5 +96,6 @@ export interface Theme {
   fonts: Fonts;
   icons: Icons;
   transitions: Transitions;
+  page: Page;
   global: Global;
 }

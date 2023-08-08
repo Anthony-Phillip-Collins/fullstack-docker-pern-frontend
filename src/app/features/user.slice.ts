@@ -5,6 +5,7 @@ import { BlogAttributes } from '../../types/blog.type';
 import { ReadingAttributes } from '../../types/reading.type';
 import { Readings, UserAttributes, UserCreateInput } from '../../types/user.type';
 import { RootState } from '../store';
+import { getAuthUser } from './auth.slice';
 
 const fetchAll = createAsyncThunk('users/fetchAll', async () => {
   const response = await userService.getAll();
@@ -45,7 +46,7 @@ export const userSlice = createSlice({
   name: 'users',
   initialState: {
     all: [] as UserAttributes[],
-    one: {} as UserAttributes,
+    one: null as UserAttributes | null,
     status: 'idle',
     error: null as string | null | undefined,
   },
@@ -67,7 +68,7 @@ export const userSlice = createSlice({
     });
     builder.addCase(fetchOne.fulfilled, (state, action) => {
       state.status = 'succeeded';
-      state.one = action.payload;
+      if (action.payload) state.one = action.payload;
     });
     builder.addCase(fetchOne.rejected, (state, action) => {
       state.status = 'failed';
@@ -158,11 +159,18 @@ export const getOneUserPopulated = createSelector(
   [getAllUsers, allBlogs, allReadings, getUserById],
   (users, blogs, readings, user) => {
     if (!users || !blogs || !readings || !user) {
-      return {} as UserAttributes;
+      return null;
     }
     return populateReadingsToUser(readings, blogs, user);
   },
 );
+
+export const getAuthUserPopulated = createSelector([getAuthUser, allBlogs, allReadings], (user, blogs, readings) => {
+  if (!user || !blogs || !readings) {
+    return null;
+  }
+  return populateReadingsToUser(readings, blogs, user);
+});
 
 const userThunk = {
   fetchAll,

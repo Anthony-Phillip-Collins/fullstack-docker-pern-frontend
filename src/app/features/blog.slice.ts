@@ -43,7 +43,7 @@ export const blogSlice = createSlice({
   name: 'blogs',
   initialState: {
     all: [] as BlogAttributes[],
-    one: {} as BlogAttributes,
+    one: null as BlogAttributes | null,
     status: 'idle',
     error: null as string | null | undefined,
   },
@@ -109,7 +109,7 @@ export const blogSlice = createSlice({
 });
 
 export const getAllBlogs = (state: RootState): BlogAttributes[] => state.blogs.all;
-export const getOneBlog = (state: RootState): BlogAttributes => state.blogs.one;
+export const getOneBlog = (state: RootState): BlogAttributes | null => state.blogs.one;
 
 export const getBlogById = (state: RootState, id: BlogAttributes['id']) =>
   getAllBlogs(state).find((blog) => blog.id === id);
@@ -157,7 +157,7 @@ export const getOneBlogPopulated = createSelector(
   [getAllReadings, getAllUsers, getOneBlog],
   (readings, users, blog) => {
     if (!users || !readings || !blog) {
-      return {} as BlogAttributes;
+      return null;
     }
     return populateReadersToBlog(readings, users, blog);
   },

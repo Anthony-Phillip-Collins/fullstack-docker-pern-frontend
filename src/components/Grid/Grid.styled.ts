@@ -5,7 +5,7 @@ import theme from '../../styles/theme';
 
 const gap = theme.spacing.md;
 
-export const StyledGrid = styled.ul<GridProps>`
+const Grid = styled.ul<GridProps>`
   display: flex;
   justify-content: flex-start;
   flex-wrap: wrap;
@@ -16,7 +16,7 @@ export const StyledGrid = styled.ul<GridProps>`
   })}
 `;
 
-export const StyledGridItem = styled.li<GridItemProps>`
+const GridItem = styled.li<GridItemProps>`
   display: flex;
   flex-basis: 100%;
   max-width: 100%;
@@ -37,3 +37,10 @@ export const StyledGridItem = styled.li<GridItemProps>`
     };
   }}
 `;
+
+const GridStyled = {
+  Grid,
+  GridItem,
+};
+
+export default GridStyled;

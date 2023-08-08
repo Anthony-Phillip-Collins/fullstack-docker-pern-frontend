@@ -1,9 +1,9 @@
 import { clearNotification } from '../../app/features/notification.slice';
 import { useAppDispatch } from '../../app/hooks';
 import { NotificationType } from '../../types/notification.type';
-import { parseError } from '../../types/utils/parsers/error.parser';
+import parseFrontendError from '../../util/parseFrontendError';
 import IconButton from '../IconButton/IconButton';
-import { Message, NotificationInner, StyledNotification } from './Notification.styled';
+import NotificationStyled from './Notification.styled';
 
 export interface NotificationInnerProps {
   error: boolean;
@@ -11,16 +11,18 @@ export interface NotificationInnerProps {
 
 type Props = NotificationType;
 
+const Styled = NotificationStyled;
+
 function Notification({ message, error }: Props) {
   const dispatch = useAppDispatch();
-  const err = parseError(error);
+  const err = parseFrontendError(error);
   const msg = err?.message || message;
   return (
     <>
       {msg && (
-        <StyledNotification>
-          <NotificationInner error={!!error}>
-            <Message>{msg}</Message>
+        <Styled.Notification>
+          <Styled.Inner error={!!error}>
+            <Styled.Message>{msg}</Styled.Message>
             <IconButton
               iconProps={{ icon: 'close' }}
               noBorder
@@ -29,8 +31,8 @@ function Notification({ message, error }: Props) {
               }}
               aria-label="Close notification"
             />
-          </NotificationInner>
-        </StyledNotification>
+          </Styled.Inner>
+        </Styled.Notification>
       )}
     </>
   );

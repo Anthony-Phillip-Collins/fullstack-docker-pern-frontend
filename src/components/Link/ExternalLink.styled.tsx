@@ -2,7 +2,7 @@ import { styled } from 'styled-components';
 import { linkStyles } from './InternalLink.styled';
 import { ExternalLinkProps } from './ExternalLink';
 
-export const StyledExternalLink = styled.a.withConfig({
+export const ExternalLinkStyled = styled.a.withConfig({
   shouldForwardProp: (prop) => !['truncate'].includes(prop),
 })<ExternalLinkProps>`
   ${linkStyles}

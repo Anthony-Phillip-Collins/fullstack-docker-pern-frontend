@@ -1,5 +1,5 @@
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef } from 'react';
-import { ExpanderInner, ExpanderWrapper } from './Expander.styled';
+import ExpanderStyled from './Expander.styled';
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
@@ -9,6 +9,8 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
 export interface ExpanderRef {
   updateHeight: () => void;
 }
+
+const Styled = ExpanderStyled;
 
 const Expander = forwardRef(({ children, open, ...props }: Props, ref: React.Ref<ExpanderRef>) => {
   const refWrapper = useRef<HTMLDivElement>(null);
@@ -30,9 +32,9 @@ const Expander = forwardRef(({ children, open, ...props }: Props, ref: React.Ref
 
   return (
     <>
-      <ExpanderWrapper {...props} ref={refWrapper}>
-        <ExpanderInner ref={refInner}>{children}</ExpanderInner>
-      </ExpanderWrapper>
+      <Styled.Expander {...props} ref={refWrapper}>
+        <Styled.Inner ref={refInner}>{children}</Styled.Inner>
+      </Styled.Expander>
     </>
   );
 });
