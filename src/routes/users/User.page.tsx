@@ -5,6 +5,7 @@ import useAuth from '../../hooks/useAuth';
 import useUserById from '../../hooks/useUserById';
 import { UserAttributes } from '../../types/user.type';
 import NotFoundPage from '../errors/NotFound.page';
+import theme from '../../styles/theme';
 
 const UserPage = () => {
   const params = useParams();
@@ -19,7 +20,7 @@ const UserPage = () => {
   return (
     <>
       {user && (
-        <Container>
+        <Container style={{ marginTop: theme.spacing.xxl }}>
           <UserContainer user={user} authUser={authUser} />
         </Container>
       )}

@@ -5,6 +5,7 @@ import useAuth from '../../hooks/useAuth';
 import useBlogById from '../../hooks/useBlogById';
 import { BlogAttributes } from '../../types/blog.type';
 import NotFoundPage from '../errors/NotFound.page';
+import theme from '../../styles/theme';
 
 const BlogPage = () => {
   const params = useParams();
@@ -19,7 +20,7 @@ const BlogPage = () => {
   return (
     <>
       {blog && (
-        <Container>
+        <Container style={{ marginTop: theme.spacing.xxl }}>
           <BlogContainer blog={blog} authUser={authUser} />
         </Container>
       )}

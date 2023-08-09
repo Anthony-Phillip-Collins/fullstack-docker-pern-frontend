@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { styled } from 'styled-components';
 import useAuth from '../../hooks/useAuth';
-import Button from '../Button/Button';
-import Container from '../Container/Container';
-import InternalLink from '../Link/InternalLink';
-import LoginFormExpander, { ExpanderContainerRef } from '../LoginForm/LoginFormExpander';
-import NavStyled from './Nav.styled';
 import useNotification from '../../hooks/useNotification';
 import { routerUtils } from '../../routes';
+import Button from '../Button/Button';
+import Container from '../Container/Container';
+import LoginFormExpander, { ExpanderContainerRef } from '../LoginForm/LoginFormExpander';
+import NavStyled from './Nav.styled';
+import NavLink from './NavLink';
 
 interface NavItem {
   to: string;
@@ -21,6 +22,7 @@ const Nav = () => {
   const { user, logOut } = useAuth();
   const { notifyAsync } = useNotification();
   const [open, setOpen] = useState(false);
+  const location = useLocation();
 
   const ref = React.useRef<ExpanderContainerRef>(null);
 
@@ -66,9 +68,13 @@ const Nav = () => {
                 return null;
               }
 
+              const active = location.pathname === to;
+
               return (
                 <Styled.ListItem key={to}>
-                  <InternalLink to={to}>{label}</InternalLink>
+                  <NavLink to={to} active={active} tabIndex={active ? -1 : 0}>
+                    {label}
+                  </NavLink>
                 </Styled.ListItem>
               );
             })}
