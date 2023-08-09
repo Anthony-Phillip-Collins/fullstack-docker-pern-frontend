@@ -23,8 +23,8 @@ const createOne = async (user: UserCreateInput) => {
   return data;
 };
 
-const updateOne = async (userId: UserAttributes['id'], update: UserUpdateAsAdminInput) => {
-  const promise = () => axios.put<UserAttributes>(`${baseUrl}/${userId}`, update, authConfig());
+const updateOne = async (username: UserAttributes['username'], update: UserUpdateAsAdminInput) => {
+  const promise = () => axios.put<UserAttributes>(`${baseUrl}/${username}`, update, authConfig());
   const { data } = await asyncHandlerAuth(promise);
   return data;
 };

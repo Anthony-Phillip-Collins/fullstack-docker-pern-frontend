@@ -1,4 +1,4 @@
-import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef } from 'react';
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import ExpanderStyled from './Expander.styled';
 import type * as CSS from 'csstype';
 
@@ -15,6 +15,7 @@ export interface ExpanderRef {
 const Styled = ExpanderStyled;
 
 const Expander = forwardRef(({ children, open, innerStyle, ...props }: Props, ref: React.Ref<ExpanderRef>) => {
+  const [hidden, setHidden] = useState(!open);
   const refWrapper = useRef<HTMLDivElement>(null);
   const refInner = useRef<HTMLDivElement>(null);
 
@@ -26,17 +27,22 @@ const Expander = forwardRef(({ children, open, innerStyle, ...props }: Props, re
     refWrapper.current.style.maxHeight = `${open ? height : 0}px`;
   }, [open]);
 
-  useImperativeHandle(ref, (): ExpanderRef => ({ updateHeight }));
+  const onTransitionEnd = useCallback(() => {
+    if (!open) setHidden(true);
+  }, [open]);
 
   useEffect(() => {
-    updateHeight();
-  }, [updateHeight]);
+    if (open) setHidden(false);
+    if (!hidden) updateHeight();
+  }, [updateHeight, hidden, open]);
+
+  useImperativeHandle(ref, (): ExpanderRef => ({ updateHeight }));
 
   return (
     <>
-      <Styled.Expander {...props} ref={refWrapper}>
+      <Styled.Expander onTransitionEnd={onTransitionEnd} {...props} ref={refWrapper}>
         <Styled.Inner style={{ ...innerStyle }} ref={refInner}>
-          {children}
+          {!hidden && children}
         </Styled.Inner>
       </Styled.Expander>
     </>

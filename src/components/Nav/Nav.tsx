@@ -7,6 +7,7 @@ import InternalLink from '../Link/InternalLink';
 import LoginFormExpander, { ExpanderContainerRef } from '../LoginForm/LoginFormExpander';
 import NavStyled from './Nav.styled';
 import useNotification from '../../hooks/useNotification';
+import { routerUtils } from '../../routes';
 
 interface NavItem {
   to: string;
@@ -37,20 +38,20 @@ const Nav = () => {
 
   const items: NavItem[] = [
     {
-      to: `/`,
+      to: routerUtils.getHomePath(),
       label: `Home`,
     },
     {
-      to: `/blogs`,
+      to: routerUtils.getBlogsPath(),
       label: `Blogs`,
     },
     {
-      to: `/bookmarks`,
+      to: routerUtils.getBookmarksPath(),
       label: `Bookmarks`,
       auth: true,
     },
     {
-      to: `/users`,
+      to: routerUtils.getUsersPath(),
       label: `Users`,
     },
   ];

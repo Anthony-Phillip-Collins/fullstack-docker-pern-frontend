@@ -3,7 +3,7 @@ import { createAsyncThunk, createSelector, createSlice } from '@reduxjs/toolkit'
 import userService from '../../services/user.service';
 import { BlogAttributes } from '../../types/blog.type';
 import { ReadingAttributes } from '../../types/reading.type';
-import { Readings, UserAttributes, UserCreateInput } from '../../types/user.type';
+import { Readings, UserAttributes, UserCreateInput, UserUpdateAsUserInput } from '../../types/user.type';
 import { RootState } from '../store';
 import { getAuthUser } from './auth.slice';
 
@@ -23,18 +23,11 @@ const createOne = createAsyncThunk('users/createOne', async (user: UserCreateInp
 });
 
 const updateOne = createAsyncThunk('users/updateOne', async (user: UserAttributes) => {
-  console.log('///// users/updateOne /////');
-  console.log(user);
-  console.log('/////');
-
-  // const update: UserUpdateAsAdmin = {
-  //   name: user.name,
-  //   username: user.username,
-  //   password: user.password,
-  // };
-
-  // const response = await userService.updateOne(user.id, update);
-  // return response;
+  const update: UserUpdateAsUserInput = {
+    name: user.name,
+  };
+  const response = await userService.updateOne(user.username, update);
+  return response;
 });
 
 const deleteOne = createAsyncThunk('users/deleteOne', async (id: UserAttributes['id']) => {
@@ -91,7 +84,8 @@ export const userSlice = createSlice({
     });
     builder.addCase(updateOne.fulfilled, (state, action) => {
       state.status = 'succeeded';
-      // state.all = state.all.map((user) => (user.id === action.payload.id ? { ...user, ...action.payload } : user));
+      state.one = action.payload;
+      state.all = state.all.map((user) => (user.id === action.payload.id ? { ...user, ...action.payload } : user));
     });
     builder.addCase(updateOne.rejected, (state, action) => {
       state.status = 'failed';
@@ -118,6 +112,7 @@ export const getUserById = (state: RootState, userId: UserAttributes['id']) =>
 
 const populateReadingsToUser = (readings: ReadingAttributes[], blogs: BlogAttributes[], user: UserAttributes) => {
   const readingsOfUser = (readings || []).filter((reading) => reading.userId === user.id);
+
   const array: UserAttributes['readings'] = [];
 
   readingsOfUser.forEach((reading) => {
@@ -134,9 +129,15 @@ const populateReadingsToUser = (readings: ReadingAttributes[], blogs: BlogAttrib
       array.push(item);
     }
   });
+
+  const blogsOfUser = (blogs || []).filter((blog) => {
+    const ownerId = blog?.owner?.id || blog.ownerId;
+    return ownerId === user.id;
+  });
+
   const userPopulated: UserAttributes = {
     ...user,
-    blogs,
+    blogs: blogsOfUser,
     readings: array,
   };
 

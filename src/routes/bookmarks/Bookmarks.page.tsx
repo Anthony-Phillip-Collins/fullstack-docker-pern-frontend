@@ -13,6 +13,7 @@ const BookmarksPage = () => {
   return (
     <Container>
       <PageTitle title="Bookmarks"></PageTitle>
+      {data.length === 0 && <p>No blogs have been bookmarked.</p>}
       <BlogList data={data} />
     </Container>
   );

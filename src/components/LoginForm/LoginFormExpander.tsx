@@ -24,7 +24,6 @@ const LoginFormExpander = forwardRef(({ onExpand, onCollapse }: Props, ref: Reac
   };
 
   const onSuccess = () => {
-    console.log('onSuccess');
     collapse();
   };
 

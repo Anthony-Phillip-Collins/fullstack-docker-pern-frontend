@@ -68,12 +68,25 @@ const Edit = styled.footer`
   })};
 `;
 
+const IconControls = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  ${({ theme }) => ({
+    paddingTop: theme.spacing.lg,
+    ['> *']: {
+      marginRight: theme.spacing.xl,
+    },
+  })}
+`;
+
 const CardStyled = {
   Card,
   Inner,
   Header,
   Body,
   Edit,
+  IconControls,
 };
 
 export default CardStyled;

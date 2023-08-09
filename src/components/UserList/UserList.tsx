@@ -1,23 +1,18 @@
-import { UserAttributes } from '../../types/user.type';
 import Grid from '../Grid/Grid';
-import InternalLink from '../Link/InternalLink';
-import User, { UserCallbacks } from '../User/User';
+import UserContainer, { UserContainerProps } from '../User/UserContainer';
 
-interface Props extends UserCallbacks {
-  data: UserAttributes[];
+interface Props {
+  users: UserContainerProps['user'][];
+  authUser?: UserContainerProps['authUser'];
 }
 
-const UserList = ({ data, onSave, onDelete }: Props) => {
+const UserList = ({ users, authUser }: Props) => {
   return (
-    data && (
+    users && (
       <Grid>
-        {data.map((user) => (
+        {users.map((user) => (
           <Grid.Item key={user.id}>
-            <User user={user} onSave={onSave} onDelete={onDelete}>
-              <div>
-                <InternalLink to={`/users/${user.id}`}>Read more</InternalLink>
-              </div>
-            </User>
+            <UserContainer user={user} authUser={authUser} oneOfMany />
           </Grid.Item>
         ))}
       </Grid>

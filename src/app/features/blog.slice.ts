@@ -123,6 +123,7 @@ const populateReadersToBlog = (readings: ReadingAttributes[], users: UserAttribu
       if (user) {
         const item: ReadersAttributes = {
           name: user.name,
+          id: user.id,
           reading: {
             read: reading.read,
           },

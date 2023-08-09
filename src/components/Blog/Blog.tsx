@@ -1,8 +1,10 @@
 import { useRef, useState } from 'react';
+import { routerUtils } from '../../routes';
 import { BlogAttributes, BlogUpdate } from '../../types/blog.type';
 import { Readings, UserAttributes } from '../../types/user.type';
-import { dateToString } from '../../util';
+import dateToString from '../../util/dateToString';
 import Card from '../Card/Card';
+import CardStyled from '../Card/Card.styled';
 import Editable, { EditableRef } from '../Editable/Editable';
 import IconButton from '../IconButton/IconButton';
 import ExternalLink from '../Link/ExternalLink';
@@ -25,10 +27,10 @@ export interface BlogCallbacks {
 export type BlogProps = Common & {
   blog: BlogAttributes;
   user?: UserAttributes | null;
-  canEdit?: boolean;
   bookmarked?: boolean;
   liked?: boolean;
-  single?: boolean;
+  canEdit?: boolean;
+  oneOfMany?: boolean;
 };
 
 type Props = BlogProps & BlogCallbacks;
@@ -46,7 +48,7 @@ const Blog = ({
   canEdit,
   bookmarked,
   liked,
-  single,
+  oneOfMany,
   onSave,
   onDelete,
   onLike,
@@ -56,7 +58,6 @@ const Blog = ({
 }: Props) => {
   const [editable, setEditable] = useState(false);
   const [warning, setWarning] = useState(false);
-
   const enableEdit = !!(canEdit && (onSave || onDelete));
   const tabIndex = { tabIndex: warning ? -1 : 0 };
 
@@ -143,7 +144,10 @@ const Blog = ({
           </Styled.LinkContainer>
         )}
 
-        <div>owner: {blog.owner && <InternalLink to={`/users/${blog.owner.id}`}>{blog.owner.name}</InternalLink>}</div>
+        <div>
+          owner:{' '}
+          {blog.owner && <InternalLink to={routerUtils.getUserPath(blog.owner.id)}>{blog.owner.name}</InternalLink>}
+        </div>
 
         <div>{createdAt && <div>created: {createdAt}</div>}</div>
 
@@ -151,7 +155,7 @@ const Blog = ({
 
         <Readers readers={blog.readers} />
 
-        <Styled.IconControls>
+        <CardStyled.IconControls>
           <IconButton
             iconProps={{ icon: liked ? 'unlike' : 'like' }}
             onClick={likeHandler}
@@ -178,7 +182,7 @@ const Blog = ({
             />
           )}
 
-          {!single && (
+          {oneOfMany && (
             <IconButton
               iconProps={{ icon: 'more' }}
               onClick={moreHandler}
@@ -187,7 +191,7 @@ const Blog = ({
               {...tabIndex}
             />
           )}
-        </Styled.IconControls>
+        </CardStyled.IconControls>
 
         {children}
 
@@ -204,19 +208,16 @@ const Readers = ({ readers }: ReadersProps) => {
     return null;
   }
 
-  const items = readers.map((reader, i) => (
-    <li key={i}>
-      <span>
-        {reader.name} - {reader.reading.read ? 'has read it.' : 'hasn’t read it yet.'}
-      </span>
+  const items = readers.map((reader) => (
+    <li key={reader.id}>
+      <InternalLink to={routerUtils.getUserPath(reader.id)}>{reader.name}</InternalLink>
     </li>
   ));
 
   return (
-    <>
-      Readers:
-      <ul>{items}</ul>
-    </>
+    <Styled.Readers>
+      <span>Readers:</span> <ul>{items}</ul>
+    </Styled.Readers>
   );
 };
 

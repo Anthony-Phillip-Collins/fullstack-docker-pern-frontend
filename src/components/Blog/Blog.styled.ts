@@ -25,16 +25,39 @@ const Likes = styled.p`
   padding: 0;
 `;
 
-const IconControls = styled.div`
+const Readers = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: flex-start;
-  ${({ theme }) => ({
-    paddingTop: theme.spacing.lg,
-    ['> *']: {
-      marginRight: theme.spacing.xl,
-    },
-  })}
+  align-items: center;
+
+  > :first-child {
+    margin-right: 0.5rem;
+  }
+
+  ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+  }
+
+  li {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-right: 0.5rem;
+    position: relative;
+
+    &::after {
+      content: ', ';
+      margin-left: 0.2rem;
+    }
+
+    &:last-child::after {
+      content: '';
+    }
+  }
 `;
 
 const BlogStyled = {
@@ -42,7 +65,7 @@ const BlogStyled = {
   Author,
   LinkContainer,
   Likes,
-  IconControls,
+  Readers,
 };
 
 export default BlogStyled;
