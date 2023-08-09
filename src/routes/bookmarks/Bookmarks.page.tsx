@@ -1,13 +1,16 @@
-import { getBookmarksOfAuthUser } from '../../app/features/blog.slice';
-import { useAppSelector } from '../../app/hooks';
+import { useEffect } from 'react';
 import BlogList from '../../components/BlogList/BlogList';
 import Container from '../../components/Container/Container';
 import PageTitle from '../../components/PageTitle/PageTitle';
+import useReadings from '../../hooks/useReadings';
 
 const BookmarksPage = () => {
-  const data = useAppSelector((state) => getBookmarksOfAuthUser(state));
+  const { data, refetch } = useReadings();
 
-  // Handle if user is not logged in
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
+
   if (!data) return null;
 
   return (

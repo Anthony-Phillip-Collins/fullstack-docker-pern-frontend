@@ -5,29 +5,36 @@ import useNotification from '../../hooks/useNotification';
 import { BlogCreation } from '../../types/blog.type';
 import BlogForm, { BlogFormRef, BlogFormShared } from './BlogForm';
 
-const BlogFormContainer = forwardRef(({ onLayout, onCancel }: BlogFormShared, ref: React.Ref<BlogFormRef>) => {
-  const dispatch = useAppDispatch();
-  const { notify } = useNotification();
-  const form = useRef<BlogFormRef>(null);
+interface BlogFormContainerProps extends BlogFormShared {
+  onSuccess?: () => void;
+}
 
-  const onSubmit = async (data: BlogCreation) => {
-    try {
-      const payload = await dispatch(blogThunk.createOne(data)).unwrap();
-      notify(`Blog ${payload.title} created!`);
-      form.current && form.current.reset();
-    } catch (error) {
-      notify({ error });
-    }
-  };
+const BlogFormContainer = forwardRef(
+  ({ onLayout, onCancel, onSuccess }: BlogFormContainerProps, ref: React.Ref<BlogFormRef>) => {
+    const dispatch = useAppDispatch();
+    const { notify } = useNotification();
+    const form = useRef<BlogFormRef>(null);
 
-  useImperativeHandle(ref, (): BlogFormRef => ({ reset: form.current?.reset || (() => null) }));
+    const onSubmit = async (data: BlogCreation) => {
+      try {
+        const payload = await dispatch(blogThunk.createOne(data)).unwrap();
+        notify(`Blog ${payload.title} created!`);
+        form.current && form.current.reset();
+        onSuccess && onSuccess();
+      } catch (error) {
+        notify({ error });
+      }
+    };
 
-  return (
-    <>
-      <BlogForm ref={form} onFormSubmit={onSubmit} onLayout={onLayout} onCancel={onCancel} />
-    </>
-  );
-});
+    useImperativeHandle(ref, (): BlogFormRef => ({ reset: form.current?.reset || (() => null) }));
+
+    return (
+      <>
+        <BlogForm ref={form} onFormSubmit={onSubmit} onLayout={onLayout} onCancel={onCancel} />
+      </>
+    );
+  },
+);
 
 BlogFormContainer.displayName = 'BlogFormContainer';
 

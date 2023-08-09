@@ -29,8 +29,8 @@ const updateOne = async (username: UserAttributes['username'], update: UserUpdat
   return data;
 };
 
-const deleteOne = async (userId: UserAttributes['id']) => {
-  const promise = () => axios.delete<UserAttributes>(`${baseUrl}/${userId}`, authConfig());
+const deleteOne = async (username: UserAttributes['username']) => {
+  const promise = () => axios.delete<UserAttributes>(`${baseUrl}/${username}`, authConfig());
   const { data } = await asyncHandlerAuth(promise);
   return data;
 };

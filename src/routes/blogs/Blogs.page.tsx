@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { BlogFormRef } from '../../components/BlogForm/BlogForm';
 import BlogFormContainer from '../../components/BlogForm/BlogFormContainer';
 import BlogList from '../../components/BlogList/BlogList';
@@ -10,7 +10,7 @@ import useAuth from '../../hooks/useAuth';
 import useBlogs from '../../hooks/useBlogs';
 
 const BlogsPage = () => {
-  const { data } = useBlogs();
+  const { data, refetch } = useBlogs();
   const { user } = useAuth();
   const [open, setOpen] = useState(false);
   const expander = useRef<ExpanderRef>(null);
@@ -31,6 +31,14 @@ const BlogsPage = () => {
     setOpen(false);
   };
 
+  const onSuccess = () => {
+    setOpen(false);
+  };
+
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
+
   if (!data) return null;
 
   return (
@@ -47,7 +55,7 @@ const BlogsPage = () => {
         )}
       </PageTitle>
       <Expander open={open} ref={expander}>
-        <BlogFormContainer onLayout={onLayout} onCancel={onCancel} ref={blogForm} />
+        <BlogFormContainer onLayout={onLayout} onCancel={onCancel} onSuccess={onSuccess} ref={blogForm} />
       </Expander>
       <BlogList data={data} />
     </Container>

@@ -11,7 +11,7 @@ const BlogPage = () => {
   const id: BlogAttributes['id'] = (params.id && parseInt(params.id)) || -1;
   const { data: blog } = useBlogById(id);
   const { user: authUser } = useAuth();
-  console.log('?', blog);
+
   return (
     <Container>
       <>{blog ? <BlogContainer blog={blog} authUser={authUser} /> : <NotFoundPage />}</>

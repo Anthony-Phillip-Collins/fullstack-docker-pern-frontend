@@ -1,11 +1,16 @@
+import { useEffect } from 'react';
 import Container from '../../components/Container/Container';
 import UserList from '../../components/UserList/UserList';
 import useAuth from '../../hooks/useAuth';
 import useUsers from '../../hooks/useUsers';
 
 const UsersPage = () => {
-  const { data } = useUsers();
+  const { data, refetch } = useUsers();
   const { user: authUser } = useAuth();
+
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
 
   if (!data) return null;
 

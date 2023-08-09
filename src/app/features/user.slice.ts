@@ -30,9 +30,9 @@ const updateOne = createAsyncThunk('users/updateOne', async (user: UserAttribute
   return response;
 });
 
-const deleteOne = createAsyncThunk('users/deleteOne', async (id: UserAttributes['id']) => {
-  await userService.deleteOne(id);
-  return id;
+const deleteOne = createAsyncThunk('users/deleteOne', async (username: UserAttributes['username']) => {
+  await userService.deleteOne(username);
+  return username;
 });
 
 export const userSlice = createSlice({
@@ -96,7 +96,7 @@ export const userSlice = createSlice({
     });
     builder.addCase(deleteOne.fulfilled, (state, action) => {
       state.status = 'succeeded';
-      state.all = state.all.filter((user) => user.id !== action.payload);
+      state.all = state.all.filter((user) => user.username !== action.payload);
     });
     builder.addCase(deleteOne.rejected, (state, action) => {
       state.status = 'failed';

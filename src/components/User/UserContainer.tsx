@@ -24,7 +24,7 @@ const UserContainer = ({ children, user, authUser, oneOfMany, ...props }: UserCo
   };
 
   const onDelete = (data: UserAttributes) => {
-    notifyAsync(dispatch(userThunk.deleteOne(data.id)), `${data.username} deleted.`);
+    notifyAsync(dispatch(userThunk.deleteOne(data.username)), `${data.name} deleted.`);
   };
 
   const onMore = (data: UserAttributes) => {
