@@ -1,11 +1,11 @@
-import Container from '../../components/Container/Container';
+import ErrorComponent from '../../components/ErrorComponent/ErrorComponent';
 
-const NotFoundPage = () => {
-  return (
-    <Container>
-      <h1>Not Found</h1>
-    </Container>
-  );
+type Props = {
+  error?: string;
+};
+
+const NotFoundPage = ({ error }: Props) => {
+  return <ErrorComponent title={`404 - ${error || 'Nothing to see here...'}`} />;
 };
 
 export default NotFoundPage;

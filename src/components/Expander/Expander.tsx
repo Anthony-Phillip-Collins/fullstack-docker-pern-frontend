@@ -1,11 +1,10 @@
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import ExpanderStyled from './Expander.styled';
-import type * as CSS from 'csstype';
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
   open: boolean;
-  innerStyle?: CSS.Properties;
+  propsInner?: React.HTMLAttributes<HTMLElement>;
 }
 
 export interface ExpanderRef {
@@ -14,7 +13,7 @@ export interface ExpanderRef {
 
 const Styled = ExpanderStyled;
 
-const Expander = forwardRef(({ children, open, innerStyle, ...props }: Props, ref: React.Ref<ExpanderRef>) => {
+const Expander = forwardRef(({ children, open, propsInner, ...props }: Props, ref: React.Ref<ExpanderRef>) => {
   const [hidden, setHidden] = useState(!open);
   const refWrapper = useRef<HTMLDivElement>(null);
   const refInner = useRef<HTMLDivElement>(null);
@@ -41,7 +40,7 @@ const Expander = forwardRef(({ children, open, innerStyle, ...props }: Props, re
   return (
     <>
       <Styled.Expander onTransitionEnd={onTransitionEnd} {...props} ref={refWrapper}>
-        <Styled.Inner style={{ ...innerStyle }} ref={refInner}>
+        <Styled.Inner {...propsInner} ref={refInner}>
           {!hidden && children}
         </Styled.Inner>
       </Styled.Expander>

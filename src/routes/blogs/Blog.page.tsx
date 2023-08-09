@@ -9,13 +9,21 @@ import NotFoundPage from '../errors/NotFound.page';
 const BlogPage = () => {
   const params = useParams();
   const id: BlogAttributes['id'] = (params.id && parseInt(params.id)) || -1;
-  const { data: blog } = useBlogById(id);
+  const { data: blog, error } = useBlogById(id);
   const { user: authUser } = useAuth();
 
+  if (error) {
+    return <NotFoundPage error={error} />;
+  }
+
   return (
-    <Container>
-      <>{blog ? <BlogContainer blog={blog} authUser={authUser} /> : <NotFoundPage />}</>
-    </Container>
+    <>
+      {blog && (
+        <Container>
+          <BlogContainer blog={blog} authUser={authUser} />
+        </Container>
+      )}
+    </>
   );
 };
 

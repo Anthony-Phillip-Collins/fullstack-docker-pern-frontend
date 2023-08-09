@@ -7,6 +7,7 @@ import ErrorPage from './errors/Error.page';
 import UserPage from './users/User.page';
 import UsersPage from './users/Users.page';
 import HomePage from './home/Home.page';
+import NotFoundPage from './errors/NotFound.page';
 
 const routerPaths = {
   home: '/',
@@ -56,7 +57,7 @@ const router = createBrowserRouter([
         path: routerPaths.bookmarks,
         element: <BookmarksPage />,
       },
-      { path: '*', element: <h1>Not Found</h1> },
+      { path: '*', element: <NotFoundPage /> },
     ],
   },
 ]);

@@ -42,9 +42,9 @@ const breakpoints: Theme['breakpoints'] = {
 
 const fonts: Theme['fonts'] = {
   h1: {
-    fontSize: '4.6rem',
+    fontSize: '4.2rem',
     fontWeight: FontWeight.bold,
-    lineHeight: '3.5rem',
+    lineHeight: '4.6rem',
   },
 
   h2: {
