@@ -83,19 +83,20 @@ const NavLink = styled(Link).withConfig({
     height: 1px;
     position: absolute;
     display: none;
+    opacity: 0.6;
   }
 
   &::before {
-    top: -0.3rem;
+    top: -0.4rem;
   }
 
   &::after {
-    bottom: -0.3rem;
+    bottom: -0.6rem;
   }
 
   &:hover,
   &:focus {
-    opacity: 1;
+    /* opacity: 1; */
     &::after,
     &::before {
       transform: scaleX(1) translateX(0%);

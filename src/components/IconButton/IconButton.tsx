@@ -9,10 +9,12 @@ interface IconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> 
   tooltipId?: string;
   label?: string;
   noBorder?: boolean;
+  inverted?: boolean;
 }
 
 const Button = (props: IconButtonProps) => {
   const { iconProps, tooltipProps, tooltipId, label, ...rest } = props;
+
   return (
     <>
       <button aria-label={label} data-tooltip-id={tooltipId} {...rest}>
@@ -25,8 +27,9 @@ const Button = (props: IconButtonProps) => {
 };
 
 const IconButton = styled(Button).withConfig({
-  shouldForwardProp: (prop) => !['noBorder'].includes(prop),
+  shouldForwardProp: (prop) => !['noBorder', 'inverted'].includes(prop),
 })<IconButtonProps>`
+  position: relative;
   cursor: pointer;
   display: inline-block;
   background-color: transparent;
@@ -47,8 +50,26 @@ const IconButton = styled(Button).withConfig({
     border-color: white;
   }
 
-  ${({ noBorder }) => ({
+  &::after {
+    content: '';
+    width: 90%;
+    height: 90%;
+    border-radius: 50%;
+    display: block;
+    position: absolute;
+    background: white;
+  }
+
+  > * {
+    z-index: 1;
+  }
+
+  ${({ noBorder, inverted, theme }) => ({
     borderWidth: noBorder ? '0' : '0.2rem',
+    color: inverted ? theme.global.backgroundColor : theme.global.color,
+    '&::after': {
+      display: inverted ? 'block' : 'none',
+    },
     ...mixins.transition('border-color'),
   })};
 `;

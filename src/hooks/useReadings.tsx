@@ -1,12 +1,14 @@
 import { useCallback, useState } from 'react';
+import { getBookmarksOfAuthUser } from '../app/features/blog.slice';
 import readingThunk from '../app/features/reading.slice';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
-import { getBookmarksOfAuthUser } from '../app/features/blog.slice';
 
 const useReadings = () => {
   const dispatch = useAppDispatch();
   const { status, error } = useAppSelector(({ readings }) => readings);
-  const allPopulated = useAppSelector((state) => getBookmarksOfAuthUser(state));
+  const all = useAppSelector((state) => getBookmarksOfAuthUser(state));
+  const read = useAppSelector((state) => getBookmarksOfAuthUser(state, true));
+  const unread = useAppSelector((state) => getBookmarksOfAuthUser(state, false));
   const [initDone, setInitDone] = useState(false);
 
   const refetch = useCallback(async () => {
@@ -21,7 +23,9 @@ const useReadings = () => {
   }, [initDone, refetch]);
 
   return {
-    data: allPopulated,
+    all,
+    read,
+    unread,
     loading: status === 'loading',
     error,
     init,

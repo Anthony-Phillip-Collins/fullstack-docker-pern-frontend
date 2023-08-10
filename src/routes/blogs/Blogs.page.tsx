@@ -52,6 +52,7 @@ const BlogsPage = () => {
             label={open ? 'Cancel' : 'Add blog'}
             tooltipId={`add-blog`}
             tooltipProps={{ place: 'right' }}
+            style={{ marginTop: theme.spacing.md }}
           />
         )}
       </PageTitle>

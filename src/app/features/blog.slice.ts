@@ -165,16 +165,20 @@ export const getOneBlogPopulated = createSelector(
 );
 
 export const getBookmarksOfAuthUser = createSelector(
-  [getAllBlogsPopulated, getAllReadings, getAuthUser],
-  (blogs, readings, user) => {
+  [getAllBlogsPopulated, getAllReadings, getAuthUser, (_state, isRead?: boolean) => isRead],
+  (blogs, readings, user, isRead) => {
     if (!user || !blogs || !readings) {
       return [];
     }
-    return blogs.filter((blog) => {
-      return readings.find((bookmark) => {
-        return user.id === bookmark.userId && blog.id === bookmark.blogId;
+    const all = blogs.filter((blog) => {
+      return readings.find(({ userId, blogId, read }) => {
+        const belongsToUser = user.id === userId && blog.id === blogId;
+        const isReadExists = isRead === true || isRead === false;
+        return isReadExists ? belongsToUser && read === isRead : belongsToUser;
       });
     });
+
+    return all;
   },
 );
 

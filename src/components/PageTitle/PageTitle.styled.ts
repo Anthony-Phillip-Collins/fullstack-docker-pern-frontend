@@ -10,14 +10,9 @@ const Title = styled.h1`
   margin-right: ${({ theme }) => theme.spacing.xl};
 `;
 
-const Children = styled.div`
-  margin-top: 1rem;
-`;
-
 const PageTitleStyled = {
   Wrapper,
   Title,
-  Children,
 };
 
 export default PageTitleStyled;
