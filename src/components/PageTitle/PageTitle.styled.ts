@@ -2,7 +2,7 @@ import { styled } from 'styled-components';
 
 const Wrapper = styled.div`
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
 `;
 

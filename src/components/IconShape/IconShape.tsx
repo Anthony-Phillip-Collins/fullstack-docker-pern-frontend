@@ -8,6 +8,7 @@ import {
 } from 'react-icons/fi';
 import { IoMdClose as CloseIcon } from 'react-icons/io';
 import { MdOutlineEdit as EditIcon, MdOutlineEditOff as EditOffIcon, MdMoreHoriz as MoreIcon } from 'react-icons/md';
+import { RxPerson as PersonIcon } from 'react-icons/rx';
 import { styled } from 'styled-components';
 import mixins from '../../styles/mixins';
 import theme from '../../styles/theme';
@@ -27,6 +28,7 @@ const icons = {
   read: ReadIcon,
   unread: UnreadIcon,
   menu: MenuIcon,
+  person: PersonIcon,
 };
 
 export interface IconProps extends React.SVGAttributes<SVGElement> {

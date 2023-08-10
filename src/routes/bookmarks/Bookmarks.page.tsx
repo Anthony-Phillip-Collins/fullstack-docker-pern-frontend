@@ -1,19 +1,28 @@
 import { useEffect, useState } from 'react';
 import BlogList from '../../components/BlogList/BlogList';
 import Container from '../../components/Container/Container';
-import IconButton from '../../components/IconButton/IconButton';
+import BookmarksFilter from '../../components/IconFilters/BookmarksFilter';
 import PageTitle from '../../components/PageTitle/PageTitle';
 import useReadings from '../../hooks/useReadings';
-import theme from '../../styles/theme';
+import useAuth from '../../hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 
 const BookmarksPage = () => {
   const { all, read, unread, refetch } = useReadings();
   const [showRead, setShowRead] = useState(true);
   const [showUnread, setShowUnread] = useState(false);
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     refetch();
   }, [refetch]);
+
+  useEffect(() => {
+    if (!user) {
+      navigate('/');
+    }
+  }, [user, navigate]);
 
   if (!all) return null;
 
@@ -38,9 +47,9 @@ const BookmarksPage = () => {
 
   return (
     <Container>
-      <PageTitle title={`${titlePrefix} Bookmarks`} style={{ justifyContent: 'space-between' }}>
+      <PageTitle title={`${titlePrefix} Bookmarks`}>
         {canFilter && (
-          <Filter
+          <BookmarksFilter
             showRead={showRead}
             showUnread={showUnread}
             toggleShowRead={() => setShowRead(!showRead)}
@@ -52,48 +61,6 @@ const BookmarksPage = () => {
       {blogs.length === 0 && <p>{canFilter ? 'Select at least one filter.' : 'No blogs have been bookmarked.'}</p>}
       <BlogList data={blogs} />
     </Container>
-  );
-};
-
-interface FilterProps extends React.HTMLAttributes<HTMLDivElement> {
-  showRead: boolean;
-  showUnread: boolean;
-  toggleShowRead: () => void;
-  toggleShowUnread: () => void;
-}
-
-const Filter = ({ showRead, showUnread, toggleShowRead, toggleShowUnread, ...props }: FilterProps) => {
-  return (
-    <>
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          border: '1px solid rgba(255, 255, 255, 0.6)',
-          borderRadius: theme.global.borderRadius,
-          padding: theme.spacing.xl,
-        }}
-        {...props}
-      >
-        <span>Filter: </span>
-        <IconButton
-          iconProps={{ icon: 'read' }}
-          onClick={() => toggleShowRead()}
-          label={showRead ? 'Remove filter for read' : 'Filter read'}
-          tooltipId={`bookmarks-show-read`}
-          inverted={showRead}
-          style={{ marginLeft: theme.spacing.xl }}
-        />
-        <IconButton
-          iconProps={{ icon: 'unread' }}
-          onClick={() => toggleShowUnread()}
-          label={showUnread ? 'Remove filter for unread' : 'Filter unread'}
-          tooltipId={`bookmarks-show-unread`}
-          inverted={showUnread}
-          style={{ marginLeft: theme.spacing.xl }}
-        />
-      </div>
-    </>
   );
 };
 

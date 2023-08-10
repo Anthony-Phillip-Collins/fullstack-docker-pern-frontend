@@ -14,7 +14,6 @@ interface IconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> 
 
 const Button = (props: IconButtonProps) => {
   const { iconProps, tooltipProps, tooltipId, label, ...rest } = props;
-
   return (
     <>
       <button aria-label={label} data-tooltip-id={tooltipId} {...rest}>

@@ -9,11 +9,13 @@ import PageTitle from '../../components/PageTitle/PageTitle';
 import useAuth from '../../hooks/useAuth';
 import useBlogs from '../../hooks/useBlogs';
 import theme from '../../styles/theme';
+import BlogsFilter from '../../components/IconFilters/BlogsFilter';
 
 const BlogsPage = () => {
   const { data, refetch } = useBlogs();
   const { user } = useAuth();
   const [open, setOpen] = useState(false);
+  const [showMyBlogsOnly, setShowMyBlogsOnly] = useState(false);
   const expander = useRef<ExpanderRef>(null);
   const blogForm = useRef<BlogFormRef>(null);
 
@@ -42,19 +44,34 @@ const BlogsPage = () => {
 
   if (!data) return null;
 
+  const blogs = showMyBlogsOnly ? user?.blogs || [] : data;
+  const canFilter = user?.blogs && user.blogs?.length > 0;
+
   return (
     <Container>
       <PageTitle title="Blogs">
-        {user && (
-          <IconButton
-            iconProps={{ icon: open ? 'minus' : 'plus' }}
-            onClick={toggle}
-            label={open ? 'Cancel' : 'Add blog'}
-            tooltipId={`add-blog`}
-            tooltipProps={{ place: 'right' }}
-            style={{ marginTop: theme.spacing.md }}
-          />
-        )}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexGrow: '1',
+          }}
+        >
+          {user && (
+            <IconButton
+              iconProps={{ icon: open ? 'minus' : 'plus' }}
+              onClick={toggle}
+              label={open ? 'Cancel' : 'Add blog'}
+              tooltipId={`add-blog`}
+              tooltipProps={{ place: 'top' }}
+            />
+          )}
+
+          {canFilter && (
+            <BlogsFilter showMyBlogsOnly={showMyBlogsOnly} toggle={() => setShowMyBlogsOnly(!showMyBlogsOnly)} />
+          )}
+        </div>
       </PageTitle>
       <Expander open={open} ref={expander}>
         <BlogFormContainer
@@ -65,7 +82,7 @@ const BlogsPage = () => {
           style={{ paddingBottom: theme.spacing.xxl }}
         />
       </Expander>
-      <BlogList data={data} />
+      <BlogList data={blogs} />
     </Container>
   );
 };
