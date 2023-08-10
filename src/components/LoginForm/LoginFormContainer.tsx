@@ -3,32 +3,38 @@ import useAuth from '../../hooks/useAuth';
 import useNotification from '../../hooks/useNotification';
 import { UserLogin } from '../../types/user.type';
 import LoginForm, { LoginFormRef, LoginFormShared } from './LoginForm';
-
-interface Props extends LoginFormShared {
-  onSuccess?: () => void;
+interface Common extends React.HTMLAttributes<HTMLFormElement> {
+  children?: React.ReactNode;
 }
 
-const LoginFormContainer = forwardRef(({ onLayout, onSuccess, onCancel }: Props, ref: React.Ref<LoginFormRef>) => {
-  const form = useRef<LoginFormRef>(null);
-
-  const { user, logIn } = useAuth();
-
-  const { notify } = useNotification();
-
-  const onLogIn = async (data: UserLogin) => {
-    try {
-      await logIn(data);
-      onSuccess && onSuccess();
-      notify('Logged in.');
-    } catch (e) {
-      notify({ error: e });
-    }
+type Props = LoginFormShared &
+  Common & {
+    onSuccess?: () => void;
   };
 
-  useImperativeHandle(ref, (): LoginFormRef => ({ reset: form.current?.reset || (() => null) }));
+const LoginFormContainer = forwardRef(
+  ({ onLayout, onSuccess, onCancel, ...props }: Props, ref: React.Ref<LoginFormRef>) => {
+    const form = useRef<LoginFormRef>(null);
+    const { user, logIn } = useAuth();
+    const { notify } = useNotification();
 
-  return <>{!user && <LoginForm ref={form} onFormSubmit={onLogIn} onLayout={onLayout} onCancel={onCancel} />}</>;
-});
+    const onLogIn = async (data: UserLogin) => {
+      try {
+        await logIn(data);
+        onSuccess && onSuccess();
+        notify('Logged in.');
+      } catch (e) {
+        notify({ error: e });
+      }
+    };
+
+    useImperativeHandle(ref, (): LoginFormRef => ({ reset: form.current?.reset || (() => null) }));
+
+    return (
+      <>{!user && <LoginForm ref={form} onFormSubmit={onLogIn} onLayout={onLayout} onCancel={onCancel} {...props} />}</>
+    );
+  },
+);
 
 LoginFormContainer.displayName = 'LoginFormContainer';
 

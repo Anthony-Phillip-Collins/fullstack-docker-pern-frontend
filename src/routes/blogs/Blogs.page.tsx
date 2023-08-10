@@ -8,6 +8,7 @@ import IconButton from '../../components/IconButton/IconButton';
 import PageTitle from '../../components/PageTitle/PageTitle';
 import useAuth from '../../hooks/useAuth';
 import useBlogs from '../../hooks/useBlogs';
+import theme from '../../styles/theme';
 
 const BlogsPage = () => {
   const { data, refetch } = useBlogs();
@@ -55,7 +56,13 @@ const BlogsPage = () => {
         )}
       </PageTitle>
       <Expander open={open} ref={expander}>
-        <BlogFormContainer onLayout={onLayout} onCancel={onCancel} onSuccess={onSuccess} ref={blogForm} />
+        <BlogFormContainer
+          onLayout={onLayout}
+          onCancel={onCancel}
+          onSuccess={onSuccess}
+          ref={blogForm}
+          style={{ paddingBottom: theme.spacing.xxl }}
+        />
       </Expander>
       <BlogList data={data} />
     </Container>

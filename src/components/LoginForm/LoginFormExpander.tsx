@@ -5,60 +5,67 @@ import LoginFormContainer from './LoginFormContainer';
 import Container from '../Container/Container';
 import theme from '../../styles/theme';
 
+interface Common extends React.HTMLAttributes<HTMLFormElement> {
+  children?: React.ReactNode;
+}
+
 export interface ExpanderContainerRef {
   expand: () => void;
   collapse: () => void;
 }
 
-interface Props {
+type Props = Common & {
   onExpand?: () => void;
   onCollapse?: () => void;
-}
-const LoginFormExpander = forwardRef(({ onExpand, onCollapse }: Props, ref: React.Ref<ExpanderContainerRef>) => {
-  const [open, setOpen] = useState(false);
-  const expander = useRef<ExpanderRef>(null);
-  const LoginForm = useRef<LoginFormRef>(null);
+};
 
-  const onLayout = () => {
-    expander.current && expander.current.updateHeight();
-  };
+const LoginFormExpander = forwardRef(
+  ({ onExpand, onCollapse, ...props }: Props, ref: React.Ref<ExpanderContainerRef>) => {
+    const [open, setOpen] = useState(false);
+    const expander = useRef<ExpanderRef>(null);
+    const LoginForm = useRef<LoginFormRef>(null);
 
-  const onSuccess = () => {
-    collapse();
-  };
+    const onLayout = () => {
+      expander.current && expander.current.updateHeight();
+    };
 
-  const expand = () => {
-    setOpen(true);
-    onExpand && onExpand();
-  };
+    const onSuccess = () => {
+      collapse();
+    };
 
-  const collapse = () => {
-    setOpen(false);
-    onCollapse && onCollapse();
-  };
+    const expand = () => {
+      setOpen(true);
+      onExpand && onExpand();
+    };
 
-  useEffect(() => {
-    if (open) {
-      LoginForm.current && LoginForm.current.reset();
-    }
-  }, [open]);
+    const collapse = () => {
+      setOpen(false);
+      onCollapse && onCollapse();
+    };
 
-  useImperativeHandle(
-    ref,
-    (): ExpanderContainerRef => ({
-      expand,
-      collapse,
-    }),
-  );
+    useEffect(() => {
+      if (open) {
+        LoginForm.current && LoginForm.current.reset();
+      }
+    }, [open]);
 
-  return (
-    <Container style={{ backgroundColor: theme.colors.darkVariant }}>
-      <Expander open={open} ref={expander}>
-        <LoginFormContainer onLayout={onLayout} onCancel={collapse} onSuccess={onSuccess} />
-      </Expander>
-    </Container>
-  );
-});
+    useImperativeHandle(
+      ref,
+      (): ExpanderContainerRef => ({
+        expand,
+        collapse,
+      }),
+    );
+
+    return (
+      <Container style={{ backgroundColor: theme.colors.darkVariant }}>
+        <Expander open={open} ref={expander}>
+          <LoginFormContainer onLayout={onLayout} onCancel={collapse} onSuccess={onSuccess} {...props} />
+        </Expander>
+      </Container>
+    );
+  },
+);
 
 LoginFormExpander.displayName = 'LoginFormExpander';
 

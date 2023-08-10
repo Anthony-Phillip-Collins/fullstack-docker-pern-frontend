@@ -7,14 +7,17 @@ import store from './app/store.ts';
 import router from './routes/index.tsx';
 import { GlobalStyle } from './styles/global.tsx';
 import theme from './styles/theme.tsx';
+import { WindowContextProvider } from './context/WindowContext.tsx';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <Provider store={store}>
-      <ThemeProvider theme={theme}>
-        <GlobalStyle />
-        <RouterProvider router={router} />
-      </ThemeProvider>
+      <WindowContextProvider>
+        <ThemeProvider theme={theme}>
+          <GlobalStyle />
+          <RouterProvider router={router} />
+        </ThemeProvider>
+      </WindowContextProvider>
     </Provider>
   </React.StrictMode>,
 );

@@ -9,10 +9,12 @@ interface Props extends React.FormHTMLAttributes<HTMLFormElement> {
 
 const Styled = FormStyled;
 
-const Form = ({ children, onSubmit }: Props) => {
+const Form = ({ children, onSubmit, ...props }: Props) => {
   return (
     <>
-      <Styled.Form onSubmit={onSubmit}>{children}</Styled.Form>
+      <Styled.Form onSubmit={onSubmit} {...props}>
+        {children}
+      </Styled.Form>
     </>
   );
 };

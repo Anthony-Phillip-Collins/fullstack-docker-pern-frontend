@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import { styled } from 'styled-components';
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
 import useNotification from '../../hooks/useNotification';
 import { routerUtils } from '../../routes';
+import theme from '../../styles/theme';
 import Button from '../Button/Button';
-import Container from '../Container/Container';
+import Expander, { ExpanderRef } from '../Expander/Expander';
 import LoginFormExpander, { ExpanderContainerRef } from '../LoginForm/LoginFormExpander';
 import NavStyled from './Nav.styled';
-import NavLink from './NavLink';
+import WindowContext from '../../context/WindowContext';
 
 interface NavItem {
   to: string;
@@ -16,26 +16,35 @@ interface NavItem {
   auth?: boolean;
 }
 
+export interface NavLinkType extends React.ComponentProps<typeof Link> {
+  active?: boolean;
+}
+
 const Styled = NavStyled;
 
 const Nav = () => {
   const { user, logOut } = useAuth();
   const { notifyAsync } = useNotification();
-  const [open, setOpen] = useState(false);
+  const [loginOpen, setLoginOpen] = useState(false);
+  const [navOpen, setNavOpen] = useState(true);
+  const navRef = useRef<ExpanderRef>(null);
+  const loginRef = React.useRef<ExpanderContainerRef>(null);
   const location = useLocation();
-
-  const ref = React.useRef<ExpanderContainerRef>(null);
+  const { isMobileWidth } = useContext(WindowContext);
 
   const onLogOut = () => {
     notifyAsync(logOut(), 'Logged out.');
   };
 
   const onExpand = () => {
-    setOpen(true);
+    setLoginOpen(true);
   };
 
   const onCollapse = () => {
-    setOpen(false);
+    setLoginOpen(false);
+    if (window.innerWidth <= theme.breakpoints.md) {
+      setNavOpen(false);
+    }
   };
 
   const items: NavItem[] = [
@@ -58,46 +67,60 @@ const Nav = () => {
     },
   ];
 
+  useEffect(() => {
+    setNavOpen(!isMobileWidth);
+    navRef.current && navRef.current.updateHeight();
+  }, [location.pathname, isMobileWidth]);
+
   return (
     <>
-      <NavContainer>
-        <Styled.Nav>
-          <Styled.List>
-            {items.map(({ auth, to, label }) => {
-              if (auth && !user) {
-                return null;
-              }
+      <Styled.NavContainer className="nav-container">
+        <Styled.Toggle className="nav-toggle">
+          <Styled.ToggleButton
+            iconProps={{ icon: navOpen ? 'close' : 'menu', size: 'xl' }}
+            onClick={() => setNavOpen(!navOpen)}
+            noBorder
+          />
+        </Styled.Toggle>
 
-              const active = location.pathname === to;
+        <Expander open={navOpen} ref={navRef}>
+          <Styled.Nav>
+            <Styled.List>
+              {items.map(({ auth, to, label }) => {
+                if (auth && !user) {
+                  return null;
+                }
 
-              return (
-                <Styled.ListItem key={to}>
-                  <NavLink to={to} active={active} tabIndex={active ? -1 : 0}>
-                    {label}
-                  </NavLink>
-                </Styled.ListItem>
-              );
-            })}
-          </Styled.List>
-          <div>
-            {user ? (
-              <Button onClick={() => onLogOut()}>Log Out</Button>
-            ) : (
-              !open && <Button onClick={() => ref.current?.expand()}>Log In</Button>
-            )}
-          </div>
-        </Styled.Nav>
-      </NavContainer>
+                const active = location.pathname === to;
 
-      <LoginFormExpander ref={ref} onExpand={onExpand} onCollapse={onCollapse} />
+                return (
+                  <Styled.ListItem key={to}>
+                    <Styled.Link to={to} active={active} tabIndex={active ? -1 : 0}>
+                      {label}
+                    </Styled.Link>
+                  </Styled.ListItem>
+                );
+              })}
+            </Styled.List>
+            <>
+              {user ? (
+                <Button onClick={() => onLogOut()}>Log Out</Button>
+              ) : (
+                !loginOpen && <Button onClick={() => loginRef.current?.expand()}>Log In</Button>
+              )}
+            </>
+          </Styled.Nav>
+        </Expander>
+      </Styled.NavContainer>
+
+      <LoginFormExpander
+        ref={loginRef}
+        onExpand={onExpand}
+        onCollapse={onCollapse}
+        style={{ paddingBottom: theme.spacing.xxl }}
+      />
     </>
   );
 };
-
-export const NavContainer = styled(Container)`
-  ${({ theme }) => ({
-    backgroundColor: theme.colors.darkVariant,
-  })}
-`;
 
 export default Nav;

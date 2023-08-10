@@ -9,11 +9,7 @@ const Expander = styled.div`
   })};
 `;
 
-const Inner = styled.div`
-  ${({ theme }) => ({
-    paddingBottom: `${theme.spacing.xxl}`,
-  })}
-`;
+const Inner = styled.div``;
 
 const ExpanderStyled = {
   Expander,

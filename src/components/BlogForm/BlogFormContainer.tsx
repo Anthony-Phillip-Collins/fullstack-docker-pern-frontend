@@ -5,12 +5,17 @@ import useNotification from '../../hooks/useNotification';
 import { BlogCreation } from '../../types/blog.type';
 import BlogForm, { BlogFormRef, BlogFormShared } from './BlogForm';
 
-interface BlogFormContainerProps extends BlogFormShared {
-  onSuccess?: () => void;
+interface Common extends React.HTMLAttributes<HTMLFormElement> {
+  children?: React.ReactNode;
 }
 
+type BlogFormContainerProps = BlogFormShared &
+  Common & {
+    onSuccess?: () => void;
+  };
+
 const BlogFormContainer = forwardRef(
-  ({ onLayout, onCancel, onSuccess }: BlogFormContainerProps, ref: React.Ref<BlogFormRef>) => {
+  ({ onLayout, onCancel, onSuccess, ...props }: BlogFormContainerProps, ref: React.Ref<BlogFormRef>) => {
     const dispatch = useAppDispatch();
     const { notify } = useNotification();
     const form = useRef<BlogFormRef>(null);
@@ -30,7 +35,7 @@ const BlogFormContainer = forwardRef(
 
     return (
       <>
-        <BlogForm ref={form} onFormSubmit={onSubmit} onLayout={onLayout} onCancel={onCancel} />
+        <BlogForm ref={form} onFormSubmit={onSubmit} onLayout={onLayout} onCancel={onCancel} {...props} />
       </>
     );
   },
