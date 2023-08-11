@@ -12,6 +12,7 @@ const Notification = styled.div`
   right: 0;
   bottom: 0;
   overflow: hidden;
+  z-index: 9999;
 `;
 
 const Inner = styled.div.withConfig({
