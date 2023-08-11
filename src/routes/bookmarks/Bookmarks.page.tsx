@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom';
 const BookmarksPage = () => {
   const { all, read, unread, refetch } = useReadings();
   const [showRead, setShowRead] = useState(true);
-  const [showUnread, setShowUnread] = useState(false);
+  const [showUnread, setShowUnread] = useState(true);
   const { user } = useAuth();
   const navigate = useNavigate();
 
