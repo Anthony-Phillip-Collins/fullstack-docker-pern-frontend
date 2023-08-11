@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { UserAttributes, UserUpdateAsAdminInput } from '../../types/user.type';
-import Card from '../Card/Card';
+import Card, { CardProps } from '../Card/Card';
 import Editable, { EditableRef } from '../Editable/Editable';
 import IconButton from '../IconButton/IconButton';
 import CardStyled from '../Card/Card.styled';
@@ -18,13 +18,14 @@ export interface UserCallbacks {
 }
 
 export type UserProps = UserCallbacks &
-  Common & {
+  Common &
+  Pick<CardProps, 'type'> & {
     user: UserAttributes;
     canEdit?: boolean;
     oneOfMany?: boolean;
   };
 
-const User = ({ children, user, canEdit, oneOfMany, onSave, onDelete, onMore }: UserProps) => {
+const User = ({ children, user, canEdit, oneOfMany, type, onSave, onDelete, onMore }: UserProps) => {
   const [editable, setEditable] = useState(false);
   const [warning, setWarning] = useState(false);
   const enableEdit = !!(canEdit && (onSave || onDelete));
@@ -64,6 +65,7 @@ const User = ({ children, user, canEdit, oneOfMany, onSave, onDelete, onMore }: 
       onWarning={setWarning}
       header={<Editable tagName="h2" ref={name} initialValue={user.name} disabled={!editable} />}
       uid={`${user.id}`}
+      type={type}
     >
       {user.username}
       {user.disabled && <div>disabled!</div>}

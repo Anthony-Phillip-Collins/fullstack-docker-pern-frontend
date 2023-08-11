@@ -38,6 +38,9 @@ export const asyncHandlerAuth = async <T>(getPromise: () => Promise<T>) => {
     const err = parseFrontendError(error);
 
     if (err?.name !== ErrorNames.TokenExpiredError) {
+      if (err?.name === ErrorNames.UserDisabled) {
+        authService.logOut();
+      }
       throw err;
     }
   }

@@ -4,25 +4,15 @@ import Container from '../../components/Container/Container';
 import BookmarksFilter from '../../components/IconFilters/BookmarksFilter';
 import PageTitle from '../../components/PageTitle/PageTitle';
 import useReadings from '../../hooks/useReadings';
-import useAuth from '../../hooks/useAuth';
-import { useNavigate } from 'react-router-dom';
 
 const BookmarksPage = () => {
   const { all, read, unread, refetch } = useReadings();
   const [showRead, setShowRead] = useState(true);
   const [showUnread, setShowUnread] = useState(true);
-  const { user } = useAuth();
-  const navigate = useNavigate();
 
   useEffect(() => {
     refetch();
   }, [refetch]);
-
-  useEffect(() => {
-    if (!user) {
-      navigate('/');
-    }
-  }, [user, navigate]);
 
   if (!all) return null;
 
@@ -47,7 +37,7 @@ const BookmarksPage = () => {
 
   return (
     <Container>
-      <PageTitle title={`${titlePrefix} Bookmarks`}>
+      <PageTitle title={`${titlePrefix} Bookmarks`} childContainerProps={{ style: { justifyContent: 'flex-end' } }}>
         {canFilter && (
           <BookmarksFilter
             showRead={showRead}

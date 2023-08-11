@@ -71,9 +71,10 @@ export const userSlice = createSlice({
     builder.addCase(createOne.pending, (state) => {
       state.status = 'loading';
     });
-    builder.addCase(createOne.fulfilled, (state) => {
+    builder.addCase(createOne.fulfilled, (state, action) => {
       state.status = 'succeeded';
-      // state.one = action.payload;
+      state.one = action.payload;
+      state.all.push(action.payload);
     });
     builder.addCase(createOne.rejected, (state, action) => {
       state.status = 'failed';

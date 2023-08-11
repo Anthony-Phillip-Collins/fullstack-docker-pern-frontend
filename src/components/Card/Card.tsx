@@ -15,12 +15,13 @@ export interface CardCallbacks {
   onWarning?: (state: boolean) => void;
 }
 
-type Props = CardCallbacks &
+export type CardProps = CardCallbacks &
   Common & {
     header: React.ReactNode;
     warningProps?: WarningProps;
     enableEdit?: boolean;
     uid?: string;
+    type?: 'primary';
   };
 
 export interface CardInnerProps {
@@ -29,7 +30,18 @@ export interface CardInnerProps {
 
 const Styled = CardStyled;
 
-const Card = ({ children, header, warningProps, enableEdit, uid, onSave, onDelete, onEdit, onWarning }: Props) => {
+const Card = ({
+  children,
+  header,
+  warningProps,
+  enableEdit,
+  uid,
+  type,
+  onSave,
+  onDelete,
+  onEdit,
+  onWarning,
+}: CardProps) => {
   const [editable, setEditable] = useState(false);
   const [warning, setWarning] = useState(false);
 
@@ -72,7 +84,7 @@ const Card = ({ children, header, warningProps, enableEdit, uid, onSave, onDelet
     <Styled.Card>
       {warning && <CardWarning onConfirm={deleteForRealHandler} onCancel={cancelHandler} {...warningProps} />}
       <Styled.Inner warning={warning}>
-        <Styled.Header>
+        <Styled.Header type={type}>
           {header}
           {isEnabled && (
             <IconButton

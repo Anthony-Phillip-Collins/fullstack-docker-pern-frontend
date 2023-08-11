@@ -9,6 +9,7 @@ import { ReadingAttributes, ReadingCreation } from '../../types/reading.type';
 import { Readings } from '../../types/user.type';
 import Blog, { BlogProps } from './Blog';
 import { routerUtils } from '../../routes';
+import useAsyncHandler from '../../hooks/useAsyncHandler';
 
 export interface BlogContainerProps extends React.HTMLAttributes<HTMLElement> {
   children?: React.ReactNode;
@@ -20,16 +21,17 @@ export interface BlogContainerProps extends React.HTMLAttributes<HTMLElement> {
 const BlogContainer = ({ children, blog, authUser, oneOfMany, ...props }: BlogContainerProps) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { notify, notifyAsync } = useNotification();
+  const { notify } = useNotification();
+  const { tryCatch } = useAsyncHandler();
   const bookmarked = authUser?.readings?.find((reading) => reading.id === blog?.id);
   const canEdit = !!(authUser?.id === blog.owner?.id);
 
   const onSave = (data: BlogAttributes) => {
-    notifyAsync(dispatch(blogThunk.updateOne(data)), `${data.title} saved.`);
+    tryCatch(dispatch(blogThunk.updateOne(data)), `${data.title} saved.`);
   };
 
   const onDelete = (data: BlogAttributes) => {
-    notifyAsync(dispatch(blogThunk.deleteOne(data.id)), `${data.title} deleted.`);
+    tryCatch(dispatch(blogThunk.deleteOne(data.id)), `${data.title} deleted.`);
   };
 
   const onLike = (data: BlogAttributes) => {
@@ -49,12 +51,9 @@ const BlogContainer = ({ children, blog, authUser, oneOfMany, ...props }: BlogCo
     };
 
     if (bookmarked) {
-      notifyAsync(
-        dispatch(readingThunk.deleteOne(bookmarked.reading.id)),
-        `${data.title} removed from your bookmarks.`,
-      );
+      tryCatch(dispatch(readingThunk.deleteOne(bookmarked.reading.id)), `${data.title} removed from your bookmarks.`);
     } else {
-      notifyAsync(dispatch(readingThunk.createOne(reading)), `${data.title} added to your bookmarks.`);
+      tryCatch(dispatch(readingThunk.createOne(reading)), `${data.title} added to your bookmarks.`);
     }
   };
 
@@ -73,10 +72,7 @@ const BlogContainer = ({ children, blog, authUser, oneOfMany, ...props }: BlogCo
       blogId: data.id,
     };
 
-    notifyAsync(
-      dispatch(readingThunk.updateOne(update)),
-      `${data.title} marked as ${update.read ? 'read' : 'unread'}.`,
-    );
+    tryCatch(dispatch(readingThunk.updateOne(update)), `${data.title} marked as ${update.read ? 'read' : 'unread'}.`);
   };
 
   const onMore = (data: BlogAttributes) => {

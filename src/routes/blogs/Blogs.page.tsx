@@ -49,15 +49,8 @@ const BlogsPage = () => {
 
   return (
     <Container>
-      <PageTitle title="Blogs">
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            flexGrow: '1',
-          }}
-        >
+      <PageTitle title={open ? 'Create blog' : 'Blogs'}>
+        <>
           {user && (
             <IconButton
               iconProps={{ icon: open ? 'minus' : 'plus' }}
@@ -71,7 +64,7 @@ const BlogsPage = () => {
           {canFilter && (
             <BlogsFilter showMyBlogsOnly={showMyBlogsOnly} toggle={() => setShowMyBlogsOnly(!showMyBlogsOnly)} />
           )}
-        </div>
+        </>
       </PageTitle>
       <Expander open={open} ref={expander}>
         <BlogFormContainer

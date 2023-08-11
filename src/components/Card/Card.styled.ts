@@ -1,5 +1,5 @@
 import { styled } from 'styled-components';
-import { CardInnerProps } from './Card';
+import { CardInnerProps, CardProps } from './Card';
 
 const Card = styled.article`
   position: relative;
@@ -23,13 +23,17 @@ const Inner = styled.div.withConfig({
   })};
 `;
 
-const Header = styled.div`
+type HeaderProps = Pick<CardProps, 'type'>;
+
+const Header = styled.div.withConfig({
+  shouldForwardProp: (prop) => !['type'].includes(prop),
+})<HeaderProps>`
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
 
-  ${({ theme }) => ({
-    backgroundColor: theme.colors.grey,
+  ${({ theme, type }) => ({
+    backgroundColor: type === 'primary' ? theme.colors.primary : theme.colors.grey,
     padding: theme.spacing.lg,
   })};
 

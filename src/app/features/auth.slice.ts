@@ -32,7 +32,11 @@ export const authSlice = createSlice({
     status: 'idle',
     error: null as unknown,
   },
-  reducers: {},
+  reducers: {
+    removeAuthUser: (state) => {
+      state.user = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(logIn.pending, (state) => {
@@ -83,6 +87,8 @@ export const authSlice = createSlice({
 });
 
 export const getAuthUser = (state: RootState) => state.auth.user;
+
+export const { removeAuthUser } = authSlice.actions;
 
 const authThunk = { logIn, logOut, signUp, fetchAuthUser };
 

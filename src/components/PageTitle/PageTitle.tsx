@@ -4,15 +4,16 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
   children?: React.ReactNode;
   title: string;
   propsTitle?: React.HTMLAttributes<HTMLHeadingElement>;
+  childContainerProps?: React.HTMLAttributes<HTMLDivElement>;
 }
 
 const Styled = PageTitleStyled;
 
-const PageTitle = ({ children, title, propsTitle, ...props }: Props) => {
+const PageTitle = ({ children, title, propsTitle, childContainerProps, ...props }: Props) => {
   return (
     <Styled.Wrapper {...props}>
       <Styled.Title {...propsTitle}>{title}</Styled.Title>
-      {children}
+      <Styled.ChildContainer {...childContainerProps}>{children}</Styled.ChildContainer>
     </Styled.Wrapper>
   );
 };

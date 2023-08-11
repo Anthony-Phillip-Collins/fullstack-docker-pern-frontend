@@ -67,9 +67,10 @@ const logIn = async (credentials: UserLogin) => {
 };
 
 const logOut = async () => {
-  const promise = () => axios.post(`${baseUrl}/logout`, null, authConfig());
-  await asyncHandlerAuth(promise);
+  const config = authConfig();
   removeUser();
+  const promise = () => axios.post(`${baseUrl}/logout`, null, config);
+  await asyncHandlerAuth(promise);
   return null;
 };
 

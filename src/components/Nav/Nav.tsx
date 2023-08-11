@@ -1,14 +1,14 @@
-import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import WindowContext from '../../context/WindowContext';
+import useAsyncHandler from '../../hooks/useAsyncHandler';
 import useAuth from '../../hooks/useAuth';
-import useNotification from '../../hooks/useNotification';
 import { routerUtils } from '../../routes';
 import theme from '../../styles/theme';
 import Button from '../Button/Button';
 import Expander, { ExpanderRef } from '../Expander/Expander';
 import LoginFormExpander, { ExpanderContainerRef } from '../LoginForm/LoginFormExpander';
 import NavStyled from './Nav.styled';
-import WindowContext from '../../context/WindowContext';
 
 interface NavItem {
   to: string;
@@ -24,7 +24,7 @@ const Styled = NavStyled;
 
 const Nav = () => {
   const { user, logOut } = useAuth();
-  const { notifyAsync } = useNotification();
+  const { tryCatch } = useAsyncHandler();
   const [loginOpen, setLoginOpen] = useState(false);
   const [navOpen, setNavOpen] = useState(true);
   const navRef = useRef<ExpanderRef>(null);
@@ -33,7 +33,7 @@ const Nav = () => {
   const { isMobileWidth } = useContext(WindowContext);
 
   const onLogOut = () => {
-    notifyAsync(logOut(), 'Logged out.');
+    tryCatch(logOut(), 'Logged out.');
   };
 
   const onExpand = () => {
@@ -103,6 +103,7 @@ const Nav = () => {
               })}
             </Styled.List>
             <>
+              {user && <p>Logged in as {user.name}</p>}
               {user ? (
                 <Button onClick={() => onLogOut()}>Log Out</Button>
               ) : (
