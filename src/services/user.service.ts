@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { UserAttributes, UserCreateInput, UserUpdateAsAdminInput } from '../types/user.type';
+import { UserAttributes, UserCreateInput, UserUpdateAsAdminInput, UserWithToken } from '../types/user.type';
 import { getApiUrl } from './util';
 import { asyncHandler, asyncHandlerAuth, authConfig } from './util/axiosUtil';
 
@@ -18,7 +18,7 @@ const getById = async (id: UserAttributes['id']) => {
 };
 
 const createOne = async (user: UserCreateInput) => {
-  const promise = () => axios.post<UserAttributes>(baseUrl, user, authConfig());
+  const promise = () => axios.post<UserWithToken | null>(baseUrl, user, authConfig());
   const { data } = await asyncHandlerAuth(promise);
   return data;
 };
@@ -31,8 +31,8 @@ const updateOne = async (username: UserAttributes['username'], update: UserUpdat
 
 const deleteOne = async (username: UserAttributes['username']) => {
   const promise = () => axios.delete<UserAttributes>(`${baseUrl}/${username}`, authConfig());
-  const { data } = await asyncHandlerAuth(promise);
-  return data;
+  await asyncHandlerAuth(promise);
+  return username;
 };
 
 const userService = { getAll, getById, createOne, updateOne, deleteOne };

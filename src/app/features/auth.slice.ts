@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import type { SerializedError } from '@reduxjs/toolkit';
 import authService from '../../services/auth.service';
 import { UserAttributes, UserCreateInput, UserLogin } from '../../types/user.type';
 import { RootState } from '../store';
@@ -30,7 +31,7 @@ export const authSlice = createSlice({
   initialState: {
     user: null as UserAttributes | null,
     status: 'idle',
-    error: null as unknown,
+    error: null as SerializedError | Error | null,
   },
   reducers: {
     removeAuthUser: (state) => {
@@ -48,7 +49,7 @@ export const authSlice = createSlice({
       })
       .addCase(logIn.rejected, (state, action) => {
         state.status = 'idle';
-        state.error = action.error.message;
+        state.error = action.error;
       })
       .addCase(logOut.pending, (state) => {
         state.status = 'loading';
@@ -59,7 +60,7 @@ export const authSlice = createSlice({
       })
       .addCase(logOut.rejected, (state, action) => {
         state.status = 'idle';
-        state.error = action.error.message;
+        state.error = action.error;
       })
       .addCase(signUp.pending, (state) => {
         state.status = 'loading';
@@ -70,7 +71,7 @@ export const authSlice = createSlice({
       })
       .addCase(signUp.rejected, (state, action) => {
         state.status = 'idle';
-        state.error = action.error.message;
+        state.error = action.error;
       })
       .addCase(fetchAuthUser.pending, (state) => {
         state.status = 'loading';
@@ -81,7 +82,7 @@ export const authSlice = createSlice({
       })
       .addCase(fetchAuthUser.rejected, (state, action) => {
         state.status = 'idle';
-        state.error = action.error.message;
+        state.error = action.error;
       });
   },
 });

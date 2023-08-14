@@ -35,8 +35,6 @@ const Editable = forwardRef(
 
     useImperativeHandle(ref, (): EditableRef => ({ value: html }));
 
-    if (!html) return null;
-
     return (
       <ContentEditable
         {...props}

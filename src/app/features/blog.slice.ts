@@ -3,40 +3,62 @@ import blogService from '../../services/blog.service';
 import { BlogAttributes, BlogCreation, BlogUpdate, ReadersAttributes } from '../../types/blog.type';
 import { ReadingAttributes } from '../../types/reading.type';
 import { UserAttributes } from '../../types/user.type';
+import { serializeFrontendError } from '../../util/frontendErrorParser';
 import { RootState } from '../store';
 import { getAuthUser } from './auth.slice';
 import { getAllReadings } from './reading.slice';
 import { getAllUsers } from './user.slice';
 
-const fetchAll = createAsyncThunk('blogs/fetchAll', async () => {
-  const response = await blogService.getAll();
-  return response;
+const fetchAll = createAsyncThunk('blogs/fetchAll', async (_, thunkApi) => {
+  try {
+    return await blogService.getAll();
+  } catch (error) {
+    const serializedError = serializeFrontendError(error);
+    return thunkApi.rejectWithValue(serializedError);
+  }
 });
 
-const fetchOne = createAsyncThunk('blogs/fetchOne', async (id: BlogAttributes['id']) => {
-  const response = await blogService.getById(id);
-  return response;
+const fetchOne = createAsyncThunk('blogs/fetchOne', async (id: BlogAttributes['id'], thunkApi) => {
+  try {
+    return await blogService.getById(id);
+  } catch (error) {
+    const serializedError = serializeFrontendError(error);
+    return thunkApi.rejectWithValue(serializedError);
+  }
 });
 
-const createOne = createAsyncThunk('blogs/createOne', async (blog: BlogCreation) => {
-  const response = await blogService.createOne(blog);
-  return response;
+const createOne = createAsyncThunk('blogs/createOne', async (blog: BlogCreation, thunkApi) => {
+  try {
+    return await blogService.createOne(blog);
+  } catch (error) {
+    const serializedError = serializeFrontendError(error);
+    return thunkApi.rejectWithValue(serializedError);
+  }
 });
 
-const updateOne = createAsyncThunk('blogs/updateOne', async (blog: BlogAttributes) => {
+const updateOne = createAsyncThunk('blogs/updateOne', async (blog: BlogAttributes, thunkApi) => {
   const update: BlogUpdate = {
     title: blog.title,
     author: blog.author,
     url: blog.url,
   };
 
-  const response = await blogService.updateOne(blog.id, update);
-  return response;
+  try {
+    return await blogService.updateOne(blog.id, update);
+  } catch (error) {
+    const serializedError = serializeFrontendError(error);
+    return thunkApi.rejectWithValue(serializedError);
+  }
 });
 
-const deleteOne = createAsyncThunk('blogs/deleteOne', async (id: BlogAttributes['id']) => {
-  await blogService.deleteOne(id);
-  return id;
+const deleteOne = createAsyncThunk('blogs/deleteOne', async (id: BlogAttributes['id'], thunkApi) => {
+  try {
+    await blogService.deleteOne(id);
+    return id;
+  } catch (error) {
+    const serializedError = serializeFrontendError(error);
+    return thunkApi.rejectWithValue(serializedError);
+  }
 });
 
 export const blogSlice = createSlice({
@@ -45,9 +67,13 @@ export const blogSlice = createSlice({
     all: [] as BlogAttributes[],
     one: null as BlogAttributes | null,
     status: 'idle',
-    error: null as string | null | undefined,
+    error: null as Error | null,
   },
-  reducers: {},
+  reducers: {
+    clearBlogError: (state) => {
+      state.error = null;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(fetchAll.pending, (state) => {
       state.status = 'loading';
@@ -58,7 +84,7 @@ export const blogSlice = createSlice({
     });
     builder.addCase(fetchAll.rejected, (state, action) => {
       state.status = 'failed';
-      state.error = action.error.message;
+      state.error = serializeFrontendError(action.payload);
     });
     builder.addCase(fetchOne.pending, (state) => {
       state.status = 'loading';
@@ -69,7 +95,7 @@ export const blogSlice = createSlice({
     });
     builder.addCase(fetchOne.rejected, (state, action) => {
       state.status = 'failed';
-      state.error = action.error.message;
+      state.error = serializeFrontendError(action.payload);
     });
     builder.addCase(createOne.pending, (state) => {
       state.status = 'loading';
@@ -80,7 +106,7 @@ export const blogSlice = createSlice({
     });
     builder.addCase(createOne.rejected, (state, action) => {
       state.status = 'failed';
-      state.error = action.error.message;
+      state.error = serializeFrontendError(action.payload);
     });
     builder.addCase(updateOne.pending, (state) => {
       state.status = 'loading';
@@ -92,7 +118,7 @@ export const blogSlice = createSlice({
     });
     builder.addCase(updateOne.rejected, (state, action) => {
       state.status = 'failed';
-      state.error = action.error.message;
+      state.error = serializeFrontendError(action.payload);
     });
     builder.addCase(deleteOne.pending, (state) => {
       state.status = 'loading';
@@ -103,7 +129,7 @@ export const blogSlice = createSlice({
     });
     builder.addCase(deleteOne.rejected, (state, action) => {
       state.status = 'failed';
-      state.error = action.error.message;
+      state.error = serializeFrontendError(action.payload);
     });
   },
 });
@@ -181,6 +207,8 @@ export const getBookmarksOfAuthUser = createSelector(
     return all;
   },
 );
+
+export const { clearBlogError } = blogSlice.actions;
 
 const blogThunk = {
   fetchAll,

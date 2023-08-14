@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import type { SerializedError } from '@reduxjs/toolkit';
 import readingService from '../../services/reading.service';
 import { BlogAttributes } from '../../types/blog.type';
 import { ReadingAttributes, ReadingCreation, ReadingUpdate } from '../../types/reading.type';
@@ -41,7 +42,7 @@ export const readingSlice = createSlice({
     all: [] as ReadingAttributes[],
     one: {} as ReadingAttributes,
     status: 'idle',
-    error: null as string | null | undefined,
+    error: null as SerializedError | Error | null,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -54,7 +55,7 @@ export const readingSlice = createSlice({
     });
     builder.addCase(fetchAll.rejected, (state, action) => {
       state.status = 'failed';
-      state.error = action.error.message;
+      state.error = action.error;
     });
     builder.addCase(fetchOne.pending, (state) => {
       state.status = 'loading';
@@ -65,7 +66,7 @@ export const readingSlice = createSlice({
     });
     builder.addCase(fetchOne.rejected, (state, action) => {
       state.status = 'failed';
-      state.error = action.error.message;
+      state.error = action.error;
     });
     builder.addCase(createOne.pending, (state) => {
       state.status = 'loading';
@@ -76,7 +77,7 @@ export const readingSlice = createSlice({
     });
     builder.addCase(createOne.rejected, (state, action) => {
       state.status = 'failed';
-      state.error = action.error.message;
+      state.error = action.error;
     });
     builder.addCase(updateOne.pending, (state) => {
       state.status = 'loading';
@@ -90,7 +91,7 @@ export const readingSlice = createSlice({
     });
     builder.addCase(updateOne.rejected, (state, action) => {
       state.status = 'failed';
-      state.error = action.error.message;
+      state.error = action.error;
     });
     builder.addCase(deleteOne.pending, (state) => {
       state.status = 'loading';
@@ -101,7 +102,7 @@ export const readingSlice = createSlice({
     });
     builder.addCase(deleteOne.rejected, (state, action) => {
       state.status = 'failed';
-      state.error = action.error.message;
+      state.error = action.error;
     });
   },
 });

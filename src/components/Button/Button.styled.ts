@@ -29,6 +29,11 @@ export const StyledButton = styled.button.withConfig({
       '&:hover': {
         backgroundColor: theme.colors[`${variant}Variant`],
       },
+      '&[disabled]': {
+        backgroundColor: theme.colors.disabled,
+        color: theme.colors.textOnDisabled,
+        cursor: 'not-allowed',
+      },
     };
   }};
 `;

@@ -18,6 +18,7 @@ interface Common extends React.HTMLAttributes<HTMLElement> {
 export interface BlogCallbacks {
   onSave?: (blog: BlogAttributes) => void;
   onDelete?: (blog: BlogAttributes) => void;
+  onCancel?: () => void;
   onLike: (blog: BlogAttributes) => void;
   onBookmark: (blog: BlogAttributes) => void;
   onRead: (reading: Readings) => void;
@@ -51,6 +52,7 @@ const Blog = ({
   oneOfMany,
   onSave,
   onDelete,
+  onCancel,
   onLike,
   onBookmark,
   onRead,
@@ -60,6 +62,7 @@ const Blog = ({
   const [warning, setWarning] = useState(false);
   const enableEdit = !!(canEdit && (onSave || onDelete));
   const tabIndex = { tabIndex: warning ? -1 : 0 };
+  const canLike = false; // implement later
 
   const title = useRef<EditableRef>(null);
   const author = useRef<EditableRef>(null);
@@ -88,6 +91,10 @@ const Blog = ({
 
   const deleteHandler = () => {
     onDelete && onDelete(blog);
+  };
+
+  const cancelHandler = () => {
+    onCancel && onCancel();
   };
 
   const likeHandler: React.MouseEventHandler = (e) => {
@@ -121,6 +128,7 @@ const Blog = ({
       enableEdit={enableEdit}
       onSave={onSave && saveHandler}
       onDelete={onDelete && deleteHandler}
+      onCancel={onCancel && cancelHandler}
       onEdit={setEditable}
       onWarning={setWarning}
       header={<Editable tagName="h2" ref={title} initialValue={blog.title} disabled={!editable} />}
@@ -156,13 +164,15 @@ const Blog = ({
         <Readers readers={blog.readers} />
 
         <CardStyled.IconControls>
-          <IconButton
-            iconProps={{ icon: liked ? 'unlike' : 'like' }}
-            onClick={likeHandler}
-            label={liked ? 'Remove like' : 'Add like'}
-            tooltipId={`like${blog.id}`}
-            {...tabIndex}
-          />
+          {canLike && (
+            <IconButton
+              iconProps={{ icon: liked ? 'unlike' : 'like' }}
+              onClick={likeHandler}
+              label={liked ? 'Remove like' : 'Add like'}
+              tooltipId={`like${blog.id}`}
+              {...tabIndex}
+            />
+          )}
 
           <IconButton
             iconProps={{ icon: bookmarked ? 'unbookmark' : 'bookmark' }}

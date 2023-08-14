@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import { BlogFormRef } from '../../components/BlogForm/BlogForm';
 import Container from '../../components/Container/Container';
 import Expander, { ExpanderRef } from '../../components/Expander/Expander';
 import IconButton from '../../components/IconButton/IconButton';
@@ -10,6 +9,7 @@ import useAuth from '../../hooks/useAuth';
 import useUsers from '../../hooks/useUsers';
 import theme from '../../styles/theme';
 import UsersFilter from '../../components/IconFilters/UsersFilter';
+import { FormRef } from '../../types/form.type';
 
 const UsersPage = () => {
   const { data, refetch } = useUsers();
@@ -17,7 +17,7 @@ const UsersPage = () => {
   const [open, setOpen] = useState(false);
   const [showAuthUser, setShowAuthUser] = useState(false);
   const expander = useRef<ExpanderRef>(null);
-  const userForm = useRef<BlogFormRef>(null);
+  const userForm = useRef<FormRef>(null);
 
   const toggle = () => {
     if (open) {

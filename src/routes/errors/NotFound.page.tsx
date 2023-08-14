@@ -1,11 +1,13 @@
 import ErrorComponent from '../../components/ErrorComponent/ErrorComponent';
+import { parseFrontendError } from '../../util/frontendErrorParser';
 
 type Props = {
-  error?: string;
+  error?: Error | string;
 };
 
 const NotFoundPage = ({ error }: Props) => {
-  return <ErrorComponent title={`404 - ${error || 'Nothing to see here...'}`} />;
+  const message = parseFrontendError(error)?.message;
+  return <ErrorComponent title={`404 - ${message || 'Nothing to see here...'}`} />;
 };
 
 export default NotFoundPage;

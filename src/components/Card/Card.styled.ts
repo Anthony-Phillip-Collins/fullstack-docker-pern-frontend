@@ -37,7 +37,9 @@ const Header = styled.div.withConfig({
     padding: theme.spacing.lg,
   })};
 
-  > *:first-child {
+  h2,
+  h3,
+  h4 {
     margin: 0;
     padding: 0;
     text-overflow: ellipsis;
@@ -84,6 +86,14 @@ const IconControls = styled.div`
   })}
 `;
 
+const InputError = styled.span`
+  ${({ theme }) => ({
+    color: theme.colors.danger,
+    marginTop: theme.spacing.md,
+    fontSize: theme.fonts.detail.fontSize,
+  })};
+`;
+
 const CardStyled = {
   Card,
   Inner,
@@ -91,6 +101,7 @@ const CardStyled = {
   Body,
   Edit,
   IconControls,
+  InputError,
 };
 
 export default CardStyled;

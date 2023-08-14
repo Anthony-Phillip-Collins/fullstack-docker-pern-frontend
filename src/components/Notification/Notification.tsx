@@ -1,7 +1,7 @@
 import { clearNotification } from '../../app/features/notification.slice';
 import { useAppDispatch } from '../../app/hooks';
 import { NotificationType } from '../../types/notification.type';
-import parseFrontendError from '../../util/parseFrontendError';
+import { parseFrontendError } from '../../util/frontendErrorParser';
 import IconButton from '../IconButton/IconButton';
 import NotificationStyled from './Notification.styled';
 

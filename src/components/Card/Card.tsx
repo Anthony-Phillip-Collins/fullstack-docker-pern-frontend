@@ -11,6 +11,7 @@ interface Common extends React.HTMLAttributes<HTMLElement> {
 export interface CardCallbacks {
   onSave?: () => void;
   onDelete?: () => void;
+  onCancel?: () => void;
   onEdit?: (state: boolean) => void;
   onWarning?: (state: boolean) => void;
 }
@@ -39,6 +40,7 @@ const Card = ({
   type,
   onSave,
   onDelete,
+  onCancel,
   onEdit,
   onWarning,
 }: CardProps) => {
@@ -73,6 +75,7 @@ const Card = ({
   const cancelHandler = () => {
     edit(false);
     warn(false);
+    onCancel && onCancel();
   };
 
   const deleteForRealHandler = () => {
@@ -101,14 +104,14 @@ const Card = ({
           {children}
           {isEnabled && editable && (
             <Styled.Edit>
-              {onSave && (
-                <Button variant="primary" aria-label="Save" onClick={saveHandler}>
-                  Save
-                </Button>
-              )}
               {onDelete && (
                 <Button variant="danger" aria-label="Delete" onClick={deleteHandler}>
                   Delete
+                </Button>
+              )}
+              {onSave && (
+                <Button variant="primary" aria-label="Save" onClick={saveHandler}>
+                  Save
                 </Button>
               )}
             </Styled.Edit>

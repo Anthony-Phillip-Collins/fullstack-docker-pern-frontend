@@ -1,11 +1,12 @@
 import { useRef, useState } from 'react';
+import { routerUtils } from '../../routes';
 import { UserAttributes, UserUpdateAsAdminInput } from '../../types/user.type';
+import dateToString from '../../util/dateToString';
 import Card, { CardProps } from '../Card/Card';
+import CardStyled from '../Card/Card.styled';
 import Editable, { EditableRef } from '../Editable/Editable';
 import IconButton from '../IconButton/IconButton';
-import CardStyled from '../Card/Card.styled';
 import InternalLink from '../Link/InternalLink';
-import { routerUtils } from '../../routes';
 
 interface Common extends React.HTMLAttributes<HTMLElement> {
   children?: React.ReactNode;
@@ -67,40 +68,16 @@ const User = ({ children, user, canEdit, oneOfMany, type, onSave, onDelete, onMo
       uid={`${user.id}`}
       type={type}
     >
-      {user.username}
-      {user.disabled && <div>disabled!</div>}
+      {<div style={{ textOverflow: 'ellipsis', overflow: 'hidden' }}>{user.username}</div>}
+      {!oneOfMany && <div>Id: {user.id}</div>}
+      {user.disabled && <div>logged out</div>}
       <div>Privileges: {user.admin ? 'Admin' : 'User'}</div>
+      {!oneOfMany && <div>Created: {dateToString(user?.createdAt)}</div>}
+      {!oneOfMany && <div>Updated: {dateToString(user?.updatedAt)}</div>}
 
-      <div>
-        {user.blogs && user.blogs.length > 0 && (
-          <>
-            <h3>Blogs</h3>
-            <ul>
-              {user.blogs.map((blog) => (
-                <li key={blog.id}>
-                  <InternalLink to={routerUtils.getBlogPath(blog.id)}>{blog.title}</InternalLink>
-                </li>
-              ))}
-            </ul>
-          </>
-        )}
-      </div>
+      {!oneOfMany && <UserBlogs blogs={user?.blogs} />}
 
-      <div>
-        {user.readings && user.readings.length > 0 && (
-          <>
-            <h3>Readings</h3>
-            <ul>
-              {user.readings.map((reading) => (
-                <li key={reading.id}>
-                  <InternalLink to={routerUtils.getBlogPath(reading.id)}>{reading.title}</InternalLink> -{' '}
-                  {reading.reading.read ? 'read' : 'unread'}
-                </li>
-              ))}
-            </ul>
-          </>
-        )}
-      </div>
+      {!oneOfMany && <UserReadings readings={user?.readings} />}
 
       <CardStyled.IconControls>
         {oneOfMany && (
@@ -116,6 +93,55 @@ const User = ({ children, user, canEdit, oneOfMany, type, onSave, onDelete, onMo
 
       {children}
     </Card>
+  );
+};
+
+const UserReadings = ({ readings }: Pick<UserAttributes, 'readings'>) => {
+  const hasReadings = readings && readings.length > 0;
+  const heading = readings && <div>Readings: {!hasReadings && ' none'}</div>;
+
+  return (
+    <div>
+      {heading}
+      {heading && hasReadings && (
+        <ul>
+          {readings.map((reading) => (
+            <>
+              <li key={reading.id}>
+                <InternalLink to={routerUtils.getBlogPath(reading.id)}>{reading.title}</InternalLink> -{' '}
+                {reading.reading.read ? 'read' : 'unread'}
+              </li>
+            </>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+};
+
+const UserBlogs = ({ blogs }: Pick<UserAttributes, 'blogs'>) => {
+  const hasBlogs = blogs && blogs.length > 0;
+  const heading = blogs && <div>Blogs: {!hasBlogs && ' none'}</div>;
+
+  return (
+    <div>
+      {heading}
+      {heading && hasBlogs && (
+        <>
+          {blogs && blogs.length > 0 && (
+            <>
+              <ul>
+                {blogs.map((blog) => (
+                  <li key={blog.id}>
+                    <InternalLink to={routerUtils.getBlogPath(blog.id)}>{blog.title}</InternalLink>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+        </>
+      )}
+    </div>
   );
 };
 

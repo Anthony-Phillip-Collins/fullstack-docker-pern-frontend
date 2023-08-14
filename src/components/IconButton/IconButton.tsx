@@ -40,6 +40,7 @@ const IconButton = styled(Button).withConfig({
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
   max-height: 4.2rem;
   max-width: 4.2rem;
   min-height: 3.2rem;

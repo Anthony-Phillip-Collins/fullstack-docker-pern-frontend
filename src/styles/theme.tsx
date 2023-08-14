@@ -28,6 +28,8 @@ const colors: Theme['colors'] = {
   textOnDanger: colorsShared.light,
   success: '#2e7d32',
   textOnSuccess: colorsShared.light,
+  disabled: colorsShared.grey,
+  textOnDisabled: colorsShared.light,
   ...colorsShared,
 };
 

@@ -34,6 +34,8 @@ interface Colors {
   darkVariant: string;
   grey: string;
   greyVariant: string;
+  disabled: string;
+  textOnDisabled: string;
 }
 
 export enum FontWeight {

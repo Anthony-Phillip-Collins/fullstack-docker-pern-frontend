@@ -1,15 +1,15 @@
 import { useNavigate } from 'react-router-dom';
-import blogThunk from '../../app/features/blog.slice';
+import blogThunk, { clearBlogError } from '../../app/features/blog.slice';
 import readingThunk from '../../app/features/reading.slice';
 import { useAppDispatch } from '../../app/hooks';
 import useNotification from '../../hooks/useNotification';
 import { BlogAttributes } from '../../types/blog.type';
 import { ReadingAttributes, ReadingCreation } from '../../types/reading.type';
 
+import useAsyncHandler from '../../hooks/useAsyncHandler';
+import { routerUtils } from '../../routes';
 import { Readings } from '../../types/user.type';
 import Blog, { BlogProps } from './Blog';
-import { routerUtils } from '../../routes';
-import useAsyncHandler from '../../hooks/useAsyncHandler';
 
 export interface BlogContainerProps extends React.HTMLAttributes<HTMLElement> {
   children?: React.ReactNode;
@@ -32,6 +32,10 @@ const BlogContainer = ({ children, blog, authUser, oneOfMany, ...props }: BlogCo
 
   const onDelete = (data: BlogAttributes) => {
     tryCatch(dispatch(blogThunk.deleteOne(data.id)), `${data.title} deleted.`);
+  };
+
+  const onCancel = () => {
+    dispatch(clearBlogError());
   };
 
   const onLike = (data: BlogAttributes) => {
@@ -87,6 +91,7 @@ const BlogContainer = ({ children, blog, authUser, oneOfMany, ...props }: BlogCo
     oneOfMany,
     onSave,
     onDelete,
+    onCancel,
     onLike,
     onBookmark,
     onRead,

@@ -31,20 +31,20 @@ const CardWarning = ({ message, confirmButtonText, cancelButtonText, onConfirm, 
         <Styled.Header>{message || 'Are you sure you want to proceed?'}</Styled.Header>
         <Styled.Body>
           <Button
-            variant="primary"
-            aria-label="Delete for real"
-            onClick={deleteHandler}
-            className="c-card__warning__button-delete"
-          >
-            {confirmButtonText || 'Yep'}
-          </Button>
-          <Button
             variant="danger"
             aria-label="Cancel deletion"
             onClick={cancelHandler}
             className="c-card__warning__button-cancel"
           >
             {cancelButtonText || 'Nope'}
+          </Button>
+          <Button
+            variant="primary"
+            aria-label="Delete for real"
+            onClick={deleteHandler}
+            className="c-card__warning__button-delete"
+          >
+            {confirmButtonText || 'Yep'}
           </Button>
         </Styled.Body>
       </Styled.Inner>

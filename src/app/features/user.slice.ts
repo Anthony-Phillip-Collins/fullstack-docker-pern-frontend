@@ -1,38 +1,76 @@
 import { createAsyncThunk, createSelector, createSlice } from '@reduxjs/toolkit';
-
 import userService from '../../services/user.service';
 import { BlogAttributes } from '../../types/blog.type';
 import { ReadingAttributes } from '../../types/reading.type';
-import { Readings, UserAttributes, UserCreateInput, UserUpdateAsUserInput } from '../../types/user.type';
+import { Readings, UserAttributes, UserCreateInput, UserUpdateAsUserInput, UserWithToken } from '../../types/user.type';
+import { serializeFrontendError } from '../../util/frontendErrorParser';
 import { RootState } from '../store';
 import { getAuthUser } from './auth.slice';
 
-const fetchAll = createAsyncThunk('users/fetchAll', async () => {
-  const response = await userService.getAll();
-  return response;
+const fetchAll = createAsyncThunk('users/fetchAll', async (_, thunkApi) => {
+  try {
+    return await userService.getAll();
+  } catch (error) {
+    const serializedError = serializeFrontendError(error);
+    return thunkApi.rejectWithValue(serializedError);
+  }
 });
 
-const fetchOne = createAsyncThunk('users/fetchOne', async (id: UserAttributes['id']) => {
-  const response = await userService.getById(id);
-  return response;
+const fetchOne = createAsyncThunk('users/fetchOne', async (id: UserAttributes['id'], thunkApi) => {
+  try {
+    return await userService.getById(id);
+  } catch (error) {
+    const serializedError = serializeFrontendError(error);
+    return thunkApi.rejectWithValue(serializedError);
+  }
 });
 
-const createOne = createAsyncThunk('users/createOne', async (user: UserCreateInput) => {
-  const response = await userService.createOne(user);
-  return response;
+const createOne = createAsyncThunk('users/createOne', async (user: UserCreateInput, thunkApi) => {
+  let userWithToken: UserWithToken | null = null;
+
+  try {
+    userWithToken = await userService.createOne(user);
+  } catch (error) {
+    const serializedError = serializeFrontendError(error);
+    return thunkApi.rejectWithValue(serializedError);
+  }
+
+  if (!userWithToken) {
+    const serializedError: Error = {
+      name: 'UserCreateError',
+      message: 'User was not created',
+    };
+    return thunkApi.rejectWithValue(serializedError);
+  }
+
+  try {
+    return await userService.getById(userWithToken.id);
+  } catch (error) {
+    const serializedError = serializeFrontendError(error);
+    return thunkApi.rejectWithValue(serializedError);
+  }
 });
 
-const updateOne = createAsyncThunk('users/updateOne', async (user: UserAttributes) => {
+const updateOne = createAsyncThunk('users/updateOne', async (user: UserAttributes, thunkApi) => {
   const update: UserUpdateAsUserInput = {
     name: user.name,
   };
-  const response = await userService.updateOne(user.username, update);
-  return response;
+
+  try {
+    return await userService.updateOne(user.username, update);
+  } catch (error) {
+    const serializedError = serializeFrontendError(error);
+    return thunkApi.rejectWithValue(serializedError);
+  }
 });
 
-const deleteOne = createAsyncThunk('users/deleteOne', async (username: UserAttributes['username']) => {
-  await userService.deleteOne(username);
-  return username;
+const deleteOne = createAsyncThunk('users/deleteOne', async (username: UserAttributes['username'], thunkApi) => {
+  try {
+    return await userService.deleteOne(username);
+  } catch (error) {
+    const serializedError = serializeFrontendError(error);
+    return thunkApi.rejectWithValue(serializedError);
+  }
 });
 
 export const userSlice = createSlice({
@@ -41,9 +79,13 @@ export const userSlice = createSlice({
     all: [] as UserAttributes[],
     one: null as UserAttributes | null,
     status: 'idle',
-    error: null as string | null | undefined,
+    error: null as Error | null,
   },
-  reducers: {},
+  reducers: {
+    clearUserError: (state) => {
+      state.error = null;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(fetchAll.pending, (state) => {
       state.status = 'loading';
@@ -54,7 +96,8 @@ export const userSlice = createSlice({
     });
     builder.addCase(fetchAll.rejected, (state, action) => {
       state.status = 'failed';
-      state.error = action.error.message;
+      state.error = serializeFrontendError(action.payload);
+      console.log('fetchAll.rejected', action.error);
     });
     builder.addCase(fetchOne.pending, (state) => {
       state.status = 'loading';
@@ -65,7 +108,7 @@ export const userSlice = createSlice({
     });
     builder.addCase(fetchOne.rejected, (state, action) => {
       state.status = 'failed';
-      state.error = action.error.message;
+      state.error = serializeFrontendError(action.payload);
     });
 
     builder.addCase(createOne.pending, (state) => {
@@ -74,11 +117,11 @@ export const userSlice = createSlice({
     builder.addCase(createOne.fulfilled, (state, action) => {
       state.status = 'succeeded';
       state.one = action.payload;
-      state.all.push(action.payload);
+      state.all.push(state.one);
     });
     builder.addCase(createOne.rejected, (state, action) => {
       state.status = 'failed';
-      state.error = action.error.message;
+      state.error = serializeFrontendError(action.payload);
     });
     builder.addCase(updateOne.pending, (state) => {
       state.status = 'loading';
@@ -90,7 +133,7 @@ export const userSlice = createSlice({
     });
     builder.addCase(updateOne.rejected, (state, action) => {
       state.status = 'failed';
-      state.error = action.error.message;
+      state.error = serializeFrontendError(action.payload);
     });
     builder.addCase(deleteOne.pending, (state) => {
       state.status = 'loading';
@@ -101,7 +144,7 @@ export const userSlice = createSlice({
     });
     builder.addCase(deleteOne.rejected, (state, action) => {
       state.status = 'failed';
-      state.error = action.error.message;
+      state.error = serializeFrontendError(action.payload);
     });
   },
 });
@@ -173,6 +216,8 @@ export const getAuthUserPopulated = createSelector([getAuthUser, allBlogs, allRe
   }
   return populateReadingsToUser(readings, blogs, user);
 });
+
+export const { clearUserError } = userSlice.actions;
 
 const userThunk = {
   fetchAll,

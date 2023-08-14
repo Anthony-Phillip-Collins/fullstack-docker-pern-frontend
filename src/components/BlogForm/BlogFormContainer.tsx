@@ -1,46 +1,49 @@
-import React, { forwardRef, useImperativeHandle, useRef } from 'react';
+import React, { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import blogThunk from '../../app/features/blog.slice';
 import { useAppDispatch } from '../../app/hooks';
 import useNotification from '../../hooks/useNotification';
 import { BlogCreation } from '../../types/blog.type';
-import BlogForm, { BlogFormRef, BlogFormShared } from './BlogForm';
+import { parseFrontendError } from '../../util/frontendErrorParser';
+import BlogCreateForm from './BlogForm';
+import { FormContainerProps, FormRef } from '../../types/form.type';
 
-interface Common extends React.HTMLAttributes<HTMLFormElement> {
-  children?: React.ReactNode;
-}
-
-type BlogFormContainerProps = BlogFormShared &
-  Common & {
-    onSuccess?: () => void;
-  };
-
-const BlogFormContainer = forwardRef(
-  ({ onLayout, onCancel, onSuccess, ...props }: BlogFormContainerProps, ref: React.Ref<BlogFormRef>) => {
+const BlogCreateFormContainer = forwardRef(
+  ({ onLayout, onCancel, onSuccess, ...props }: FormContainerProps, ref: React.Ref<FormRef>) => {
     const dispatch = useAppDispatch();
     const { notify } = useNotification();
-    const form = useRef<BlogFormRef>(null);
+    const form = useRef<FormRef>(null);
+    const [blogError, setBlogError] = useState<Error | null>(null);
 
     const onSubmit = async (data: BlogCreation) => {
       try {
         const payload = await dispatch(blogThunk.createOne(data)).unwrap();
-        notify(`Blog ${payload.title} created!`);
         form.current && form.current.reset();
+        setBlogError(null);
+        notify(`Blog ${payload.title} created!`);
         onSuccess && onSuccess();
       } catch (error) {
+        setBlogError(parseFrontendError(error));
         notify({ error });
       }
     };
 
-    useImperativeHandle(ref, (): BlogFormRef => ({ reset: form.current?.reset || (() => null) }));
+    useImperativeHandle(ref, (): FormRef => ({ reset: form.current?.reset || (() => null) }));
 
     return (
       <>
-        <BlogForm ref={form} onFormSubmit={onSubmit} onLayout={onLayout} onCancel={onCancel} {...props} />
+        <BlogCreateForm
+          ref={form}
+          onFormSubmit={onSubmit}
+          onLayout={onLayout}
+          onCancel={onCancel}
+          errors={blogError?.errors}
+          {...props}
+        />
       </>
     );
   },
 );
 
-BlogFormContainer.displayName = 'BlogFormContainer';
+BlogCreateFormContainer.displayName = 'BlogCreateFormContainer';
 
-export default BlogFormContainer;
+export default BlogCreateFormContainer;

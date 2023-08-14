@@ -1,29 +1,33 @@
 import { useEffect, useRef, useState } from 'react';
-import { BlogFormRef } from '../../components/BlogForm/BlogForm';
-import BlogFormContainer from '../../components/BlogForm/BlogFormContainer';
+import { clearBlogError } from '../../app/features/blog.slice';
+import { useAppDispatch } from '../../app/hooks';
+import BlogCreateFormContainer from '../../components/BlogForm/BlogFormContainer';
 import BlogList from '../../components/BlogList/BlogList';
 import Container from '../../components/Container/Container';
 import Expander, { ExpanderRef } from '../../components/Expander/Expander';
 import IconButton from '../../components/IconButton/IconButton';
+import BlogsFilter from '../../components/IconFilters/BlogsFilter';
 import PageTitle from '../../components/PageTitle/PageTitle';
 import useAuth from '../../hooks/useAuth';
 import useBlogs from '../../hooks/useBlogs';
 import theme from '../../styles/theme';
-import BlogsFilter from '../../components/IconFilters/BlogsFilter';
+import { FormRef } from '../../types/form.type';
 
 const BlogsPage = () => {
+  const dispatch = useAppDispatch();
   const { data, refetch } = useBlogs();
   const { user } = useAuth();
   const [open, setOpen] = useState(false);
   const [showMyBlogsOnly, setShowMyBlogsOnly] = useState(false);
   const expander = useRef<ExpanderRef>(null);
-  const blogForm = useRef<BlogFormRef>(null);
+  const BlogCreateForm = useRef<FormRef>(null);
 
   const toggle = () => {
     if (open) {
-      blogForm.current && blogForm.current.reset();
+      BlogCreateForm.current && BlogCreateForm.current.reset();
     }
     setOpen(!open);
+    dispatch(clearBlogError());
   };
 
   const onLayout = () => {
@@ -67,11 +71,11 @@ const BlogsPage = () => {
         </>
       </PageTitle>
       <Expander open={open} ref={expander}>
-        <BlogFormContainer
+        <BlogCreateFormContainer
           onLayout={onLayout}
           onCancel={onCancel}
           onSuccess={onSuccess}
-          ref={blogForm}
+          ref={BlogCreateForm}
           style={{ paddingBottom: theme.spacing.xxl }}
         />
       </Expander>

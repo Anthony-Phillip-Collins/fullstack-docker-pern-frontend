@@ -1,5 +1,5 @@
 import { ErrorNames } from '../../types/errors.type';
-import parseFrontendError from '../../util/parseFrontendError';
+import { parseFrontendError } from '../../util/frontendErrorParser';
 import authService from '../auth.service';
 
 export const authConfig = () => {
@@ -36,11 +36,11 @@ export const asyncHandlerAuth = async <T>(getPromise: () => Promise<T>) => {
     return response;
   } catch (error: unknown) {
     const err = parseFrontendError(error);
-
     if (err?.name !== ErrorNames.TokenExpiredError) {
       if (err?.name === ErrorNames.UserDisabled) {
         authService.logOut();
       }
+      console.log('asyncHandlerAuth', err);
       throw err;
     }
   }

@@ -1,7 +1,7 @@
 import { removeAuthUser } from '../app/features/auth.slice';
 import { useAppDispatch } from '../app/hooks';
-import { ErrorNames } from '../types/errors.type';
-import parseFrontendError from '../util/parseFrontendError';
+import { ErrorNames, ErrorResponse } from '../types/errors.type';
+import { parseFrontendError } from '../util/frontendErrorParser';
 import useNotification from './useNotification';
 
 const useAsyncHandler = () => {
@@ -21,13 +21,20 @@ const useAsyncHandler = () => {
     } catch (error) {
       console.log('ERROR!', error);
 
-      const err = parseFrontendError(error);
+      notify({ error });
 
-      if (err?.name === ErrorNames.UserDisabled) {
+      const parsedError = parseFrontendError(error);
+
+      if (parsedError?.name === ErrorNames.UserDisabled) {
         dispatch(removeAuthUser());
       }
 
-      notify({ error });
+      if (parsedError) {
+        const errorResponse: ErrorResponse = { error: parsedError };
+        return errorResponse;
+      }
+
+      return null;
     }
   };
 
