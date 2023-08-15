@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { Ref, forwardRef, useImperativeHandle, useState } from 'react';
 import Button from '../Button/Button';
 import CardStyled from '../Card/Card.styled';
 import IconButton from '../IconButton/IconButton';
@@ -23,103 +23,123 @@ export type CardProps = CardCallbacks &
     enableEdit?: boolean;
     uid?: string;
     type?: 'primary';
+    disabled?: boolean;
   };
 
 export interface CardInnerProps {
   warning?: boolean;
 }
 
+export interface CardRef {
+  close: () => void;
+}
+
 const Styled = CardStyled;
 
-const Card = ({
-  children,
-  header,
-  warningProps,
-  enableEdit,
-  uid,
-  type,
-  onSave,
-  onDelete,
-  onCancel,
-  onEdit,
-  onWarning,
-}: CardProps) => {
-  const [editable, setEditable] = useState(false);
-  const [warning, setWarning] = useState(false);
+const Card = forwardRef(
+  (
+    {
+      children,
+      header,
+      warningProps,
+      enableEdit,
+      uid,
+      type,
+      disabled,
+      onSave,
+      onDelete,
+      onCancel,
+      onEdit,
+      onWarning,
+    }: CardProps,
+    ref: Ref<CardRef>,
+  ) => {
+    const [editable, setEditable] = useState(false);
+    const [warning, setWarning] = useState(false);
 
-  const tabIndex = { tabIndex: warning ? -1 : 0 };
-  const isEnabled = enableEdit && (onDelete || onSave);
+    const tabIndex = { tabIndex: warning ? -1 : 0 };
+    const isEnabled = enableEdit && (onDelete || onSave);
 
-  const edit = (state: boolean) => {
-    setEditable(state);
-    onEdit && onEdit(state);
-  };
+    const edit = (state: boolean) => {
+      setEditable(state);
+      onEdit && onEdit(state);
+    };
 
-  const warn = (state: boolean) => {
-    setWarning(state);
-    onWarning && onWarning(state);
-  };
+    const warn = (state: boolean) => {
+      setWarning(state);
+      onWarning && onWarning(state);
+    };
 
-  const saveHandler: React.MouseEventHandler = (e) => {
-    e.preventDefault();
-    edit(false);
-    onSave && onSave();
-  };
+    const toggle = () => {
+      if (editable) {
+        cancel();
+      } else {
+        edit(true);
+      }
+    };
 
-  const deleteHandler: React.MouseEventHandler = (e) => {
-    e.preventDefault();
-    edit(false);
-    warn(true);
-  };
+    const save = () => {
+      onSave && onSave();
+    };
 
-  const cancelHandler = () => {
-    edit(false);
-    warn(false);
-    onCancel && onCancel();
-  };
+    const remove = () => {
+      edit(false);
+      warn(true);
+    };
 
-  const deleteForRealHandler = () => {
-    warn(false);
-    onDelete && onDelete();
-  };
+    const cancel = () => {
+      edit(false);
+      warn(false);
+      onCancel && onCancel();
+    };
 
-  return (
-    <Styled.Card>
-      {warning && <CardWarning onConfirm={deleteForRealHandler} onCancel={cancelHandler} {...warningProps} />}
-      <Styled.Inner warning={warning}>
-        <Styled.Header type={type}>
-          {header}
-          {isEnabled && (
-            <IconButton
-              iconProps={{ icon: editable ? 'editOff' : 'edit' }}
-              onClick={() => edit(editable ? false : true)}
-              label={editable ? `Cancel editing card` : `Edit card`}
-              tooltipId={uid && `edit-card-${uid}`}
-              {...tabIndex}
-            />
-          )}
-        </Styled.Header>
+    const deleteForReal = () => {
+      warn(false);
+      onDelete && onDelete();
+    };
 
-        <Styled.Body>
-          {children}
-          {isEnabled && editable && (
-            <Styled.Edit>
-              {onDelete && (
-                <Button variant="danger" aria-label="Delete" onClick={deleteHandler}>
-                  Delete
-                </Button>
-              )}
-              {onSave && (
-                <Button variant="primary" aria-label="Save" onClick={saveHandler}>
-                  Save
-                </Button>
-              )}
-            </Styled.Edit>
-          )}
-        </Styled.Body>
-      </Styled.Inner>
-    </Styled.Card>
-  );
-};
+    useImperativeHandle(ref, (): CardRef => ({ close: cancel }));
+
+    return (
+      <Styled.Card>
+        {warning && <CardWarning onConfirm={deleteForReal} onCancel={cancel} {...warningProps} />}
+        <Styled.Inner warning={warning}>
+          <Styled.Header type={type}>
+            {header}
+            {isEnabled && (
+              <IconButton
+                iconProps={{ icon: editable ? 'editOff' : 'edit' }}
+                onClick={() => toggle()}
+                label={editable ? `Cancel` : `Edit`}
+                tooltipId={uid && `edit-card-${uid}`}
+                {...tabIndex}
+              />
+            )}
+          </Styled.Header>
+
+          <Styled.Body>
+            {children}
+            {isEnabled && editable && (
+              <Styled.Edit>
+                {onDelete && (
+                  <Button variant="danger" aria-label="Delete" onClick={() => remove()} disabled={disabled}>
+                    Delete
+                  </Button>
+                )}
+                {onSave && (
+                  <Button variant="primary" aria-label="Save" onClick={() => save()} disabled={disabled}>
+                    Save
+                  </Button>
+                )}
+              </Styled.Edit>
+            )}
+          </Styled.Body>
+        </Styled.Inner>
+      </Styled.Card>
+    );
+  },
+);
+
+Card.displayName = 'Card';
 
 export default Card;

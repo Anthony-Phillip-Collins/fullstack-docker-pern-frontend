@@ -40,7 +40,6 @@ export const asyncHandlerAuth = async <T>(getPromise: () => Promise<T>) => {
       if (err?.name === ErrorNames.UserDisabled) {
         authService.logOut();
       }
-      console.log('asyncHandlerAuth', err);
       throw err;
     }
   }

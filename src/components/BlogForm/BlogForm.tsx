@@ -30,7 +30,6 @@ const BlogCreateForm = forwardRef(
     const [url, setUrl] = useState('');
     const [firstSubmit, setFirstSubmit] = useState(false);
     const [errors, setErrors] = useState<InputFields>(initialErrors);
-    const defaultError = 'This field is mandatory.';
 
     const reset = () => {
       setTitle('');
@@ -65,7 +64,7 @@ const BlogCreateForm = forwardRef(
     useImperativeHandle(ref, (): FormRef => ({ reset }));
 
     const updateErrorsOnInput = (input: InputFields, state: InputFields) => {
-      const update = (key: keyof InputFields) => (input[key] ? '' : state[key] || defaultError);
+      const update = (key: keyof InputFields) => (input[key] ? '' : state[key] || 'This field is mandatory.');
       const keys = Object.keys(state) as Array<keyof InputFields>;
       const updated = keys.reduce((obj, key) => {
         obj[key] = update(key);
@@ -88,7 +87,7 @@ const BlogCreateForm = forwardRef(
           return updateErrorsOnInput(input, state);
         });
       }
-    }, [title, author, url, firstSubmit, errorArray]);
+    }, [title, author, url, firstSubmit]);
 
     useEffect(() => {
       if (errorArray) {

@@ -50,8 +50,11 @@ const Header = styled.div.withConfig({
     ${({ theme }) => ({
       ...theme.fonts.h2,
       fontFamily: theme.global.fontFamily,
-      marginRight: theme.spacing.lg,
     })};
+  }
+
+  > :first-child {
+    margin-right: ${({ theme }) => theme.spacing.lg};
   }
 `;
 

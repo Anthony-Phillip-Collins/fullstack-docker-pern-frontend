@@ -97,7 +97,6 @@ export const userSlice = createSlice({
     builder.addCase(fetchAll.rejected, (state, action) => {
       state.status = 'failed';
       state.error = serializeFrontendError(action.payload);
-      console.log('fetchAll.rejected', action.error);
     });
     builder.addCase(fetchOne.pending, (state) => {
       state.status = 'loading';

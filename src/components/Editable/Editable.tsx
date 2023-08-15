@@ -1,8 +1,7 @@
 import { convert } from 'html-to-text';
-import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
-import ContentEditable, { ContentEditableEvent } from 'react-contenteditable';
-import cn from 'classnames';
-import styles from './Editable.module.css';
+import { Ref, forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { ContentEditableEvent } from 'react-contenteditable';
+import StyledContentEditable from './Editable.styled';
 
 interface Common extends React.HTMLAttributes<HTMLElement> {
   children?: React.ReactNode;
@@ -12,14 +11,18 @@ interface EditableProps extends Common {
   initialValue: string;
   tagName: string;
   disabled?: boolean;
+  error: string | null;
+  onChange: () => void;
 }
 
 export interface EditableRef {
   value: string;
 }
 
+const Styled = StyledContentEditable;
+
 const Editable = forwardRef(
-  ({ initialValue, tagName, disabled, className, ...props }: EditableProps, ref: React.Ref<EditableRef>) => {
+  ({ initialValue, tagName, disabled, error, onChange, ...props }: EditableProps, ref: Ref<EditableRef>) => {
     const [html, setHtml] = useState<string>(initialValue || '');
     const contentEditable = useRef<HTMLElement>(null);
 
@@ -29,22 +32,26 @@ const Editable = forwardRef(
       }
     }, [disabled, initialValue]);
 
-    const onChange = (evt: ContentEditableEvent) => {
+    const changeHandler = (evt: ContentEditableEvent) => {
       setHtml(convert(evt.target.value));
+      onChange && onChange();
     };
 
     useImperativeHandle(ref, (): EditableRef => ({ value: html }));
 
     return (
-      <ContentEditable
-        {...props}
-        innerRef={contentEditable}
-        html={html}
-        disabled={!!disabled}
-        onChange={onChange}
-        tagName={tagName}
-        className={cn(!disabled && styles.editable, className)}
-      />
+      <Styled.Wrapper>
+        <Styled.Editable
+          {...props}
+          innerRef={contentEditable}
+          html={html}
+          disabled={!!disabled}
+          onChange={changeHandler}
+          tagName={tagName}
+          error={!!error}
+        />
+        {error && <Styled.ErrorField>{error}</Styled.ErrorField>}
+      </Styled.Wrapper>
     );
   },
 );

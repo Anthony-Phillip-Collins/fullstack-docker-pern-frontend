@@ -1,9 +1,9 @@
-import { useRef, useState } from 'react';
+import { Ref, forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
 import { routerUtils } from '../../routes';
 import { BlogAttributes, BlogUpdate } from '../../types/blog.type';
 import { Readings, UserAttributes } from '../../types/user.type';
 import dateToString from '../../util/dateToString';
-import Card from '../Card/Card';
+import Card, { CardRef } from '../Card/Card';
 import CardStyled from '../Card/Card.styled';
 import Editable, { EditableRef } from '../Editable/Editable';
 import IconButton from '../IconButton/IconButton';
@@ -32,6 +32,7 @@ export type BlogProps = Common & {
   liked?: boolean;
   canEdit?: boolean;
   oneOfMany?: boolean;
+  errors?: Error[] | null;
 };
 
 type Props = BlogProps & BlogCallbacks;
@@ -40,176 +41,286 @@ export interface BlogInnerProps {
   warning?: boolean;
 }
 
+interface InputFields {
+  title: string;
+  author: string;
+  url: string;
+}
+
+export interface BlogRef {
+  saved: () => void;
+}
+
 const Styled = BlogStyled;
 
-const Blog = ({
-  children,
-  user,
-  blog,
-  canEdit,
-  bookmarked,
-  liked,
-  oneOfMany,
-  onSave,
-  onDelete,
-  onCancel,
-  onLike,
-  onBookmark,
-  onRead,
-  onMore,
-}: Props) => {
-  const [editable, setEditable] = useState(false);
-  const [warning, setWarning] = useState(false);
-  const enableEdit = !!(canEdit && (onSave || onDelete));
-  const tabIndex = { tabIndex: warning ? -1 : 0 };
-  const canLike = false; // implement later
+const Blog = forwardRef(
+  (
+    {
+      children,
+      user,
+      blog,
+      canEdit,
+      bookmarked,
+      liked,
+      oneOfMany,
+      errors: errorArray,
+      onSave,
+      onDelete,
+      onCancel,
+      onLike,
+      onBookmark,
+      onRead,
+      onMore,
+    }: Props,
+    ref: Ref<BlogRef>,
+  ) => {
+    const [editable, setEditable] = useState(false);
+    const [warning, setWarning] = useState(false);
+    const enableEdit = !!(canEdit && (onSave || onDelete));
+    const tabIndex = { tabIndex: warning ? -1 : 0 };
+    const canLike = false; // implement later
 
-  const title = useRef<EditableRef>(null);
-  const author = useRef<EditableRef>(null);
-  const url = useRef<EditableRef>(null);
+    const cardRef = useRef<CardRef>(null);
 
-  const saveHandler = () => {
-    const update: BlogUpdate = {};
+    const title = useRef<EditableRef>(null);
+    const author = useRef<EditableRef>(null);
+    const url = useRef<EditableRef>(null);
 
-    if (title && title.current && title.current.value) {
-      update.title = title.current.value;
-    }
+    const initialErrors: InputFields = useMemo(
+      () => ({
+        title: '',
+        author: '',
+        url: '',
+      }),
+      [],
+    );
+    const [errors, setErrors] = useState<InputFields>(initialErrors);
+    const hasErrors = () => {
+      return Object.values(errors).some((error) => error !== '');
+    };
 
-    if (author && author.current && author.current.value) {
-      update.author = author.current.value;
-    }
+    const save = () => {
+      const update: BlogUpdate = {};
 
-    if (url && url.current && url.current.value) {
-      update.url = url.current.value;
-    }
+      if (title && title.current && title.current.value) {
+        update.title = title.current.value;
+      }
 
-    if (Object.keys(update).length > 0) {
-      const data: BlogAttributes = { ...blog, ...update };
-      onSave && onSave(data);
-    }
-  };
+      if (author && author.current && author.current.value) {
+        update.author = author.current.value;
+      }
 
-  const deleteHandler = () => {
-    onDelete && onDelete(blog);
-  };
+      if (url && url.current && url.current.value) {
+        update.url = url.current.value;
+      }
 
-  const cancelHandler = () => {
-    onCancel && onCancel();
-  };
+      if (Object.keys(update).length > 0) {
+        const data: BlogAttributes = { ...blog, ...update };
+        onSave && onSave(data);
+      }
+    };
 
-  const likeHandler: React.MouseEventHandler = (e) => {
-    e.preventDefault();
-    onLike(blog);
-  };
+    const remove = () => {
+      onDelete && onDelete(blog);
+    };
 
-  const bookmarkHandler: React.MouseEventHandler = (e) => {
-    e.preventDefault();
-    onBookmark(blog);
-  };
+    const cancel = () => {
+      onCancel && onCancel();
+    };
 
-  const readHandler: React.MouseEventHandler = (e) => {
-    e.preventDefault();
-    onRead && reading && onRead(reading);
-  };
+    const likeHandler: React.MouseEventHandler = (e) => {
+      e.preventDefault();
+      onLike(blog);
+    };
 
-  const moreHandler: React.MouseEventHandler = (e) => {
-    e.preventDefault();
-    onMore(blog);
-  };
+    const bookmarkHandler: React.MouseEventHandler = (e) => {
+      e.preventDefault();
+      onBookmark(blog);
+    };
 
-  if (!blog) return null;
+    const readHandler: React.MouseEventHandler = (e) => {
+      e.preventDefault();
+      onRead && reading && onRead(reading);
+    };
 
-  const createdAt = dateToString(blog.createdAt);
-  const updatedAt = dateToString(blog.updatedAt);
-  const reading = user?.readings?.find((reading) => reading.id === blog.id);
+    const moreHandler: React.MouseEventHandler = (e) => {
+      e.preventDefault();
+      onMore(blog);
+    };
 
-  return (
-    <Card
-      enableEdit={enableEdit}
-      onSave={onSave && saveHandler}
-      onDelete={onDelete && deleteHandler}
-      onCancel={onCancel && cancelHandler}
-      onEdit={setEditable}
-      onWarning={setWarning}
-      header={<Editable tagName="h2" ref={title} initialValue={blog.title} disabled={!editable} />}
-      uid={`${blog.id}`}
-    >
-      <Styled.Body>
-        <Styled.Author>
-          by &nbsp;
-          <Editable tagName="span" ref={author} initialValue={blog.author} disabled={!editable} />
-        </Styled.Author>
-        <Styled.Likes>
-          has <strong>{blog.likes}</strong> likes
-        </Styled.Likes>
-        {editable ? (
-          <Editable tagName="span" ref={url} initialValue={blog.url} disabled={!editable} />
-        ) : (
-          <Styled.LinkContainer>
-            <ExternalLink href={blog.url} truncate {...tabIndex}>
-              {blog.url}
-            </ExternalLink>
-          </Styled.LinkContainer>
-        )}
+    const changeHandler = (key: keyof InputFields) => {
+      setErrors((state) => {
+        const input: InputFields = {
+          author: author?.current?.value || '',
+          title: title?.current?.value || '',
+          url: url?.current?.value || '',
+        };
+        return updateErrorsOnInput(input, state, key);
+      });
+    };
 
-        <div>
-          owner:{' '}
-          {blog.owner && <InternalLink to={routerUtils.getUserPath(blog.owner.id)}>{blog.owner.name}</InternalLink>}
-        </div>
+    const updateErrorsOnInput = (input: InputFields, state: InputFields, current: keyof InputFields) => {
+      const update = (key: keyof InputFields) => {
+        if (key === current) {
+          return input[key] ? '' : state[key] || 'This field is mandatory.';
+        } else {
+          return state[key];
+        }
+      };
+      const keys = Object.keys(state) as Array<keyof InputFields>;
+      const updated = keys.reduce((obj, key) => {
+        obj[key] = update(key);
+        return obj;
+      }, {} as InputFields);
+      const changed = keys.filter((key) => state[key] !== updated[key]).length > 0;
+      return changed ? updated : state;
+    };
 
-        <div>{createdAt && <div>created: {createdAt}</div>}</div>
+    useEffect(() => {
+      if (errorArray) {
+        const updated = { ...initialErrors };
+        const keys = Object.keys(updated) as Array<keyof InputFields>;
+        errorArray.forEach((error) => {
+          keys.forEach((key) => {
+            if (error.path === key) {
+              updated[key] = error.message;
+            }
+          });
+        });
+        setErrors(updated);
+      } else {
+        setErrors(initialErrors);
+      }
+    }, [errorArray, initialErrors]);
 
-        <div>{updatedAt && <div>updated: {updatedAt}</div>}</div>
+    useImperativeHandle(
+      ref,
+      (): BlogRef => ({
+        saved: () => {
+          cardRef?.current?.close();
+        },
+      }),
+    );
 
-        <Readers readers={blog.readers} />
+    if (!blog) return null;
 
-        <CardStyled.IconControls>
-          {canLike && (
-            <IconButton
-              iconProps={{ icon: liked ? 'unlike' : 'like' }}
-              onClick={likeHandler}
-              label={liked ? 'Remove like' : 'Add like'}
-              tooltipId={`like${blog.id}`}
-              {...tabIndex}
-            />
-          )}
+    const createdAt = dateToString(blog.createdAt);
+    const updatedAt = dateToString(blog.updatedAt);
+    const reading = user?.readings?.find((reading) => reading.id === blog.id);
 
-          <IconButton
-            iconProps={{ icon: bookmarked ? 'unbookmark' : 'bookmark' }}
-            onClick={bookmarkHandler}
-            label={bookmarked ? 'Remove bookmark' : 'Add bookmark'}
-            tooltipId={`bookmark${blog.id}`}
-            {...tabIndex}
+    return (
+      <Card
+        enableEdit={enableEdit}
+        onSave={onSave && save}
+        onDelete={onDelete && remove}
+        onCancel={onCancel && cancel}
+        onEdit={setEditable}
+        onWarning={setWarning}
+        header={
+          <Editable
+            tagName="h2"
+            ref={title}
+            initialValue={blog.title}
+            disabled={!editable}
+            error={errors?.title}
+            onChange={() => changeHandler('title')}
           />
-
-          {reading && (
-            <IconButton
-              iconProps={{ icon: reading.reading.read ? 'read' : 'unread' }}
-              onClick={readHandler}
-              label={reading.reading.read ? 'Mark as unread' : 'Mark as read'}
-              tooltipId={`read${blog.id}`}
-              {...tabIndex}
+        }
+        uid={`${blog.id}`}
+        disabled={hasErrors()}
+        ref={cardRef}
+      >
+        <Styled.Body>
+          <Styled.Author>
+            by &nbsp;
+            <Editable
+              tagName="span"
+              ref={author}
+              initialValue={blog.author}
+              disabled={!editable}
+              error={errors?.author}
+              onChange={() => changeHandler('author')}
             />
+          </Styled.Author>
+          <Styled.Likes>
+            has <strong>{blog.likes}</strong> likes
+          </Styled.Likes>
+          {editable ? (
+            <Editable
+              tagName="span"
+              ref={url}
+              initialValue={blog.url}
+              disabled={!editable}
+              error={errors?.url}
+              onChange={() => changeHandler('url')}
+            />
+          ) : (
+            <Styled.LinkContainer>
+              <ExternalLink href={blog.url} truncate {...tabIndex}>
+                {blog.url}
+              </ExternalLink>
+            </Styled.LinkContainer>
           )}
 
-          {oneOfMany && (
+          <div>
+            owner:{' '}
+            {blog.owner && <InternalLink to={routerUtils.getUserPath(blog.owner.id)}>{blog.owner.name}</InternalLink>}
+          </div>
+
+          <div>{createdAt && <div>created: {createdAt}</div>}</div>
+
+          <div>{updatedAt && <div>updated: {updatedAt}</div>}</div>
+
+          <Readers readers={blog.readers} />
+
+          <CardStyled.IconControls>
+            {canLike && (
+              <IconButton
+                iconProps={{ icon: liked ? 'unlike' : 'like' }}
+                onClick={likeHandler}
+                label={liked ? 'Remove like' : 'Add like'}
+                tooltipId={`like${blog.id}`}
+                {...tabIndex}
+              />
+            )}
+
             <IconButton
-              iconProps={{ icon: 'more' }}
-              onClick={moreHandler}
-              label="Read more"
-              tooltipId={`more${blog.id}`}
+              iconProps={{ icon: bookmarked ? 'unbookmark' : 'bookmark' }}
+              onClick={bookmarkHandler}
+              label={bookmarked ? 'Remove bookmark' : 'Add bookmark'}
+              tooltipId={`bookmark${blog.id}`}
               {...tabIndex}
             />
-          )}
-        </CardStyled.IconControls>
 
-        {children}
+            {reading && (
+              <IconButton
+                iconProps={{ icon: reading.reading.read ? 'read' : 'unread' }}
+                onClick={readHandler}
+                label={reading.reading.read ? 'Mark as unread' : 'Mark as read'}
+                tooltipId={`read${blog.id}`}
+                {...tabIndex}
+              />
+            )}
 
-        {reading?.reading.read}
-      </Styled.Body>
-    </Card>
-  );
-};
+            {oneOfMany && (
+              <IconButton
+                iconProps={{ icon: 'more' }}
+                onClick={moreHandler}
+                label="Read more"
+                tooltipId={`more${blog.id}`}
+                {...tabIndex}
+              />
+            )}
+          </CardStyled.IconControls>
+
+          {children}
+
+          {reading?.reading.read}
+        </Styled.Body>
+      </Card>
+    );
+  },
+);
 
 type ReadersProps = Pick<BlogAttributes, 'readers'>;
 
@@ -230,5 +341,7 @@ const Readers = ({ readers }: ReadersProps) => {
     </Styled.Readers>
   );
 };
+
+Blog.displayName = 'Blog';
 
 export default Blog;

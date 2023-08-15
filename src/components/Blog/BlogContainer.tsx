@@ -6,10 +6,12 @@ import useNotification from '../../hooks/useNotification';
 import { BlogAttributes } from '../../types/blog.type';
 import { ReadingAttributes, ReadingCreation } from '../../types/reading.type';
 
+import { useRef, useState } from 'react';
 import useAsyncHandler from '../../hooks/useAsyncHandler';
 import { routerUtils } from '../../routes';
 import { Readings } from '../../types/user.type';
-import Blog, { BlogProps } from './Blog';
+import { isErrorResponse } from '../../types/utils/parsers/error.parser';
+import Blog, { BlogProps, BlogRef } from './Blog';
 
 export interface BlogContainerProps extends React.HTMLAttributes<HTMLElement> {
   children?: React.ReactNode;
@@ -25,9 +27,17 @@ const BlogContainer = ({ children, blog, authUser, oneOfMany, ...props }: BlogCo
   const { tryCatch } = useAsyncHandler();
   const bookmarked = authUser?.readings?.find((reading) => reading.id === blog?.id);
   const canEdit = !!(authUser?.id === blog.owner?.id);
+  const [error, setError] = useState<Error | null>();
+  const blogRef = useRef<BlogRef>(null);
 
-  const onSave = (data: BlogAttributes) => {
-    tryCatch(dispatch(blogThunk.updateOne(data)), `${data.title} saved.`);
+  const onSave = async (data: BlogAttributes) => {
+    const response = await tryCatch(dispatch(blogThunk.updateOne(data)), `${data.title} saved.`);
+    if (isErrorResponse(response)) {
+      setError(response.error);
+    } else {
+      setError(null);
+      blogRef?.current?.saved();
+    }
   };
 
   const onDelete = (data: BlogAttributes) => {
@@ -35,6 +45,7 @@ const BlogContainer = ({ children, blog, authUser, oneOfMany, ...props }: BlogCo
   };
 
   const onCancel = () => {
+    setError(null);
     dispatch(clearBlogError());
   };
 
@@ -101,7 +112,7 @@ const BlogContainer = ({ children, blog, authUser, oneOfMany, ...props }: BlogCo
   if (!blog) return null;
 
   return (
-    <Blog {...blogProps} bookmarked={!!bookmarked}>
+    <Blog {...blogProps} bookmarked={!!bookmarked} errors={error?.errors} ref={blogRef}>
       {children}
     </Blog>
   );

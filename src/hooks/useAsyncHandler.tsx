@@ -19,8 +19,6 @@ const useAsyncHandler = () => {
       notify(message);
       return payload;
     } catch (error) {
-      console.log('ERROR!', error);
-
       notify({ error });
 
       const parsedError = parseFrontendError(error);
