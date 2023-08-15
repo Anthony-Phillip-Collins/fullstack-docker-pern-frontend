@@ -6,6 +6,7 @@ import useUserById from '../../hooks/useUserById';
 import { UserAttributes } from '../../types/user.type';
 import NotFoundPage from '../errors/NotFound.page';
 import theme from '../../styles/theme';
+import { StatusCodes } from '../../types/errors.type';
 
 const UserPage = () => {
   const params = useParams();
@@ -13,7 +14,7 @@ const UserPage = () => {
   const { data: user, error } = useUserById(id);
   const { user: authUser } = useAuth();
 
-  if (error) {
+  if (error?.status === StatusCodes.NOT_FOUND) {
     return <NotFoundPage error={error} />;
   }
 

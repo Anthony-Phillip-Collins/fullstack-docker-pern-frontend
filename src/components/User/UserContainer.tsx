@@ -4,7 +4,9 @@ import { useAppDispatch } from '../../app/hooks';
 import useAsyncHandler from '../../hooks/useAsyncHandler';
 import { routerUtils } from '../../routes';
 import { UserAttributes } from '../../types/user.type';
-import User, { UserProps } from './User';
+import User, { UserProps, UserRef } from './User';
+import { isErrorResponse } from '../../types/utils/parsers/error.parser';
+import { useRef, useState } from 'react';
 
 export interface UserContainerProps extends React.HTMLAttributes<HTMLElement> {
   children?: React.ReactNode;
@@ -19,9 +21,17 @@ const UserContainer = ({ children, user, authUser, oneOfMany, ...props }: UserCo
   const navigate = useNavigate();
   const canEdit = !!(user?.id === authUser?.id || authUser?.admin);
   const type: UserProps['type'] = authUser && authUser.id === user?.id ? 'primary' : undefined;
+  const [error, setError] = useState<Error | null>();
+  const userRef = useRef<UserRef>(null);
 
-  const onSave = (data: UserAttributes) => {
-    tryCatch(dispatch(userThunk.updateOne(data)), `${data.username} saved.`);
+  const onSave = async (data: UserAttributes) => {
+    const response = await tryCatch(dispatch(userThunk.updateOne(data)), `${data.username} saved.`);
+    if (isErrorResponse(response)) {
+      setError(response.error);
+    } else {
+      setError(null);
+      userRef?.current?.saved();
+    }
   };
 
   const onDelete = (data: UserAttributes) => {
@@ -32,6 +42,10 @@ const UserContainer = ({ children, user, authUser, oneOfMany, ...props }: UserCo
     navigate(routerUtils.getUserPath(data.id));
   };
 
+  const onCancel = () => {
+    setError(null);
+  };
+
   const userProps = {
     user,
     canEdit,
@@ -40,11 +54,12 @@ const UserContainer = ({ children, user, authUser, oneOfMany, ...props }: UserCo
     onSave,
     onDelete,
     onMore,
+    onCancel,
   };
 
   return (
     <>
-      <User {...userProps} {...props}>
+      <User {...userProps} {...props} errors={error?.errors} ref={userRef}>
         {children}
       </User>
     </>

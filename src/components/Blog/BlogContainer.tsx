@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import blogThunk, { clearBlogError } from '../../app/features/blog.slice';
+import blogThunk from '../../app/features/blog.slice';
 import readingThunk from '../../app/features/reading.slice';
 import { useAppDispatch } from '../../app/hooks';
 import useNotification from '../../hooks/useNotification';
@@ -46,7 +46,6 @@ const BlogContainer = ({ children, blog, authUser, oneOfMany, ...props }: BlogCo
 
   const onCancel = () => {
     setError(null);
-    dispatch(clearBlogError());
   };
 
   const onLike = (data: BlogAttributes) => {

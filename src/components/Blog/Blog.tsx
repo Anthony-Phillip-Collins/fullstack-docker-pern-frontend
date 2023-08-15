@@ -211,9 +211,9 @@ const Blog = forwardRef(
     return (
       <Card
         enableEdit={enableEdit}
-        onSave={onSave && save}
-        onDelete={onDelete && remove}
-        onCancel={onCancel && cancel}
+        onSave={save}
+        onDelete={remove}
+        onCancel={cancel}
         onEdit={setEditable}
         onWarning={setWarning}
         header={

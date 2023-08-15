@@ -6,6 +6,7 @@ import useBlogById from '../../hooks/useBlogById';
 import { BlogAttributes } from '../../types/blog.type';
 import NotFoundPage from '../errors/NotFound.page';
 import theme from '../../styles/theme';
+import { StatusCodes } from '../../types/errors.type';
 
 const BlogPage = () => {
   const params = useParams();
@@ -13,7 +14,7 @@ const BlogPage = () => {
   const { data: blog, error } = useBlogById(id);
   const { user: authUser } = useAuth();
 
-  if (error) {
+  if (error?.status === StatusCodes.NOT_FOUND) {
     return <NotFoundPage error={error} />;
   }
 

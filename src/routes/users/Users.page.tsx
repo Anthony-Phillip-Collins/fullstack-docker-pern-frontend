@@ -52,7 +52,7 @@ const UsersPage = () => {
 
   return (
     <Container>
-      <PageTitle title={open ? 'Create user' : 'Users'}>
+      <PageTitle title={open ? 'Create user' : `${showAuthUser ? 'Me' : 'All Users'}`}>
         <>
           {authUser && (
             <IconButton

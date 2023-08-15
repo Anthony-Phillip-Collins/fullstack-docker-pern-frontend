@@ -53,7 +53,7 @@ const BlogsPage = () => {
 
   return (
     <Container>
-      <PageTitle title={open ? 'Create blog' : 'Blogs'}>
+      <PageTitle title={open ? 'Create blog' : `${showMyBlogsOnly ? 'My' : 'All'} Blogs`}>
         <>
           {user && (
             <IconButton
