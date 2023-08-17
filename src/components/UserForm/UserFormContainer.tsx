@@ -1,33 +1,34 @@
 import React, { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import userThunk from '../../app/features/user.slice';
 import { useAppDispatch } from '../../app/hooks';
-import useNotification from '../../hooks/useNotification';
-import { UserCreateInput } from '../../types/user.type';
-import { parseFrontendError } from '../../util/frontendErrorParser';
-import UserForm from './UserForm';
+import useAsyncHandler from '../../hooks/useAsyncHandler';
 import { FormContainerProps, FormRef } from '../../types/form.type';
+import { UserCreateInput } from '../../types/user.type';
+import { isErrorResponse } from '../../types/utils/parsers/error.parser';
+import UserForm from './UserForm';
 
 const UserFormContainer = forwardRef(
   ({ onLayout, onCancel, onSuccess, ...props }: FormContainerProps, ref: React.Ref<FormRef>) => {
     const dispatch = useAppDispatch();
-    const { notify } = useNotification();
     const form = useRef<FormRef>(null);
-    const [userError, setUserError] = useState<Error | null>(null);
+    const [error, setError] = useState<Error | null>(null);
+    const { tryCatch } = useAsyncHandler();
 
     const onSubmit = async (data: UserCreateInput) => {
-      try {
-        const payload = await dispatch(userThunk.createOne(data)).unwrap();
-        notify(`User ${payload.name} created!`);
-        form.current && form.current.reset();
+      const response = await tryCatch(dispatch(userThunk.createOne(data)), `User ${data.name} created!`);
+      if (isErrorResponse(response)) {
+        setError(response.error);
+      } else {
+        reset();
         onSuccess && onSuccess();
-        setUserError(null);
-      } catch (error) {
-        notify({ error });
-        setUserError(parseFrontendError(error));
       }
     };
 
-    useImperativeHandle(ref, (): FormRef => ({ reset: form.current?.reset || (() => null) }));
+    const reset = () => {
+      form.current && form.current.reset();
+    };
+
+    useImperativeHandle(ref, (): FormRef => ({ reset }));
 
     return (
       <>
@@ -36,7 +37,7 @@ const UserFormContainer = forwardRef(
           onFormSubmit={onSubmit}
           onLayout={onLayout}
           onCancel={onCancel}
-          errors={userError?.errors}
+          errors={error?.errors}
           {...props}
         />
       </>

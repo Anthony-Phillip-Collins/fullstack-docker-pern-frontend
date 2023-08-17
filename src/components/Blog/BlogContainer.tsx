@@ -35,9 +35,13 @@ const BlogContainer = ({ children, blog, authUser, oneOfMany, ...props }: BlogCo
     if (isErrorResponse(response)) {
       setError(response.error);
     } else {
-      setError(null);
+      reset();
       blogRef?.current?.saved();
     }
+  };
+
+  const reset = () => {
+    setError(null);
   };
 
   const onDelete = (data: BlogAttributes) => {
@@ -45,7 +49,7 @@ const BlogContainer = ({ children, blog, authUser, oneOfMany, ...props }: BlogCo
   };
 
   const onCancel = () => {
-    setError(null);
+    reset();
   };
 
   const onLike = (data: BlogAttributes) => {
@@ -101,11 +105,11 @@ const BlogContainer = ({ children, blog, authUser, oneOfMany, ...props }: BlogCo
     oneOfMany,
     onSave,
     onDelete,
+    onMore,
     onCancel,
     onLike,
     onBookmark,
     onRead,
-    onMore,
   };
 
   if (!blog) return null;

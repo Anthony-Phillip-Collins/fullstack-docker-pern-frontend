@@ -7,7 +7,7 @@ interface StyledContentEditableProps {
 }
 
 const Editable = styled(ContentEditable).withConfig({
-  shouldForwardProp: (prop) => !['disabled', 'error'].includes(prop),
+  shouldForwardProp: (prop) => !['error'].includes(prop),
 })<StyledContentEditableProps>`
   ${({ theme, disabled, error }) => {
     const styles = disabled

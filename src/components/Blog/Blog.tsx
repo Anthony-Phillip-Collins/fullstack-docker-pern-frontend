@@ -1,4 +1,5 @@
-import { Ref, forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
+import { Ref, forwardRef, useImperativeHandle, useRef, useState } from 'react';
+import useInputErrors, { UseInputErrorFields } from '../../hooks/useInputErrors';
 import { routerUtils } from '../../routes';
 import { BlogAttributes, BlogUpdate } from '../../types/blog.type';
 import { Readings, UserAttributes } from '../../types/user.type';
@@ -15,14 +16,17 @@ interface Common extends React.HTMLAttributes<HTMLElement> {
   children?: React.ReactNode;
 }
 
-export interface BlogCallbacks {
-  onSave?: (blog: BlogAttributes) => void;
-  onDelete?: (blog: BlogAttributes) => void;
+interface CardImplementer {
+  onSave?: (data: BlogAttributes) => void;
+  onDelete?: (data: BlogAttributes) => void;
+  onMore?: (data: BlogAttributes) => void;
   onCancel?: () => void;
+}
+
+export interface BlogCallbacks extends CardImplementer {
   onLike: (blog: BlogAttributes) => void;
   onBookmark: (blog: BlogAttributes) => void;
   onRead: (reading: Readings) => void;
-  onMore: (blog: BlogAttributes) => void;
 }
 
 export type BlogProps = Common & {
@@ -46,6 +50,8 @@ interface InputFields {
   author: string;
   url: string;
 }
+
+type InputErrorFields = InputFields & UseInputErrorFields;
 
 export interface BlogRef {
   saved: () => void;
@@ -86,17 +92,23 @@ const Blog = forwardRef(
     const author = useRef<EditableRef>(null);
     const url = useRef<EditableRef>(null);
 
-    const initialErrors: InputFields = useMemo(
-      () => ({
-        title: '',
-        author: '',
-        url: '',
-      }),
-      [],
-    );
-    const [errors, setErrors] = useState<InputFields>(initialErrors);
-    const hasErrors = () => {
-      return Object.values(errors).some((error) => error !== '');
+    const [inputFields, setInputFields] = useState<InputErrorFields>({
+      author: '',
+      title: '',
+      url: '',
+    });
+    const { errors, hasErrors } = useInputErrors<InputErrorFields>({
+      errors: errorArray,
+      inputFields,
+    });
+
+    const updateInputFields = (key: keyof InputFields, value: string) => {
+      const updated = { ...inputFields, [key]: value };
+      setInputFields(updated);
+    };
+
+    const closeCard = () => {
+      cardRef?.current?.close();
     };
 
     const save = () => {
@@ -145,60 +157,13 @@ const Blog = forwardRef(
 
     const moreHandler: React.MouseEventHandler = (e) => {
       e.preventDefault();
-      onMore(blog);
+      onMore && onMore(blog);
     };
-
-    const changeHandler = (key: keyof InputFields) => {
-      setErrors((state) => {
-        const input: InputFields = {
-          author: author?.current?.value || '',
-          title: title?.current?.value || '',
-          url: url?.current?.value || '',
-        };
-        return updateErrorsOnInput(input, state, key);
-      });
-    };
-
-    const updateErrorsOnInput = (input: InputFields, state: InputFields, current: keyof InputFields) => {
-      const update = (key: keyof InputFields) => {
-        if (key === current) {
-          return input[key] ? '' : state[key] || 'This field is mandatory.';
-        } else {
-          return state[key];
-        }
-      };
-      const keys = Object.keys(state) as Array<keyof InputFields>;
-      const updated = keys.reduce((obj, key) => {
-        obj[key] = update(key);
-        return obj;
-      }, {} as InputFields);
-      const changed = keys.filter((key) => state[key] !== updated[key]).length > 0;
-      return changed ? updated : state;
-    };
-
-    useEffect(() => {
-      if (errorArray) {
-        const updated = { ...initialErrors };
-        const keys = Object.keys(updated) as Array<keyof InputFields>;
-        errorArray.forEach((error) => {
-          keys.forEach((key) => {
-            if (error.path === key) {
-              updated[key] = error.message;
-            }
-          });
-        });
-        setErrors(updated);
-      } else {
-        setErrors(initialErrors);
-      }
-    }, [errorArray, initialErrors]);
 
     useImperativeHandle(
       ref,
       (): BlogRef => ({
-        saved: () => {
-          cardRef?.current?.close();
-        },
+        saved: closeCard,
       }),
     );
 
@@ -223,7 +188,9 @@ const Blog = forwardRef(
             initialValue={blog.title}
             disabled={!editable}
             error={errors?.title}
-            onChange={() => changeHandler('title')}
+            onUpdate={(value) => updateInputFields('title', value)}
+            onEnter={() => save()}
+            onEscape={closeCard}
           />
         }
         uid={`${blog.id}`}
@@ -239,7 +206,9 @@ const Blog = forwardRef(
               initialValue={blog.author}
               disabled={!editable}
               error={errors?.author}
-              onChange={() => changeHandler('author')}
+              onUpdate={(value) => updateInputFields('author', value)}
+              onEnter={() => save()}
+              onEscape={closeCard}
             />
           </Styled.Author>
           <Styled.Likes>
@@ -252,7 +221,9 @@ const Blog = forwardRef(
               initialValue={blog.url}
               disabled={!editable}
               error={errors?.url}
-              onChange={() => changeHandler('url')}
+              onUpdate={(value) => updateInputFields('url', value)}
+              onEnter={() => save()}
+              onEscape={closeCard}
             />
           ) : (
             <Styled.LinkContainer>

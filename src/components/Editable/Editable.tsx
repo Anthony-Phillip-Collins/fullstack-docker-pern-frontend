@@ -1,5 +1,5 @@
 import { convert } from 'html-to-text';
-import { Ref, forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { Ref, forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { ContentEditableEvent } from 'react-contenteditable';
 import StyledContentEditable from './Editable.styled';
 
@@ -12,7 +12,9 @@ interface EditableProps extends Common {
   tagName: string;
   disabled?: boolean;
   error: string | null;
-  onChange: () => void;
+  onUpdate?: (value: string) => void;
+  onEnter?: (value: string) => void;
+  onEscape?: () => void;
 }
 
 export interface EditableRef {
@@ -22,20 +24,46 @@ export interface EditableRef {
 const Styled = StyledContentEditable;
 
 const Editable = forwardRef(
-  ({ initialValue, tagName, disabled, error, onChange, ...props }: EditableProps, ref: Ref<EditableRef>) => {
+  (
+    { initialValue, tagName, disabled, error, onUpdate, onEnter, onEscape, ...props }: EditableProps,
+    ref: Ref<EditableRef>,
+  ) => {
     const [html, setHtml] = useState<string>(initialValue || '');
     const contentEditable = useRef<HTMLElement>(null);
+
+    const changeHandler = (evt: ContentEditableEvent) => {
+      const converted = convert(evt.target.value);
+      const value = converted.replace(/\n/g, '');
+      setHtml(value);
+      onUpdate && onUpdate(value);
+    };
+
+    const handleKeyup = useCallback(
+      (evt: KeyboardEvent) => {
+        if (evt.key === 'Enter') {
+          onEnter && onEnter(html);
+        }
+
+        if (evt.key === 'Escape') {
+          onEscape && onEscape();
+        }
+      },
+      [html, onEnter, onEscape],
+    );
+
+    const onFocus = () => {
+      addEventListener('keyup', handleKeyup);
+    };
+
+    const onBlur = () => {
+      removeEventListener('keyup', handleKeyup);
+    };
 
     useEffect(() => {
       if (disabled) {
         setHtml(initialValue);
       }
     }, [disabled, initialValue]);
-
-    const changeHandler = (evt: ContentEditableEvent) => {
-      setHtml(convert(evt.target.value));
-      onChange && onChange();
-    };
 
     useImperativeHandle(ref, (): EditableRef => ({ value: html }));
 
@@ -49,6 +77,8 @@ const Editable = forwardRef(
           onChange={changeHandler}
           tagName={tagName}
           error={!!error}
+          onFocus={() => onFocus()}
+          onBlur={() => onBlur()}
         />
         {error && <Styled.ErrorField>{error}</Styled.ErrorField>}
       </Styled.Wrapper>

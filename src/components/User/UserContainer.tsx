@@ -29,9 +29,13 @@ const UserContainer = ({ children, user, authUser, oneOfMany, ...props }: UserCo
     if (isErrorResponse(response)) {
       setError(response.error);
     } else {
-      setError(null);
+      reset();
       userRef?.current?.saved();
     }
+  };
+
+  const reset = () => {
+    setError(null);
   };
 
   const onDelete = (data: UserAttributes) => {
@@ -43,7 +47,7 @@ const UserContainer = ({ children, user, authUser, oneOfMany, ...props }: UserCo
   };
 
   const onCancel = () => {
-    setError(null);
+    reset();
   };
 
   const userProps = {

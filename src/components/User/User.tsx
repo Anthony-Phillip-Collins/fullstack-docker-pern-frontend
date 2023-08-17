@@ -1,4 +1,5 @@
-import { Ref, forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
+import { Ref, forwardRef, useImperativeHandle, useRef, useState } from 'react';
+import useInputErrors, { UseInputErrorFields } from '../../hooks/useInputErrors';
 import { routerUtils } from '../../routes';
 import { UserAttributes, UserUpdateAsAdminInput } from '../../types/user.type';
 import dateToString from '../../util/dateToString';
@@ -12,14 +13,14 @@ interface Common extends React.HTMLAttributes<HTMLElement> {
   children?: React.ReactNode;
 }
 
-export interface UserCallbacks {
-  onSave?: (user: UserAttributes) => void;
-  onDelete?: (user: UserAttributes) => void;
-  onMore: (user: UserAttributes) => void;
+interface CardImplementer {
+  onSave?: (data: UserAttributes) => void;
+  onDelete?: (data: UserAttributes) => void;
+  onMore?: (data: UserAttributes) => void;
   onCancel?: () => void;
 }
 
-export type UserProps = UserCallbacks &
+export type UserProps = CardImplementer &
   Common &
   Pick<CardProps, 'type'> & {
     user: UserAttributes;
@@ -31,6 +32,8 @@ export type UserProps = UserCallbacks &
 interface InputFields {
   name: string;
 }
+
+type InputErrorFields = InputFields & UseInputErrorFields;
 
 export interface UserRef {
   saved: () => void;
@@ -47,16 +50,21 @@ const User = forwardRef(
     const tabIndex = { tabIndex: warning ? -1 : 0 };
     const name = useRef<EditableRef>(null);
     const cardRef = useRef<CardRef>(null);
+    const [inputFields, setInputFields] = useState<InputErrorFields>({
+      name: user.name,
+    });
+    const { errors, hasErrors } = useInputErrors<InputErrorFields>({
+      errors: errorArray,
+      inputFields,
+    });
 
-    const initialErrors: InputFields = useMemo(
-      () => ({
-        name: '',
-      }),
-      [],
-    );
-    const [errors, setErrors] = useState<InputFields>(initialErrors);
-    const hasErrors = () => {
-      return Object.values(errors).some((error) => error !== '');
+    const updateInputFields = (key: keyof InputFields, value: string) => {
+      const updated = { ...inputFields, [key]: value };
+      setInputFields(updated);
+    };
+
+    const closeCard = () => {
+      cardRef?.current?.close();
     };
 
     const save = () => {
@@ -82,58 +90,13 @@ const User = forwardRef(
 
     const moreHandler: React.MouseEventHandler = (e) => {
       e.preventDefault();
-      onMore(user);
+      onMore && onMore(user);
     };
-
-    const changeHandler = (key: keyof InputFields) => {
-      setErrors((state) => {
-        const input: InputFields = {
-          name: name?.current?.value || '',
-        };
-        return updateErrorsOnInput(input, state, key);
-      });
-    };
-
-    const updateErrorsOnInput = (input: InputFields, state: InputFields, current: keyof InputFields) => {
-      const update = (key: keyof InputFields) => {
-        if (key === current) {
-          return input[key] ? '' : state[key] || 'This field is mandatory.';
-        } else {
-          return state[key];
-        }
-      };
-      const keys = Object.keys(state) as Array<keyof InputFields>;
-      const updated = keys.reduce((obj, key) => {
-        obj[key] = update(key);
-        return obj;
-      }, {} as InputFields);
-      const changed = keys.filter((key) => state[key] !== updated[key]).length > 0;
-      return changed ? updated : state;
-    };
-
-    useEffect(() => {
-      if (errorArray) {
-        const updated = { ...initialErrors };
-        const keys = Object.keys(updated) as Array<keyof InputFields>;
-        errorArray.forEach((error) => {
-          keys.forEach((key) => {
-            if (error.path === key) {
-              updated[key] = error.message;
-            }
-          });
-        });
-        setErrors(updated);
-      } else {
-        setErrors(initialErrors);
-      }
-    }, [errorArray, initialErrors]);
 
     useImperativeHandle(
       ref,
       (): UserRef => ({
-        saved: () => {
-          cardRef?.current?.close();
-        },
+        saved: closeCard,
       }),
     );
 
@@ -154,7 +117,9 @@ const User = forwardRef(
             initialValue={user.name}
             disabled={!editable}
             error={errors?.name}
-            onChange={() => changeHandler('name')}
+            onUpdate={(value) => updateInputFields('name', value)}
+            onEnter={() => save()}
+            onEscape={closeCard}
           />
         }
         uid={`${user.id}`}
