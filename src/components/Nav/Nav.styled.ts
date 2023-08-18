@@ -39,7 +39,7 @@ const Nav = styled.nav`
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      padding: `${theme.spacing.xxl} 0`,
+      padding: `${theme.spacing.xl} 0`,
     }),
   })};
 `;

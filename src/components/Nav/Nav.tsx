@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import { ComponentProps, useContext, useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import WindowContext from '../../context/WindowContext';
 import useAsyncHandler from '../../hooks/useAsyncHandler';
@@ -16,7 +16,7 @@ interface NavItem {
   auth?: boolean;
 }
 
-export interface NavLinkType extends React.ComponentProps<typeof Link> {
+export interface NavLinkType extends ComponentProps<typeof Link> {
   active?: boolean;
 }
 
@@ -27,8 +27,8 @@ const Nav = () => {
   const { tryCatch } = useAsyncHandler();
   const [loginOpen, setLoginOpen] = useState(false);
   const [navOpen, setNavOpen] = useState(true);
-  const navRef = useRef<ExpanderRef>(null);
-  const loginRef = React.useRef<ExpanderContainerRef>(null);
+  const navExpander = useRef<ExpanderRef>(null);
+  const loginExpander = useRef<ExpanderContainerRef>(null);
   const location = useLocation();
   const { isMobileWidth } = useContext(WindowContext);
 
@@ -69,7 +69,7 @@ const Nav = () => {
 
   useEffect(() => {
     setNavOpen(!isMobileWidth);
-    navRef.current && navRef.current.updateHeight();
+    navExpander.current && navExpander.current.updateHeight();
   }, [location.pathname, isMobileWidth]);
 
   return (
@@ -83,7 +83,7 @@ const Nav = () => {
           />
         </Styled.Toggle>
 
-        <Expander open={navOpen} ref={navRef}>
+        <Expander open={navOpen} disabled={!isMobileWidth} ref={navExpander}>
           <Styled.Nav>
             <Styled.List>
               {items.map(({ auth, to, label }) => {
@@ -107,7 +107,7 @@ const Nav = () => {
               {user ? (
                 <Button onClick={() => onLogOut()}>Log Out</Button>
               ) : (
-                !loginOpen && <Button onClick={() => loginRef.current?.expand()}>Log In</Button>
+                !loginOpen && <Button onClick={() => loginExpander.current?.expand()}>Log In</Button>
               )}
             </>
           </Styled.Nav>
@@ -115,7 +115,7 @@ const Nav = () => {
       </Styled.NavContainer>
 
       <LoginFormExpander
-        ref={loginRef}
+        ref={loginExpander}
         onExpand={onExpand}
         onCollapse={onCollapse}
         style={{ paddingBottom: theme.spacing.xxl }}
