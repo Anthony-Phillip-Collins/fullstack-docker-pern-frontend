@@ -68,6 +68,18 @@ const ListItem = styled.li`
   })}
 `;
 
+const Config = styled.div`
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+`;
+
+const Info = styled.p`
+  display: inline;
+  margin-right: ${({ theme }) => theme.spacing.xl};
+  text-align: right;
+`;
+
 const NavLink = styled(Link).withConfig({
   shouldForwardProp: (prop) => !['active'].includes(prop),
 })<NavLinkType>`
@@ -135,6 +147,8 @@ const NavStyled = {
   List,
   ListItem,
   Link: NavLink,
+  Config,
+  Info,
 };
 
 export default NavStyled;

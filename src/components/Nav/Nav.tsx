@@ -102,14 +102,18 @@ const Nav = () => {
                 );
               })}
             </Styled.List>
-            <>
-              {user && <p>Logged in as {user.name}</p>}
+            <Styled.Config>
+              {user && (
+                <Styled.Info>
+                  Logged in as <strong>{user.name}</strong>
+                </Styled.Info>
+              )}
               {user ? (
                 <Button onClick={() => onLogOut()}>Log Out</Button>
               ) : (
                 !loginOpen && <Button onClick={() => loginExpander.current?.expand()}>Log In</Button>
               )}
-            </>
+            </Styled.Config>
           </Styled.Nav>
         </Expander>
       </Styled.NavContainer>
