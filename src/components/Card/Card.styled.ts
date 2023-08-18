@@ -23,17 +23,17 @@ const Inner = styled.div.withConfig({
   })};
 `;
 
-type HeaderProps = Pick<CardProps, 'type'>;
+type HeaderProps = { owned?: boolean };
 
 const Header = styled.div.withConfig({
-  shouldForwardProp: (prop) => !['type'].includes(prop),
+  shouldForwardProp: (prop) => !['owned'].includes(prop),
 })<HeaderProps>`
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
 
-  ${({ theme, type }) => ({
-    backgroundColor: type === 'primary' ? theme.colors.primary : theme.colors.grey,
+  ${({ theme, owned }) => ({
+    backgroundColor: owned ? theme.colors.secondary : theme.colors.grey,
     padding: theme.spacing.lg,
   })};
 

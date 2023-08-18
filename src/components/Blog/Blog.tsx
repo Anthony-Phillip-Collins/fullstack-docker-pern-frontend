@@ -4,7 +4,7 @@ import { routerUtils } from '../../routes';
 import { BlogAttributes, BlogUpdate } from '../../types/blog.type';
 import { Readings, UserAttributes } from '../../types/user.type';
 import dateToString from '../../util/dateToString';
-import Card, { CardProps, CardRef } from '../Card/Card';
+import Card, { CardRef } from '../Card/Card';
 import CardStyled from '../Card/Card.styled';
 import Editable, { EditableRef } from '../Editable/Editable';
 import IconButton from '../IconButton/IconButton';
@@ -30,7 +30,7 @@ export interface BlogCallbacks extends CardImplementer {
 }
 
 export type BlogProps = Common &
-  Pick<CardProps, 'type'> & {
+  BlogCallbacks & {
     blog: BlogAttributes;
     user?: UserAttributes | null;
     bookmarked?: boolean;
@@ -39,8 +39,6 @@ export type BlogProps = Common &
     oneOfMany?: boolean;
     errors?: Error[] | null;
   };
-
-type Props = BlogProps & BlogCallbacks;
 
 export interface BlogInnerProps {
   warning?: boolean;
@@ -70,7 +68,6 @@ const Blog = forwardRef(
       bookmarked,
       liked,
       oneOfMany,
-      type,
       errors: errorArray,
       onSave,
       onDelete,
@@ -79,7 +76,7 @@ const Blog = forwardRef(
       onBookmark,
       onRead,
       onMore,
-    }: Props,
+    }: BlogProps,
     ref: Ref<BlogRef>,
   ) => {
     const [editable, setEditable] = useState(false);
@@ -196,9 +193,9 @@ const Blog = forwardRef(
           />
         }
         uid={`${blog.id}`}
-        type={type}
         ref={cardRef}
         disabled={hasErrors()}
+        owned={blog.owner?.id === user?.id}
       >
         <Styled.Body>
           <Styled.Author>

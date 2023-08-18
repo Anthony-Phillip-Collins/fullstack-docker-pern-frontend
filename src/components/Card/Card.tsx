@@ -22,8 +22,8 @@ export type CardProps = CardCallbacks &
     warningProps?: WarningProps;
     enableEdit?: boolean;
     uid?: string;
-    type?: 'primary';
     disabled?: boolean;
+    owned?: boolean;
   };
 
 export interface CardInnerProps {
@@ -44,8 +44,8 @@ const Card = forwardRef(
       warningProps,
       enableEdit,
       uid,
-      type,
       disabled,
+      owned,
       onSave,
       onDelete,
       onCancel,
@@ -104,7 +104,7 @@ const Card = forwardRef(
       <Styled.Card>
         {warning && <CardWarning onConfirm={deleteForReal} onCancel={cancel} {...warningProps} />}
         <Styled.Inner warning={warning}>
-          <Styled.Header type={type}>
+          <Styled.Header owned={owned}>
             {header}
             {isEnabled && (
               <IconButton

@@ -29,7 +29,6 @@ const BlogContainer = ({ children, blog, authUser, oneOfMany, ...props }: BlogCo
   const canEdit = !!(authUser?.id === blog.owner?.id);
   const [error, setError] = useState<Error | null>();
   const blogRef = useRef<BlogRef>(null);
-  const type: BlogProps['type'] = authUser && authUser.id === blog?.owner?.id ? 'primary' : undefined;
 
   const onSave = async (data: BlogAttributes) => {
     const response = await tryCatch(dispatch(blogThunk.updateOne(data)), `${data.title} saved.`);
@@ -98,13 +97,12 @@ const BlogContainer = ({ children, blog, authUser, oneOfMany, ...props }: BlogCo
     navigate(routerUtils.getBlogPath(data.id));
   };
 
-  const blogProps = {
+  const blogProps: BlogProps = {
     ...props,
     blog,
     user: authUser,
     canEdit,
     oneOfMany,
-    type,
     onSave,
     onDelete,
     onMore,

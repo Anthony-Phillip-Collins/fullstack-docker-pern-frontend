@@ -11,7 +11,7 @@ import { useRef, useState } from 'react';
 export interface UserContainerProps extends React.HTMLAttributes<HTMLElement> {
   children?: React.ReactNode;
   user: UserProps['user'];
-  authUser?: UserAttributes | null | undefined;
+  authUser?: UserAttributes | undefined;
   oneOfMany?: UserProps['oneOfMany'];
 }
 
@@ -20,7 +20,6 @@ const UserContainer = ({ children, user, authUser, oneOfMany, ...props }: UserCo
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const canEdit = !!(user?.id === authUser?.id || authUser?.admin);
-  const type: UserProps['type'] = authUser && authUser.id === user?.id ? 'primary' : undefined;
   const [error, setError] = useState<Error | null>();
   const userRef = useRef<UserRef>(null);
 
@@ -50,11 +49,11 @@ const UserContainer = ({ children, user, authUser, oneOfMany, ...props }: UserCo
     reset();
   };
 
-  const userProps = {
+  const userProps: UserProps = {
     user,
+    authUser,
     canEdit,
     oneOfMany,
-    type,
     onSave,
     onDelete,
     onMore,

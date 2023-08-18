@@ -21,9 +21,9 @@ interface CardImplementer {
 }
 
 export type UserProps = CardImplementer &
-  Common &
-  Pick<CardProps, 'type'> & {
+  Common & {
     user: UserAttributes;
+    authUser?: UserAttributes;
     canEdit?: boolean;
     oneOfMany?: boolean;
     errors?: Error[] | null;
@@ -41,7 +41,7 @@ export interface UserRef {
 
 const User = forwardRef(
   (
-    { children, user, canEdit, oneOfMany, type, errors: errorArray, onSave, onDelete, onMore, onCancel }: UserProps,
+    { children, user, authUser, canEdit, oneOfMany, errors: errorArray, onSave, onDelete, onMore, onCancel }: UserProps,
     ref: Ref<UserRef>,
   ) => {
     const [editable, setEditable] = useState(false);
@@ -123,9 +123,9 @@ const User = forwardRef(
           />
         }
         uid={`${user.id}`}
-        type={type}
         ref={cardRef}
         disabled={hasErrors()}
+        owned={authUser?.id === user.id}
       >
         {<div style={{ textOverflow: 'ellipsis', overflow: 'hidden' }}>{user.username}</div>}
         {!oneOfMany && <div>Id: {user.id}</div>}
