@@ -4,7 +4,7 @@ import { routerUtils } from '../../routes';
 import { BlogAttributes, BlogUpdate } from '../../types/blog.type';
 import { Readings, UserAttributes } from '../../types/user.type';
 import dateToString from '../../util/dateToString';
-import Card, { CardRef } from '../Card/Card';
+import Card, { CardProps, CardRef } from '../Card/Card';
 import CardStyled from '../Card/Card.styled';
 import Editable, { EditableRef } from '../Editable/Editable';
 import IconButton from '../IconButton/IconButton';
@@ -29,15 +29,16 @@ export interface BlogCallbacks extends CardImplementer {
   onRead: (reading: Readings) => void;
 }
 
-export type BlogProps = Common & {
-  blog: BlogAttributes;
-  user?: UserAttributes | null;
-  bookmarked?: boolean;
-  liked?: boolean;
-  canEdit?: boolean;
-  oneOfMany?: boolean;
-  errors?: Error[] | null;
-};
+export type BlogProps = Common &
+  Pick<CardProps, 'type'> & {
+    blog: BlogAttributes;
+    user?: UserAttributes | null;
+    bookmarked?: boolean;
+    liked?: boolean;
+    canEdit?: boolean;
+    oneOfMany?: boolean;
+    errors?: Error[] | null;
+  };
 
 type Props = BlogProps & BlogCallbacks;
 
@@ -69,6 +70,7 @@ const Blog = forwardRef(
       bookmarked,
       liked,
       oneOfMany,
+      type,
       errors: errorArray,
       onSave,
       onDelete,
@@ -194,8 +196,9 @@ const Blog = forwardRef(
           />
         }
         uid={`${blog.id}`}
-        disabled={hasErrors()}
+        type={type}
         ref={cardRef}
+        disabled={hasErrors()}
       >
         <Styled.Body>
           <Styled.Author>
