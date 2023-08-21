@@ -19,14 +19,17 @@
     "build": "tsc && vite build",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "lint:fix": "eslint src --ext ts,tsx --fix",
+    "format": "prettier --write \"src/**/*.{ts,tsx}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx}\"",
+    "test": "echo \"Error: no test specified\" && exit 1",
     "preview": "vite preview",
     "docker:dev:build": "docker compose -f docker-compose.dev.yml build",
     "docker:dev:build:nc": "npm run docker:dev:build -- --no-cache",
     "docker:dev:up": "docker compose -f docker-compose.dev.yml up",
     "docker:dev:down": "docker compose -f docker-compose.dev.yml down",
     "prepare": "node -e \"if (process.env.NODE_ENV !== 'production'){process.exit(1)} \" || husky install",
-    "pre-commit": "lint-staged",
-    "pre-push": "npm run build"
+    "pre-commit": "npx lint-staged && npm run build",
+    "pre-push": "npm run test"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.5",

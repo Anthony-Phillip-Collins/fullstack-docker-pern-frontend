@@ -23,7 +23,7 @@ interface CardImplementer {
 export type UserProps = CardImplementer &
   Common & {
     user: UserAttributes;
-    authUser?: UserAttributes;
+    authUser?: UserAttributes | null;
     canEdit?: boolean;
     oneOfMany?: boolean;
     errors?: Error[] | null;
