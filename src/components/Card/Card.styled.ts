@@ -1,5 +1,5 @@
 import { styled } from 'styled-components';
-import { CardInnerProps, CardProps } from './Card';
+import { CardInnerProps } from './Card';
 
 const Card = styled.article`
   position: relative;

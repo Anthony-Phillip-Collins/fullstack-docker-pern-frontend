@@ -3,7 +3,7 @@ import useInputErrors, { UseInputErrorFields } from '../../hooks/useInputErrors'
 import { routerUtils } from '../../routes';
 import { UserAttributes, UserUpdateAsAdminInput } from '../../types/user.type';
 import dateToString from '../../util/dateToString';
-import Card, { CardProps, CardRef } from '../Card/Card';
+import Card, { CardRef } from '../Card/Card';
 import CardStyled from '../Card/Card.styled';
 import Editable, { EditableRef } from '../Editable/Editable';
 import IconButton from '../IconButton/IconButton';
@@ -23,7 +23,7 @@ interface CardImplementer {
 export type UserProps = CardImplementer &
   Common & {
     user: UserAttributes;
-    authUser?: UserAttributes;
+    authUser?: UserAttributes | null;
     canEdit?: boolean;
     oneOfMany?: boolean;
     errors?: Error[] | null;

@@ -8,12 +8,10 @@ import User, { UserProps, UserRef } from './User';
 import { isErrorResponse } from '../../types/utils/parsers/error.parser';
 import { useRef, useState } from 'react';
 
-export interface UserContainerProps extends React.HTMLAttributes<HTMLElement> {
-  children?: React.ReactNode;
-  user: UserProps['user'];
-  authUser?: UserAttributes | undefined;
-  oneOfMany?: UserProps['oneOfMany'];
-}
+export type UserContainerProps = React.HTMLAttributes<HTMLElement> &
+  Pick<UserProps, 'user' | 'authUser' | 'oneOfMany'> & {
+    children?: React.ReactNode;
+  };
 
 const UserContainer = ({ children, user, authUser, oneOfMany, ...props }: UserContainerProps) => {
   const { tryCatch } = useAsyncHandler();
