@@ -76,8 +76,10 @@ const Config = styled.div`
 
 const Info = styled.p`
   display: inline;
-  margin-right: ${({ theme }) => theme.spacing.xl};
   text-align: right;
+  ${({ theme }) => ({
+    margin: `0 ${theme.spacing.xl} 0 0`,
+  })};
 `;
 
 const NavLink = styled(Link).withConfig({

@@ -2,10 +2,10 @@ import React, { forwardRef, useImperativeHandle, useRef, useState } from 'react'
 import userThunk from '../../app/features/user.slice';
 import { useAppDispatch } from '../../app/hooks';
 import useAsyncHandler from '../../hooks/useAsyncHandler';
-import { FormContainerProps, FormRef } from '../../types/form.type';
 import { UserCreateInput } from '../../types/user.type';
 import { isErrorResponse } from '../../types/utils/parsers/error.parser';
 import UserForm from './UserForm';
+import { FormContainerProps, FormRef } from '../Form/Form';
 
 const UserFormContainer = forwardRef(
   ({ onLayout, onCancel, onSuccess, ...props }: FormContainerProps, ref: React.Ref<FormRef>) => {

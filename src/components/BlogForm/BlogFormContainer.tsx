@@ -3,9 +3,9 @@ import blogThunk from '../../app/features/blog.slice';
 import { useAppDispatch } from '../../app/hooks';
 import useNotification from '../../hooks/useNotification';
 import { BlogCreation } from '../../types/blog.type';
-import { FormContainerProps, FormRef } from '../../types/form.type';
 import { parseFrontendError } from '../../util/frontendErrorParser';
 import BlogCreateForm from './BlogForm';
+import { FormContainerProps, FormRef } from '../Form/Form';
 
 const BlogCreateFormContainer = forwardRef(
   ({ onLayout, onCancel, onSuccess, ...props }: FormContainerProps, ref: React.Ref<FormRef>) => {

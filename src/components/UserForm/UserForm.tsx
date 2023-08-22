@@ -1,9 +1,8 @@
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useState } from 'react';
 import useInputErrors, { UseInputErrorFields } from '../../hooks/useInputErrors';
-import { FormProps, FormRef } from '../../types/form.type';
 import { UserCreateInput } from '../../types/user.type';
 import Button from '../Button/Button';
-import Form from '../Form/Form';
+import Form, { FormProps, FormRef } from '../Form/Form';
 
 interface InputFields extends UseInputErrorFields {
   username: string;

@@ -1,9 +1,9 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import Expander, { ExpanderRef } from '../Expander/Expander';
-import { LoginFormRef } from './LoginForm';
 import LoginFormContainer from './LoginFormContainer';
 import Container from '../Container/Container';
 import theme from '../../styles/theme';
+import { FormRef } from '../Form/Form';
 
 interface Common extends React.HTMLAttributes<HTMLFormElement> {
   children?: React.ReactNode;
@@ -23,7 +23,7 @@ const LoginFormExpander = forwardRef(
   ({ onExpand, onCollapse, ...props }: Props, ref: React.Ref<ExpanderContainerRef>) => {
     const [open, setOpen] = useState(false);
     const expander = useRef<ExpanderRef>(null);
-    const LoginForm = useRef<LoginFormRef>(null);
+    const LoginForm = useRef<FormRef>(null);
 
     const onLayout = () => {
       expander.current && expander.current.updateHeight();

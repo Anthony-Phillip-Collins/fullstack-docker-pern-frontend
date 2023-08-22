@@ -11,7 +11,7 @@ import PageTitle from '../../components/PageTitle/PageTitle';
 import useAuth from '../../hooks/useAuth';
 import useBlogs from '../../hooks/useBlogs';
 import theme from '../../styles/theme';
-import { FormRef } from '../../types/form.type';
+import { FormRef } from '../../components/Form/Form';
 
 const BlogsPage = () => {
   const dispatch = useAppDispatch();

@@ -1,32 +1,18 @@
 import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
-import Button from '../Button/Button';
-import Form from '../Form/Form';
 import { UserLogin } from '../../types/user.type';
-
-export interface LoginFormRef {
-  reset: () => void;
-}
-
-interface Common extends React.HTMLAttributes<HTMLFormElement> {
-  children?: React.ReactNode;
-}
+import Button from '../Button/Button';
+import Form, { FormProps, FormRef } from '../Form/Form';
 
 interface ErrorProps {
   username: string;
   password: string;
 }
 
-export interface LoginFormShared {
-  onLayout?: () => void;
-  onCancel?: () => void;
-}
+type Props = FormProps & {
+  onFormSubmit: (data: UserLogin) => void;
+};
 
-type Props = Common &
-  LoginFormShared & {
-    onFormSubmit: (data: UserLogin) => void;
-  };
-
-const LoginForm = forwardRef(({ onFormSubmit, onCancel, onLayout, ...props }: Props, ref: React.Ref<LoginFormRef>) => {
+const LoginForm = forwardRef(({ onFormSubmit, onCancel, onLayout, ...props }: Props, ref: React.Ref<FormRef>) => {
   const initialError: ErrorProps = {
     username: '',
     password: '',
@@ -63,7 +49,7 @@ const LoginForm = forwardRef(({ onFormSubmit, onCancel, onLayout, ...props }: Pr
     onCancel && onCancel();
   };
 
-  useImperativeHandle(ref, (): LoginFormRef => ({ reset }));
+  useImperativeHandle(ref, (): FormRef => ({ reset }));
 
   useEffect(() => {
     if (firstSubmit) {

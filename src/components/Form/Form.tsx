@@ -1,5 +1,28 @@
 import FormStyled from './Form.styled';
 
+interface Common extends React.HTMLAttributes<HTMLFormElement> {
+  children?: React.ReactNode;
+}
+
+export interface FormRef {
+  reset: () => void;
+}
+
+interface FormCallbacks {
+  onLayout?: () => void;
+  onCancel?: () => void;
+}
+
+export type FormProps = Common &
+  FormCallbacks & {
+    errors?: Error[];
+  };
+
+export type FormContainerProps = Common &
+  FormCallbacks & {
+    onSuccess?: () => void;
+  };
+
 /* Form */
 
 interface Props extends React.FormHTMLAttributes<HTMLFormElement> {

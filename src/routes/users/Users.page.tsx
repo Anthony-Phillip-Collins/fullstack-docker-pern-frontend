@@ -9,7 +9,7 @@ import useAuth from '../../hooks/useAuth';
 import useUsers from '../../hooks/useUsers';
 import theme from '../../styles/theme';
 import UsersFilter from '../../components/IconFilters/UsersFilter';
-import { FormRef } from '../../types/form.type';
+import { FormRef } from '../../components/Form/Form';
 
 const UsersPage = () => {
   const { data, refetch } = useUsers();
