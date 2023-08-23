@@ -24,9 +24,9 @@ interface CardImplementer {
 }
 
 export interface BlogCallbacks extends CardImplementer {
-  onLike: (blog: BlogAttributes) => void;
-  onBookmark: (blog: BlogAttributes) => void;
-  onRead: (reading: Readings) => void;
+  onLike?: (blog: BlogAttributes) => void;
+  onBookmark?: (blog: BlogAttributes) => void;
+  onRead?: (reading: Readings) => void;
 }
 
 export type BlogProps = Common &
@@ -84,7 +84,6 @@ const Blog = forwardRef(
     const enableEdit = !!(canEdit && (onSave || onDelete));
     const tabIndex = { tabIndex: warning ? -1 : 0 };
     const canLike = false; // implement later
-
     const cardRef = useRef<CardRef>(null);
 
     const title = useRef<EditableRef>(null);
@@ -141,12 +140,12 @@ const Blog = forwardRef(
 
     const likeHandler: React.MouseEventHandler = (e) => {
       e.preventDefault();
-      onLike(blog);
+      onLike && onLike(blog);
     };
 
     const bookmarkHandler: React.MouseEventHandler = (e) => {
       e.preventDefault();
-      onBookmark(blog);
+      onBookmark && onBookmark(blog);
     };
 
     const readHandler: React.MouseEventHandler = (e) => {
@@ -255,13 +254,15 @@ const Blog = forwardRef(
               />
             )}
 
-            <IconButton
-              iconProps={{ icon: bookmarked ? 'unbookmark' : 'bookmark' }}
-              onClick={bookmarkHandler}
-              label={bookmarked ? 'Remove bookmark' : 'Add bookmark'}
-              tooltipId={`bookmark${blog.id}`}
-              {...tabIndex}
-            />
+            {onBookmark && (
+              <IconButton
+                iconProps={{ icon: bookmarked ? 'unbookmark' : 'bookmark' }}
+                onClick={bookmarkHandler}
+                label={bookmarked ? 'Remove bookmark' : 'Add bookmark'}
+                tooltipId={`bookmark${blog.id}`}
+                {...tabIndex}
+              />
+            )}
 
             {reading && (
               <IconButton

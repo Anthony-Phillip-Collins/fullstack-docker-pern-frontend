@@ -41,10 +41,10 @@ heroku logs -t --app appname
 heroku apps:info -a backendAppName
 ```
 
-5. Update `VITE_API_BASE_URL` in _Dockerfile.prod_ with the web url from the previous step and add _/api_ at the end. For example:
+5. Update `API_BASE_URL` in _Dockerfile.prod_ with the web url from the previous step and add _/api_ at the end. For example:
 
 ```bash
-ENV VITE_API_BASE_URL=https://backendAppName-800d35caffaa.herokuapp.com/api
+ENV API_BASE_URL=https://backendAppName-800d35caffaa.herokuapp.com/api
 ```
 
 6. Commit changes

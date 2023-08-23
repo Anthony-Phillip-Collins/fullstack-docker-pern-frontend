@@ -1,20 +1,12 @@
 #!/bin/bash
 
-# Version: 0.1.1
-# Author: Anthony Collins
-
-# install npm packages both in docker container and locally
-# It follows the pattern of npm.sh <container> <args>
-
-# Example:
-# ./npm.sh dev.frontend install -D eslint
-
-container=$1
-args="${*:2}"
+# install npm packages both in docker dev.frontend container and locally
+# Example usage: ./npm.sh install --save-dev webpack
+args="${*:1}"
 timeout=5
 
 npm ${args}
-docker exec $container /bin/bash -c "npm ${args}"
+docker exec dev.frontend /bin/bash -c "npm ${args}"
 
 
 # wait for timeout (seconds) and the restart container
