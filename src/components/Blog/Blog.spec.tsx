@@ -1,9 +1,9 @@
 import '@testing-library/jest-dom';
-import { screen, fireEvent } from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
 import { BlogAttributes } from '../../types/blog.type';
-import { renderWithTheme } from '../../util/jest';
-import Blog from './Blog';
 import { UserAttributes } from '../../types/user.type';
+import { renderWithProviders } from '../../util/jest';
+import Blog from './Blog';
 
 let blog: BlogAttributes;
 let user: UserAttributes;
@@ -31,7 +31,7 @@ beforeAll(() => {
 
 describe('<Blog />', () => {
   it('should render the blog component', () => {
-    renderWithTheme(<Blog blog={blog} />);
+    renderWithProviders(<Blog blog={blog} />);
 
     const title = screen.getByText('Overreacted');
     expect(title).toBeInTheDocument();
@@ -50,7 +50,7 @@ describe('<Blog />', () => {
   });
 
   it('should not have a bookmark button if callback isn’t provided', () => {
-    renderWithTheme(<Blog blog={blog} />);
+    renderWithProviders(<Blog blog={blog} />);
 
     const bookmark = screen.queryByTestId('bookmark');
     expect(bookmark).not.toBeInTheDocument();
@@ -60,21 +60,21 @@ describe('<Blog />', () => {
   });
 
   it('should have a bookmark button if callback is provided', () => {
-    renderWithTheme(<Blog blog={blog} onBookmark={() => null} />);
+    renderWithProviders(<Blog blog={blog} onBookmark={() => null} />);
 
     const bookmark = screen.queryByTestId('bookmark');
     expect(bookmark).toBeInTheDocument();
   });
 
   it('should not have a more button if blog is not one of many', () => {
-    renderWithTheme(<Blog blog={blog} />);
+    renderWithProviders(<Blog blog={blog} />);
 
     const more = screen.queryByTestId('more');
     expect(more).not.toBeInTheDocument();
   });
 
   it('should have a more button if blog is one of many', () => {
-    renderWithTheme(<Blog blog={blog} oneOfMany />);
+    renderWithProviders(<Blog blog={blog} oneOfMany />);
 
     const more = screen.queryByTestId('more');
     expect(more).toBeInTheDocument();
@@ -82,7 +82,7 @@ describe('<Blog />', () => {
 
   it('should call the onBookmark callback when the bookmark button is clicked', () => {
     const onBookmark = jest.fn();
-    renderWithTheme(<Blog blog={blog} onBookmark={onBookmark} />);
+    renderWithProviders(<Blog blog={blog} onBookmark={onBookmark} />);
 
     const bookmark = screen.getByTestId('bookmark');
     bookmark.click();
@@ -93,7 +93,7 @@ describe('<Blog />', () => {
   it('should have an edit button if callbacks are provided and user canEdit=true', () => {
     const onSave = jest.fn();
     const onDelete = jest.fn();
-    renderWithTheme(<Blog blog={blog} user={user} onSave={onSave} onDelete={onDelete} canEdit />);
+    renderWithProviders(<Blog blog={blog} user={user} onSave={onSave} onDelete={onDelete} canEdit />);
 
     const edit = screen.queryByTestId('edit');
     expect(edit).toBeInTheDocument();
@@ -102,7 +102,7 @@ describe('<Blog />', () => {
   it('should not have an edit button if callbacks are provided and user canEdit=false', () => {
     const onSave = jest.fn();
     const onDelete = jest.fn();
-    renderWithTheme(<Blog blog={blog} user={user} onSave={onSave} onDelete={onDelete} />);
+    renderWithProviders(<Blog blog={blog} user={user} onSave={onSave} onDelete={onDelete} />);
 
     const edit = screen.queryByTestId('edit');
     expect(edit).not.toBeInTheDocument();
@@ -111,7 +111,7 @@ describe('<Blog />', () => {
   it('should show delete and save buttons when edit button is clicked', () => {
     const onSave = jest.fn();
     const onDelete = jest.fn();
-    renderWithTheme(<Blog blog={blog} user={user} onSave={onSave} onDelete={onDelete} canEdit />);
+    renderWithProviders(<Blog blog={blog} user={user} onSave={onSave} onDelete={onDelete} canEdit />);
 
     const edit = screen.getByTestId('edit');
     expect(edit).toBeInTheDocument();
@@ -128,7 +128,7 @@ describe('<Blog />', () => {
   it('should show the warning dialog when delete button is clicked', () => {
     const onSave = jest.fn();
     const onDelete = jest.fn();
-    renderWithTheme(<Blog blog={blog} user={user} onSave={onSave} onDelete={onDelete} canEdit />);
+    renderWithProviders(<Blog blog={blog} user={user} onSave={onSave} onDelete={onDelete} canEdit />);
 
     const edit = screen.getByTestId('edit');
     fireEvent.click(edit);

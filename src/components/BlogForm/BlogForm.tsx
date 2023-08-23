@@ -74,7 +74,7 @@ const BlogCreateForm = forwardRef(
       <Form onSubmit={handleSubmit} {...props}>
         <Form.Input label="Title" name="title" value={title} setValue={setTitle} error={errors.title} />
         <Form.Input label="Author" name="author" value={author} setValue={setAuthor} error={errors.author} />
-        <Form.Input label="Url" name="url" value={url} setValue={setUrl} error={errors.url} />
+        <Form.Input label="URL" name="url" value={url} setValue={setUrl} error={errors.url} />
         <Form.Footer>
           {onCancel && (
             <Button type="button" variant="danger" onClick={handleCancel}>

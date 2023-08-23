@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { clearBlogError } from '../../app/features/blog.slice';
 import { useAppDispatch } from '../../app/hooks';
-import BlogCreateFormContainer from '../../components/BlogForm/BlogFormContainer';
+import BlogFormContainer from '../../components/BlogForm/BlogFormContainer';
 import BlogList from '../../components/BlogList/BlogList';
 import Container from '../../components/Container/Container';
 import Expander, { ExpanderRef } from '../../components/Expander/Expander';
@@ -71,7 +71,7 @@ const BlogsPage = () => {
         </>
       </PageTitle>
       <Expander open={open} ref={expander}>
-        <BlogCreateFormContainer
+        <BlogFormContainer
           onLayout={onLayout}
           onCancel={onCancel}
           onSuccess={onSuccess}
