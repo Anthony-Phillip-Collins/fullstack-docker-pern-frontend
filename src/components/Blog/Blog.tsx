@@ -194,7 +194,7 @@ const Blog = forwardRef(
         uid={`${blog.id}`}
         ref={cardRef}
         disabled={hasErrors()}
-        owned={blog.owner?.id === user?.id}
+        owned={blog.ownerId === user?.id || blog.owner?.id === user?.id}
       >
         <Styled.Body>
           <Styled.Author>
@@ -231,15 +231,15 @@ const Blog = forwardRef(
               </ExternalLink>
             </Styled.LinkContainer>
           )}
+          {blog.owner && (
+            <div>
+              owner: <InternalLink to={routerUtils.getUserPath(blog.owner.id)}>{blog.owner.name}</InternalLink>
+            </div>
+          )}
 
-          <div>
-            owner:{' '}
-            {blog.owner && <InternalLink to={routerUtils.getUserPath(blog.owner.id)}>{blog.owner.name}</InternalLink>}
-          </div>
+          {createdAt && <div>created: {createdAt}</div>}
 
-          <div>{createdAt && <div>created: {createdAt}</div>}</div>
-
-          <div>{updatedAt && <div>updated: {updatedAt}</div>}</div>
+          {updatedAt && <div>updated: {updatedAt}</div>}
 
           <Readers readers={blog.readers} />
 
@@ -261,6 +261,7 @@ const Blog = forwardRef(
                 label={bookmarked ? 'Remove bookmark' : 'Add bookmark'}
                 tooltipId={`bookmark${blog.id}`}
                 {...tabIndex}
+                data-testid="bookmark"
               />
             )}
 
@@ -281,6 +282,7 @@ const Blog = forwardRef(
                 label="Read more"
                 tooltipId={`more${blog.id}`}
                 {...tabIndex}
+                data-testid="more"
               />
             )}
           </CardStyled.IconControls>

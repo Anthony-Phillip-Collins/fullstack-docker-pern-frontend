@@ -113,6 +113,7 @@ const Card = forwardRef(
                 label={editable ? `Cancel` : `Edit`}
                 tooltipId={uid && `edit-card-${uid}`}
                 {...tabIndex}
+                data-testid="edit"
               />
             )}
           </Styled.Header>
@@ -122,12 +123,24 @@ const Card = forwardRef(
             {isEnabled && editable && (
               <Styled.Edit>
                 {onDelete && (
-                  <Button variant="danger" aria-label="Delete" onClick={() => remove()} disabled={disabled}>
+                  <Button
+                    variant="danger"
+                    aria-label="Delete"
+                    onClick={() => remove()}
+                    disabled={disabled}
+                    data-testid="delete"
+                  >
                     Delete
                   </Button>
                 )}
                 {onSave && (
-                  <Button variant="primary" aria-label="Save" onClick={() => save()} disabled={disabled}>
+                  <Button
+                    variant="primary"
+                    aria-label="Save"
+                    onClick={() => save()}
+                    disabled={disabled}
+                    data-testid="save"
+                  >
                     Save
                   </Button>
                 )}

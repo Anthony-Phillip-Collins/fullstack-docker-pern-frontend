@@ -26,7 +26,7 @@ const CardWarning = ({ message, confirmButtonText, cancelButtonText, onConfirm, 
   };
 
   return (
-    <Styled.Warning>
+    <Styled.Warning data-testid="warning">
       <Styled.Inner>
         <Styled.Header>{message || 'Are you sure you want to proceed?'}</Styled.Header>
         <Styled.Body>
