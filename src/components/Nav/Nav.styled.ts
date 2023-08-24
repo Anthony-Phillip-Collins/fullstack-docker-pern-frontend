@@ -89,6 +89,7 @@ const NavLink = styled(Link).withConfig({
   display: inline-block;
   text-decoration: none;
   outline: none;
+  padding: 0.5rem 0 0.6rem;
 
   &::after,
   &::before {
@@ -101,11 +102,11 @@ const NavLink = styled(Link).withConfig({
   }
 
   &::before {
-    top: -0.4rem;
+    top: 0;
   }
 
   &::after {
-    bottom: -0.6rem;
+    bottom: 0;
   }
 
   &:hover,
