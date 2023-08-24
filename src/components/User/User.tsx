@@ -160,7 +160,7 @@ User.displayName = 'User';
 
 const UserReadings = ({ readings }: Pick<UserAttributes, 'readings'>) => {
   const hasReadings = readings && readings.length > 0;
-  const heading = readings && <div>{`Readings: ${!hasReadings && ' none'}`}</div>;
+  const heading = readings && <div>{`Readings: ${hasReadings ? '' : ' none'}`}</div>;
 
   return (
     <div>
@@ -183,7 +183,7 @@ const UserReadings = ({ readings }: Pick<UserAttributes, 'readings'>) => {
 
 const UserBlogs = ({ blogs }: Pick<UserAttributes, 'blogs'>) => {
   const hasBlogs = blogs && blogs.length > 0;
-  const heading = blogs && <div>{`Blogs: ${!hasBlogs && ' none'}`}</div>;
+  const heading = blogs && <div>{`Blogs: ${hasBlogs ? '' : ' none'}`}</div>;
 
   return (
     <div>
