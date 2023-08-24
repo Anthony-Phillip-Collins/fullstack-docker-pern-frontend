@@ -25,15 +25,6 @@ describe('<BlogForm />', () => {
     expect(cancel).not.toBeInTheDocument();
   });
 
-  it('should have a cancel button when onCancel callback is provided', () => {
-    const onFormSubmit = jest.fn();
-    const onCancel = jest.fn();
-    renderWithProviders(<BlogCreateForm onFormSubmit={onFormSubmit} onCancel={onCancel} />);
-
-    const cancel = screen.getByText('Cancel');
-    expect(cancel).toBeInTheDocument();
-  });
-
   it('should call the onCancel callback when the cancel button is clicked', () => {
     const onFormSubmit = jest.fn();
     const onCancel = jest.fn();

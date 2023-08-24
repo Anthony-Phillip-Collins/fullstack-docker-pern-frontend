@@ -16,7 +16,7 @@ const Button = (props: IconButtonProps) => {
   const { iconProps, tooltipProps, tooltipId, label, ...rest } = props;
   return (
     <>
-      <button aria-label={label} data-tooltip-id={tooltipId} {...rest}>
+      <button aria-label={label} data-tooltip-id={tooltipId} data-testid="icon-button" {...rest}>
         <IconShape {...iconProps} />
       </button>
 

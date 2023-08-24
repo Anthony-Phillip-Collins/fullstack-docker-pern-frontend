@@ -1,5 +1,5 @@
 import Button from '../Button/Button';
-import CardWarningStyled from './Card.Warning.styled';
+import CardWarningStyled from './CardWarning.styled';
 
 export interface WarningProps {
   confirmButtonText?: string;
@@ -36,7 +36,7 @@ const CardWarning = ({ message, confirmButtonText, cancelButtonText, onConfirm, 
             onClick={cancelHandler}
             className="c-card__warning__button-cancel"
           >
-            {cancelButtonText || 'Nope'}
+            {cancelButtonText || 'Cancel'}
           </Button>
           <Button
             variant="primary"
@@ -44,7 +44,7 @@ const CardWarning = ({ message, confirmButtonText, cancelButtonText, onConfirm, 
             onClick={deleteHandler}
             className="c-card__warning__button-delete"
           >
-            {confirmButtonText || 'Yep'}
+            {confirmButtonText || 'Confirm'}
           </Button>
         </Styled.Body>
       </Styled.Inner>

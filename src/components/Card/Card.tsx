@@ -2,7 +2,7 @@ import { Ref, forwardRef, useImperativeHandle, useState } from 'react';
 import Button from '../Button/Button';
 import CardStyled from '../Card/Card.styled';
 import IconButton from '../IconButton/IconButton';
-import CardWarning, { WarningProps } from './Card.Warning';
+import CardWarning, { WarningProps } from './CardWarning';
 
 interface Common extends React.HTMLAttributes<HTMLElement> {
   children?: React.ReactNode;

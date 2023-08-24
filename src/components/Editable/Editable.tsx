@@ -28,12 +28,13 @@ const Editable = forwardRef(
     { initialValue, tagName, disabled, error, onUpdate, onEnter, onEscape, ...props }: EditableProps,
     ref: Ref<EditableRef>,
   ) => {
-    const [html, setHtml] = useState<string>(initialValue || '');
+    const clean = (value: string) => convert(value);
+
+    const [html, setHtml] = useState<string>(clean(initialValue) || '');
     const contentEditable = useRef<HTMLElement>(null);
 
     const changeHandler = (evt: ContentEditableEvent) => {
-      const converted = convert(evt.target.value);
-      const value = converted.replace(/\n/g, '');
+      const value = clean(evt.target.value);
       setHtml(value);
       onUpdate && onUpdate(value);
     };
@@ -61,7 +62,7 @@ const Editable = forwardRef(
 
     useEffect(() => {
       if (disabled) {
-        setHtml(initialValue);
+        setHtml(clean(initialValue));
       }
     }, [disabled, initialValue]);
 
@@ -79,6 +80,7 @@ const Editable = forwardRef(
           error={!!error}
           onFocus={() => onFocus()}
           onBlur={() => onBlur()}
+          data-testid="editable"
         />
         {error && <Styled.ErrorField>{error}</Styled.ErrorField>}
       </Styled.Wrapper>

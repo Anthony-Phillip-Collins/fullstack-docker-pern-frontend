@@ -128,11 +128,11 @@ const User = forwardRef(
         owned={authUser?.id === user.id}
       >
         {<div style={{ textOverflow: 'ellipsis', overflow: 'hidden' }}>{user.username}</div>}
-        {!oneOfMany && <div>Id: {user.id}</div>}
+        {!oneOfMany && <div>{`Id: ${user.id}`}</div>}
         {user.disabled && <div>logged out</div>}
-        <div>Privileges: {user.admin ? 'Admin' : 'User'}</div>
-        {!oneOfMany && <div>Created: {dateToString(user?.createdAt)}</div>}
-        {!oneOfMany && <div>Updated: {dateToString(user?.updatedAt)}</div>}
+        <div>{`Privileges: ${user.admin ? 'Admin' : 'User'}`}</div>
+        {!oneOfMany && <div>{`Created: ${dateToString(user?.createdAt)}`}</div>}
+        {!oneOfMany && <div>{`Updated: ${dateToString(user?.updatedAt)}`}</div>}
 
         {!oneOfMany && <UserBlogs blogs={user?.blogs} />}
 
@@ -160,7 +160,7 @@ User.displayName = 'User';
 
 const UserReadings = ({ readings }: Pick<UserAttributes, 'readings'>) => {
   const hasReadings = readings && readings.length > 0;
-  const heading = readings && <div>Readings: {!hasReadings && ' none'}</div>;
+  const heading = readings && <div>{`Readings: ${!hasReadings && ' none'}`}</div>;
 
   return (
     <div>
@@ -183,7 +183,7 @@ const UserReadings = ({ readings }: Pick<UserAttributes, 'readings'>) => {
 
 const UserBlogs = ({ blogs }: Pick<UserAttributes, 'blogs'>) => {
   const hasBlogs = blogs && blogs.length > 0;
-  const heading = blogs && <div>Blogs: {!hasBlogs && ' none'}</div>;
+  const heading = blogs && <div>{`Blogs: ${!hasBlogs && ' none'}`}</div>;
 
   return (
     <div>
