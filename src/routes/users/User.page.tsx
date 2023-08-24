@@ -11,11 +11,15 @@ import { StatusCodes } from '../../types/errors.type';
 const UserPage = () => {
   const params = useParams();
   const id: UserAttributes['id'] = (params.id && parseInt(params.id)) || -1;
-  const { data: user, error } = useUserById(id);
+  const { data: user, error, loading } = useUserById(id);
   const { user: authUser } = useAuth();
 
   if (error?.status === StatusCodes.NOT_FOUND) {
     return <NotFoundPage error={error} />;
+  }
+
+  if (loading) {
+    return null;
   }
 
   return (

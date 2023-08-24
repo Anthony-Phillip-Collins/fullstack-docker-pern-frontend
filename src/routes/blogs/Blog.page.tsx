@@ -11,11 +11,15 @@ import { StatusCodes } from '../../types/errors.type';
 const BlogPage = () => {
   const params = useParams();
   const id: BlogAttributes['id'] = (params.id && parseInt(params.id)) || -1;
-  const { data: blog, error } = useBlogById(id);
+  const { data: blog, error, loading } = useBlogById(id);
   const { user: authUser } = useAuth();
 
   if (error?.status === StatusCodes.NOT_FOUND) {
     return <NotFoundPage error={error} />;
+  }
+
+  if (loading) {
+    return null;
   }
 
   return (
