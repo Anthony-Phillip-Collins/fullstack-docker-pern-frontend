@@ -17,8 +17,8 @@ const LoginForm = forwardRef(({ onFormSubmit, onCancel, onLayout, ...props }: Pr
     username: '',
     password: '',
   };
-  const [username, setUsername] = useState('admin@foobar.com');
-  const [password, setPassword] = useState('letmein');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [firstSubmit, setFirstSubmit] = useState(false);
   const [errors, setErrors] = useState<ErrorProps>(initialError);
   const defaultError = 'This field is mandatory.';
