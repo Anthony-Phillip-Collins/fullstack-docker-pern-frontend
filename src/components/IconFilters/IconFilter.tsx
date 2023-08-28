@@ -17,8 +17,10 @@ const StyledIconFilter = styled.div`
   display: flex;
   align-items: center;
   border: 1px solid rgba(255, 255, 255, 0.4);
-  border-radius: ${(props) => props.theme.global.borderRadius};
-  padding: ${(props) => props.theme.spacing.lg};
+  ${({ theme }) => ({
+    padding: `${theme.spacing.lg} ${theme.spacing.xl}`,
+    borderRadius: theme.global.borderRadius,
+  })};
 
   > button {
     margin-left: ${(props) => props.theme.spacing.xl};
