@@ -10,30 +10,30 @@ on:
     types: [opened, synchronize]
 
 jobs:
-  # run_tests:
-  #   runs-on: ubuntu-20.04
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #     - uses: actions/setup-node@v3
-  #       with:
-  #         node-version: '18.15.0'
-  #     - name: Install dependencies
-  #       run: npm ci
-  #     - name: Run Eslint
-  #       run: npm run lint
-  #     - name: build
-  #       run: npm run build
-  #     - name: Run Jest
-  #       run: npm run test
-  #     - name: Run Cypress
-  #       # skip when running locally, because cypress throws errors when using act
-  #       if: ${{ !github.event.act }}
-  #       uses: cypress-io/github-action@v5
-  #       with:
-  #         command: npm run cypress:run
-  #         start: npm run preview
-  #         wait-on: 'http://localhost:4173/'
-  #         browser: chrome
+  run_tests:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18.15.0'
+      - name: Install dependencies
+        run: npm ci
+      - name: Run Eslint
+        run: npm run lint
+      - name: build
+        run: npm run build
+      - name: Run Jest
+        run: npm run test
+      - name: Run Cypress
+        # skip when running locally, because cypress throws errors when using act
+        if: ${{ !github.event.act }}
+        uses: cypress-io/github-action@v5
+        with:
+          command: npm run cypress:run
+          start: npm run preview
+          wait-on: 'http://localhost:4173/'
+          browser: chrome
 
   deploy:
     # if: ${{ (github.event_name == 'push' || github.event.pull_request.merged == true) && (!contains( join(github.event.commits.*.message), '#skip') && !github.event.act) }}
