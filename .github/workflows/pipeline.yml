@@ -14,6 +14,9 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.FULLSTACK_DOCKER_PERN }}
+          submodules: recursive
       - uses: actions/setup-node@v3
         with:
           node-version: '18.15.0'
