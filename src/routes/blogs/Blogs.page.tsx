@@ -5,28 +5,28 @@ import BlogFormContainer from '../../components/BlogForm/BlogFormContainer';
 import BlogList from '../../components/BlogList/BlogList';
 import Container from '../../components/Container/Container';
 import Expander, { ExpanderRef } from '../../components/Expander/Expander';
+import { FormRef } from '../../components/Form/Form';
 import IconButton from '../../components/IconButton/IconButton';
 import BlogsFilter from '../../components/IconFilters/BlogsFilter';
-import PageTitle from '../../components/PageTitle/PageTitle';
+import PageHeader from '../../components/PageHeader/PageHeader';
 import useAuth from '../../hooks/useAuth';
 import useBlogs from '../../hooks/useBlogs';
 import theme from '../../styles/theme';
-import { FormRef } from '../../components/Form/Form';
 
 const BlogsPage = () => {
   const dispatch = useAppDispatch();
   const { data, refetch } = useBlogs();
   const { user } = useAuth();
-  const [open, setOpen] = useState(false);
+  const [showForm, setShowForm] = useState(false);
   const [showMyBlogsOnly, setShowMyBlogsOnly] = useState(false);
   const expander = useRef<ExpanderRef>(null);
   const BlogCreateForm = useRef<FormRef>(null);
 
   const toggle = () => {
-    if (open) {
+    if (showForm) {
       BlogCreateForm.current && BlogCreateForm.current.reset();
     }
-    setOpen(!open);
+    setShowForm(!showForm);
     dispatch(clearBlogError());
   };
 
@@ -35,11 +35,11 @@ const BlogsPage = () => {
   };
 
   const onCancel = () => {
-    setOpen(false);
+    setShowForm(false);
   };
 
   const onSuccess = () => {
-    setOpen(false);
+    setShowForm(false);
   };
 
   useEffect(() => {
@@ -50,27 +50,25 @@ const BlogsPage = () => {
 
   const blogs = showMyBlogsOnly ? user?.blogs || [] : data;
   const canFilter = user?.blogs && user.blogs?.length > 0;
+  const filter = canFilter && (
+    <BlogsFilter showMyBlogsOnly={showMyBlogsOnly} toggle={() => setShowMyBlogsOnly(!showMyBlogsOnly)} />
+  );
 
   return (
     <Container>
-      <PageTitle title={open ? 'Create blog' : `${showMyBlogsOnly ? 'My' : 'All'} Blogs`}>
-        <>
-          {user && (
-            <IconButton
-              iconProps={{ icon: open ? 'minus' : 'plus' }}
-              onClick={toggle}
-              label={open ? 'Cancel' : 'Add blog'}
-              tooltipId={`add-blog`}
-              tooltipProps={{ place: 'top' }}
-            />
-          )}
+      <PageHeader title={showForm ? 'Create blog' : `${showMyBlogsOnly ? 'My' : 'All'} Blogs`} childrenFar={filter}>
+        {user && (
+          <IconButton
+            iconProps={{ icon: showForm ? 'minus' : 'plus' }}
+            onClick={toggle}
+            label={showForm ? 'Cancel' : 'Add blog'}
+            tooltipId={`add-blog`}
+            tooltipProps={{ place: 'top' }}
+          />
+        )}
+      </PageHeader>
 
-          {canFilter && (
-            <BlogsFilter showMyBlogsOnly={showMyBlogsOnly} toggle={() => setShowMyBlogsOnly(!showMyBlogsOnly)} />
-          )}
-        </>
-      </PageTitle>
-      <Expander open={open} ref={expander}>
+      <Expander open={showForm} ref={expander}>
         <BlogFormContainer
           onLayout={onLayout}
           onCancel={onCancel}

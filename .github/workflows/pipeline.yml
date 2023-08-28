@@ -39,8 +39,8 @@ jobs:
           browser: chrome
 
   deploy:
-    # if: ${{ (github.event_name == 'push' || github.event.pull_request.merged == true) && (!contains( join(github.event.commits.*.message), '#skip') && !github.event.act) }}
-    # needs: run_tests
+    if: ${{ (github.event_name == 'push' || github.event.pull_request.merged == true) && (!contains( join(github.event.commits.*.message), '#skip') && !github.event.act) }}
+    needs: run_tests
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
@@ -52,23 +52,18 @@ jobs:
           dontuseforce: true
           dontautocreate: true
 
-      # - name: Deploy to Fly.io
-      #   run: flyctl deploy --remote-only
-      #   env:
-      #     FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-
-  # tag_release:
-  #   if: ${{ (github.event_name == 'push' || github.event.pull_request.merged == true) && (!contains( join(github.event.commits.*.message), '#skip') && !github.event.act) }}
-  #   needs: deploy
-  #   runs-on: ubuntu-20.04
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #       with:
-  #         ref: ${{ github.sha }}
-  #         fetch-depth: '0'
-  #     - name: Bump version and push tag
-  #       uses: anothrNick/github-tag-action@8c8163ef62cf9c4677c8e800f36270af27930f42 # using commit hash instead of git-tag is future-proof
-  #       env:
-  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #         DEFAULT_BUMP: patch
-  #         WITH_V: true
+  tag_release:
+    if: ${{ (github.event_name == 'push' || github.event.pull_request.merged == true) && (!contains( join(github.event.commits.*.message), '#skip') && !github.event.act) }}
+    needs: deploy
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: '0'
+      - name: Bump version and push tag
+        uses: anothrNick/github-tag-action@8c8163ef62cf9c4677c8e800f36270af27930f42 # using commit hash instead of git-tag is future-proof
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEFAULT_BUMP: patch
+          WITH_V: true

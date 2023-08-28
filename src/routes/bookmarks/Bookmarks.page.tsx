@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import BlogList from '../../components/BlogList/BlogList';
 import Container from '../../components/Container/Container';
 import BookmarksFilter from '../../components/IconFilters/BookmarksFilter';
-import PageTitle from '../../components/PageTitle/PageTitle';
+import PageTitle from '../../components/PageHeader/PageHeader';
 import useReadings from '../../hooks/useReadings';
 
 const BookmarksPage = () => {
@@ -17,7 +17,15 @@ const BookmarksPage = () => {
   if (!all) return null;
 
   const canFilter = read && unread && read.length > 0 && unread.length > 0;
-
+  const filter = canFilter && (
+    <BookmarksFilter
+      showRead={showRead}
+      showUnread={showUnread}
+      toggleShowRead={() => setShowRead(!showRead)}
+      toggleShowUnread={() => setShowUnread(!showUnread)}
+      className="filter"
+    />
+  );
   let blogs = all;
   let titlePrefix = '';
 
@@ -37,17 +45,7 @@ const BookmarksPage = () => {
 
   return (
     <Container>
-      <PageTitle title={`${titlePrefix} Bookmarks`} childContainerProps={{ style: { justifyContent: 'flex-end' } }}>
-        {canFilter && (
-          <BookmarksFilter
-            showRead={showRead}
-            showUnread={showUnread}
-            toggleShowRead={() => setShowRead(!showRead)}
-            toggleShowUnread={() => setShowUnread(!showUnread)}
-            className="filter"
-          />
-        )}
-      </PageTitle>
+      <PageTitle title={`${titlePrefix} Bookmarks`} childrenFar={filter} />
       {blogs.length === 0 && <p>{canFilter ? 'Select at least one filter.' : 'No blogs have been bookmarked.'}</p>}
       <BlogList data={blogs} />
     </Container>
