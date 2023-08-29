@@ -25,3 +25,4 @@ dist-ssr
 
 cypress/videos
 cypress/downloads
+cypress/screenshots

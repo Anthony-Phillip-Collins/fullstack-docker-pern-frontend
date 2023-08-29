@@ -59,7 +59,7 @@ const LoginFormExpander = forwardRef(
 
     return (
       <Container style={{ backgroundColor: theme.colors.darkVariant }}>
-        <Expander open={open} ref={expander}>
+        <Expander open={open} ref={expander} data-testid="login-form-expander">
           <LoginFormContainer onLayout={onLayout} onCancel={collapse} onSuccess={onSuccess} {...props} />
         </Expander>
       </Container>

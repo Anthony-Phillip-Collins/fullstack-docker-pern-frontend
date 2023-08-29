@@ -72,8 +72,15 @@ const LoginForm = forwardRef(({ onFormSubmit, onCancel, onLayout, ...props }: Pr
   }, [errors, firstSubmit, onLayout]);
 
   return (
-    <Form onSubmit={handleSubmit} {...props}>
-      <Form.Input label="Username" name="username" value={username} setValue={setUsername} error={errors.username} />
+    <Form onSubmit={handleSubmit} {...props} data-testid="login-form">
+      <Form.Input
+        label="Username"
+        name="username"
+        value={username}
+        setValue={setUsername}
+        error={errors.username}
+        data-testid="username"
+      />
       <Form.Input
         label="Password"
         name="password"
@@ -81,10 +88,11 @@ const LoginForm = forwardRef(({ onFormSubmit, onCancel, onLayout, ...props }: Pr
         setValue={setPassword}
         error={errors.password}
         type="password"
+        data-testid="password"
       />
       <Form.Footer>
         {onCancel && (
-          <Button type="button" variant="danger" onClick={handleCancel}>
+          <Button type="button" variant="danger" onClick={handleCancel} data-testid="login-cancel-button">
             Cancel
           </Button>
         )}

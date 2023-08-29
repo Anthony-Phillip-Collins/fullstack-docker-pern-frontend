@@ -109,9 +109,15 @@ const Nav = () => {
                 </Styled.Info>
               )}
               {user ? (
-                <Button onClick={() => onLogOut()}>Log Out</Button>
+                <Button onClick={() => onLogOut()} data-testid="logout-button">
+                  Log Out
+                </Button>
               ) : (
-                !loginOpen && <Button onClick={() => loginExpander.current?.expand()}>Log In</Button>
+                !loginOpen && (
+                  <Button onClick={() => loginExpander.current?.expand()} data-testid="login-expand-button">
+                    Log In
+                  </Button>
+                )
               )}
             </Styled.Config>
           </Styled.Nav>
