@@ -71,7 +71,7 @@ const BlogCreateForm = forwardRef(
     }, [errors, firstSubmit, onLayout]);
 
     return (
-      <Form onSubmit={handleSubmit} {...props}>
+      <Form onSubmit={handleSubmit} data-testid="blog-form" {...props}>
         <Form.Input label="Title" name="title" value={title} setValue={setTitle} error={errors.title} />
         <Form.Input label="Author" name="author" value={author} setValue={setAuthor} error={errors.author} />
         <Form.Input label="URL" name="url" value={url} setValue={setUrl} error={errors.url} />

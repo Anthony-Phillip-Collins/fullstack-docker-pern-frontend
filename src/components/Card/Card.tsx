@@ -51,6 +51,7 @@ const Card = forwardRef(
       onCancel,
       onEdit,
       onWarning,
+      ...props
     }: CardProps,
     ref: Ref<CardRef>,
   ) => {
@@ -101,7 +102,7 @@ const Card = forwardRef(
     useImperativeHandle(ref, (): CardRef => ({ close: cancel }));
 
     return (
-      <Styled.Card>
+      <Styled.Card {...props}>
         {warning && <CardWarning onConfirm={deleteForReal} onCancel={cancel} {...warningProps} />}
         <Styled.Inner warning={warning}>
           <Styled.Header owned={owned}>

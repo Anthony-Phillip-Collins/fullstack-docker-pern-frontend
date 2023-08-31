@@ -32,7 +32,7 @@ const CardWarning = ({ message, confirmButtonText, cancelButtonText, onConfirm, 
         <Styled.Body>
           <Button
             variant="danger"
-            aria-label="Cancel deletion"
+            aria-label="Cancel"
             onClick={cancelHandler}
             className="c-card__warning__button-cancel"
           >
@@ -40,7 +40,7 @@ const CardWarning = ({ message, confirmButtonText, cancelButtonText, onConfirm, 
           </Button>
           <Button
             variant="primary"
-            aria-label="Delete for real"
+            aria-label="Confirm"
             onClick={deleteHandler}
             className="c-card__warning__button-delete"
           >

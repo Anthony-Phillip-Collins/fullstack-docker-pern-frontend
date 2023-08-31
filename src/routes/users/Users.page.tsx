@@ -54,7 +54,7 @@ const UsersPage = () => {
   return (
     <Container>
       <PageHeader title={showForm ? 'Create user' : `${showAuthUser ? 'Me' : 'All Users'}`} childrenFar={filter}>
-        {authUser && (
+        {authUser && authUser.admin && (
           <IconButton
             iconProps={{ icon: showForm ? 'minus' : 'plus' }}
             onClick={toggle}

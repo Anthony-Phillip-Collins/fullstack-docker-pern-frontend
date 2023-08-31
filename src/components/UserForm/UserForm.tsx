@@ -61,7 +61,7 @@ const UserForm = forwardRef(
     }, [errors, firstSubmit, onLayout]);
 
     return (
-      <Form onSubmit={handleSubmit} {...props}>
+      <Form onSubmit={handleSubmit} data-testid="user-form" {...props}>
         <Form.Input label="Username" name="username" value={username} setValue={setUsername} error={errors.username} />
         <Form.Input label="Name" name="name" value={name} setValue={setName} error={errors.name} />
         <Form.Input

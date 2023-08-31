@@ -33,10 +33,22 @@ const Editable = forwardRef(
     const [html, setHtml] = useState<string>(clean(initialValue) || '');
     const contentEditable = useRef<HTMLElement>(null);
 
+    const update = useCallback(
+      (value: string) => {
+        const cleanValue = clean(value);
+        let changed = false;
+        setHtml((state) => {
+          changed = state !== cleanValue;
+          return changed ? cleanValue : state;
+        });
+
+        changed && onUpdate && onUpdate(cleanValue);
+      },
+      [setHtml, onUpdate],
+    );
+
     const changeHandler = (evt: ContentEditableEvent) => {
-      const value = clean(evt.target.value);
-      setHtml(value);
-      onUpdate && onUpdate(value);
+      update(evt.target.value);
     };
 
     const handleKeyup = useCallback(
@@ -62,16 +74,15 @@ const Editable = forwardRef(
 
     useEffect(() => {
       if (disabled) {
-        setHtml(clean(initialValue));
+        update(initialValue);
       }
-    }, [disabled, initialValue]);
+    }, [disabled, initialValue, update]);
 
     useImperativeHandle(ref, (): EditableRef => ({ value: html }));
 
     return (
       <Styled.Wrapper>
         <Styled.Editable
-          {...props}
           innerRef={contentEditable}
           html={html}
           disabled={!!disabled}
@@ -81,6 +92,7 @@ const Editable = forwardRef(
           onFocus={() => onFocus()}
           onBlur={() => onBlur()}
           data-testid="editable"
+          {...props}
         />
         {error && <Styled.ErrorField>{error}</Styled.ErrorField>}
       </Styled.Wrapper>

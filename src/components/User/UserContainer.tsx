@@ -60,7 +60,7 @@ const UserContainer = ({ children, user, authUser, oneOfMany, ...props }: UserCo
 
   return (
     <>
-      <User {...userProps} {...props} errors={error?.errors} ref={userRef}>
+      <User {...userProps} {...props} errors={error?.errors} ref={userRef} data-testid="user">
         {children}
       </User>
     </>

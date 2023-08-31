@@ -76,6 +76,7 @@ const Blog = forwardRef(
       onBookmark,
       onRead,
       onMore,
+      ...props
     }: BlogProps,
     ref: Ref<BlogRef>,
   ) => {
@@ -91,9 +92,9 @@ const Blog = forwardRef(
     const url = useRef<EditableRef>(null);
 
     const [inputFields, setInputFields] = useState<InputErrorFields>({
-      author: '',
-      title: '',
-      url: '',
+      author: blog.author,
+      title: blog.title,
+      url: blog.url,
     });
     const { errors, hasErrors } = useInputErrors<InputErrorFields>({
       errors: errorArray,
@@ -170,15 +171,15 @@ const Blog = forwardRef(
     const createdAt = dateToString(blog.createdAt);
     const updatedAt = dateToString(blog.updatedAt);
     const reading = user?.readings?.find((reading) => reading.id === blog.id);
-
+    const owned = (blog.ownerId && blog.ownerId === user?.id) || blog.owner?.id === user?.id;
     return (
       <Card
         enableEdit={enableEdit}
         onSave={save}
         onDelete={remove}
-        onCancel={cancel}
         onEdit={setEditable}
         onWarning={setWarning}
+        onCancel={cancel}
         header={
           <Editable
             tagName="h2"
@@ -189,12 +190,14 @@ const Blog = forwardRef(
             onUpdate={(value) => updateInputFields('title', value)}
             onEnter={() => save()}
             onEscape={closeCard}
+            data-testid="blog-heading"
           />
         }
         uid={`${blog.id}`}
         ref={cardRef}
         disabled={hasErrors()}
-        owned={blog.ownerId === user?.id || blog.owner?.id === user?.id}
+        owned={owned}
+        {...props}
       >
         <Styled.Body>
           <Styled.Author>

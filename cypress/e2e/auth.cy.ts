@@ -1,12 +1,7 @@
 import { UserLogin } from '../../src/types/user.type';
 
-const user: UserLogin = { username: 'user@foobar.com', password: 'letmein' };
-const user2: UserLogin = { username: 'user2@foobar.com', password: 'letmein' };
-
-const url = '/';
-
 beforeEach(() => {
-  cy.visit(url);
+  cy.visit('/');
 });
 
 afterEach(function onAfterEach() {
@@ -15,33 +10,35 @@ afterEach(function onAfterEach() {
   }
 });
 
-describe('Blog App', () => {
-  it('should show login form', () => {
-    cy.showLoginForm();
+describe('Auth', () => {
+  it('should log in as user', () => {
+    Cypress.session.clearAllSavedSessions();
+    cy.loginAsUser();
   });
 
-  it('should log in', () => {
-    cy.showLoginForm();
-    cy.login(user);
-    cy.contains('Logged in.');
-    cy.getUserWithToken().then((ls) => {
-      expect(ls).to.have.property('accessToken');
-    });
-  });
-
-  it('should show error message on login failure', () => {
-    cy.showLoginForm();
-    cy.login(user2);
-    cy.contains('Invalid username or password.');
+  it('should log in as admin', () => {
+    cy.loginAsAdmin();
   });
 
   it('should log out', () => {
-    cy.showLoginForm();
-    cy.login(user);
-    cy.get('[data-testid=logout-button]').click();
-    cy.contains('Logged out.');
+    cy.loginAsAdmin();
+    cy.logout();
+    cy.visit('/');
+    cy.get('[data-testid=login-expand-button]').should('exist');
+
     cy.getUserWithToken().then((ls) => {
       expect(ls).to.not.have.property('accessToken');
+    });
+
+    cy.getUser().then((user) => {
+      expect(user).to.be.null;
+    });
+  });
+
+  it('should not log in with invalid credentials', () => {
+    cy.fixture('credentials/fail.json').then((credentials: UserLogin) => {
+      cy.loginWithoutSession(credentials);
+      cy.contains('Invalid username or password.');
     });
   });
 });

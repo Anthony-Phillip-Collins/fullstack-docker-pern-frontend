@@ -115,7 +115,7 @@ const BlogContainer = ({ children, blog, authUser, oneOfMany, ...props }: BlogCo
   if (!blog) return null;
 
   return (
-    <Blog {...blogProps} bookmarked={!!bookmarked} errors={error?.errors} ref={blogRef}>
+    <Blog {...blogProps} bookmarked={!!bookmarked} errors={error?.errors} ref={blogRef} data-testid="blog">
       {children}
     </Blog>
   );

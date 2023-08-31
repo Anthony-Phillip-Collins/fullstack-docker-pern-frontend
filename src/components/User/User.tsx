@@ -41,7 +41,19 @@ export interface UserRef {
 
 const User = forwardRef(
   (
-    { children, user, authUser, canEdit, oneOfMany, errors: errorArray, onSave, onDelete, onMore, onCancel }: UserProps,
+    {
+      children,
+      user,
+      authUser,
+      canEdit,
+      oneOfMany,
+      errors: errorArray,
+      onSave,
+      onDelete,
+      onMore,
+      onCancel,
+      ...props
+    }: UserProps,
     ref: Ref<UserRef>,
   ) => {
     const [editable, setEditable] = useState(false);
@@ -120,12 +132,14 @@ const User = forwardRef(
             onUpdate={(value) => updateInputFields('name', value)}
             onEnter={() => save()}
             onEscape={closeCard}
+            data-testid="user-heading"
           />
         }
         uid={`${user.id}`}
         ref={cardRef}
         disabled={hasErrors()}
         owned={authUser?.id === user.id}
+        {...props}
       >
         {<div style={{ textOverflow: 'ellipsis', overflow: 'hidden' }}>{user.username}</div>}
         {!oneOfMany && <div>{`Id: ${user.id}`}</div>}
