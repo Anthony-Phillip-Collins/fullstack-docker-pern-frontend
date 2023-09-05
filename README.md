@@ -60,3 +60,23 @@ git push heroku main
 ```bash
 heroku open
 ```
+
+## Running Cypress tests
+
+Start the app locally
+
+```bash
+npm run preview
+```
+
+Open Cypress
+
+```bash
+npm run cypress:open
+```
+
+Or run Cypress in headless mode
+
+```bash
+npm run cypress:run
+```
