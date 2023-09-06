@@ -32,6 +32,9 @@ jobs:
         # skip when running locally, because cypress throws errors when using act
         if: ${{ !github.event.act }}
         uses: cypress-io/github-action@v5
+        env:
+          ADMIN_PROD_PASSWORD: ${{ secrets.ADMIN_PROD_PASSWORD }}
+          USER_PROD_PASSWORD: ${{ secrets.USER_PROD_PASSWORD }}
         with:
           command: npm run cypress:run
           start: npm run preview
