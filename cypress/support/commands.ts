@@ -47,7 +47,7 @@ Cypress.Commands.add('login', ({ username, password }) => {
 });
 
 Cypress.Commands.add('loginAsAdmin', (url) => {
-  cy.fixture('credentials/admin.json').then((credentials: UserLogin) => {
+  cy.getAdminCredentials().then((credentials: UserLogin) => {
     cy.login(credentials);
     cy.visit(url || '/');
   });
@@ -59,7 +59,7 @@ Cypress.Commands.add('loginAsAdmin', (url) => {
 });
 
 Cypress.Commands.add('loginAsUser', (url) => {
-  cy.fixture('credentials/user.json').then((credentials: UserLogin) => {
+  cy.getUserCredentials().then((credentials: UserLogin) => {
     cy.login(credentials);
     cy.visit(url || '/');
   });
@@ -105,7 +105,7 @@ Cypress.Commands.add('getUserWithToken', () => {
 });
 
 Cypress.Commands.add('cleanupUsers', () => {
-  cy.fixture('credentials/admin.json').then((credentials: UserLogin) => {
+  cy.getAdminCredentials().then((credentials: UserLogin) => {
     cy.request('POST', `${Cypress.env('API_URL')}/auth/login`, credentials).then((res) => {
       const { accessToken } = res.body;
       cy.request('GET', `${Cypress.env('API_URL')}/users`).then((res) => {
@@ -128,7 +128,7 @@ Cypress.Commands.add('cleanupUsers', () => {
 });
 
 Cypress.Commands.add('cleanupBlogs', () => {
-  cy.fixture('credentials/admin.json').then((credentials: UserLogin) => {
+  cy.getAdminCredentials().then((credentials: UserLogin) => {
     cy.request('POST', `${Cypress.env('API_URL')}/auth/login`, credentials).then((res) => {
       const { accessToken } = res.body;
       cy.request('GET', `${Cypress.env('API_URL')}/blogs`).then((res) => {
@@ -147,5 +147,19 @@ Cypress.Commands.add('cleanupBlogs', () => {
         });
       });
     });
+  });
+});
+
+Cypress.Commands.add('getAdminCredentials', () => {
+  cy.fixture('credentials/admin.json').then((credentials: UserLogin) => {
+    credentials.password = Cypress.env('ADMIN_PROD_PASSWORD') || credentials.password;
+    return credentials;
+  });
+});
+
+Cypress.Commands.add('getUserCredentials', () => {
+  cy.fixture('credentials/user.json').then((credentials: UserLogin) => {
+    credentials.password = Cypress.env('USER_PROD_PASSWORD') || credentials.password;
+    return credentials;
   });
 });

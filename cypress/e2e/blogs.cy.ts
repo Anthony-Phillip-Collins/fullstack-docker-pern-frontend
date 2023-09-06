@@ -5,6 +5,7 @@ let newTitle;
 
 before(() => {
   cy.cleanupBlogs();
+  Cypress.session.clearAllSavedSessions();
 });
 
 beforeEach(() => {
@@ -20,11 +21,9 @@ afterEach(function onAfterEach() {
 describe('Blogs', () => {
   describe('Create', () => {
     it('should allow creating blogs when logged in', () => {
+      cy.loginAsAdmin(blogsSlug);
       cy.fixture('blogs/test.json').then(({ title, author, url }: BlogAttributes) => {
         cy.get('[data-testid=blog]').filter(`:contains("${title}")`).should('not.exist');
-        Cypress.session.clearAllSavedSessions();
-        cy.loginAsAdmin(blogsSlug);
-
         cy.get('[aria-label="Add blog"]').click();
         cy.get('[data-testid="blog-form"]').as('form').should('exist');
         cy.get('@form').find('[name="title"]').type(title);

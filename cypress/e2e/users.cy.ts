@@ -4,6 +4,7 @@ const usersSlug = '/users';
 
 before(() => {
   cy.cleanupUsers();
+  Cypress.session.clearAllSavedSessions();
 });
 
 beforeEach(() => {
@@ -19,10 +20,9 @@ afterEach(function onAfterEach() {
 describe('Users', () => {
   describe('Create', () => {
     it('should be able to create users when logged in as admin', () => {
+      cy.loginAsAdmin(usersSlug);
       cy.fixture('credentials/test.json').then((credentials: UserLogin) => {
         const username = 'Test User';
-        Cypress.session.clearAllSavedSessions();
-        cy.loginAsAdmin(usersSlug);
         cy.get('[data-testid="user"]').filter(':contains("Test User")').should('not.exist');
         cy.get('[aria-label="Add user"]').click();
         cy.get('[data-testid="user-form"]').as('form').should('exist');

@@ -11,6 +11,8 @@ declare global {
       loginWithoutSession(credentials: UserLogin): Chainable<void>;
       loginAsAdmin(url?: string): Chainable<void>;
       loginAsUser(url?: string): Chainable<void>;
+      getAdminCredentials(): Chainable<UserLogin>;
+      getUserCredentials(): Chainable<UserLogin>;
       logout(): Chainable<void>;
       getUserWithToken(): Chainable<UserWithToken>;
       createUser(data: UserCreateInput): Chainable<void>;

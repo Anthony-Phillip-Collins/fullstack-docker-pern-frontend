@@ -1,5 +1,9 @@
 import { UserLogin } from '../../src/types/user.type';
 
+before(() => {
+  Cypress.session.clearAllSavedSessions();
+});
+
 beforeEach(() => {
   cy.visit('/');
 });
@@ -12,7 +16,6 @@ afterEach(function onAfterEach() {
 
 describe('Auth', () => {
   it('should log in as user', () => {
-    Cypress.session.clearAllSavedSessions();
     cy.loginAsUser();
   });
 
