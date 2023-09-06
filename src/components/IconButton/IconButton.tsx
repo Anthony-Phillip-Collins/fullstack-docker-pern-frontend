@@ -20,7 +20,18 @@ const Button = (props: IconButtonProps) => {
         <IconShape {...iconProps} />
       </button>
 
-      {tooltipId && <Tooltip id={tooltipId} place="top" variant="dark" content={label} {...tooltipProps} />}
+      {tooltipId && (
+        <Tooltip
+          id={tooltipId}
+          place="top"
+          variant="dark"
+          content={label}
+          {...tooltipProps}
+          closeOnResize={true}
+          closeOnEsc={true}
+          closeOnScroll={true}
+        />
+      )}
     </>
   );
 };
