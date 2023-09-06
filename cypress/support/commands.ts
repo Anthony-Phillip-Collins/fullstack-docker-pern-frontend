@@ -1,3 +1,4 @@
+import { BlogAttributes } from '../../src/types/blog.type';
 import { UserAttributes, UserLogin } from '../../src/types/user.type';
 
 Cypress.Commands.overwrite('log', function (log, ...args) {
@@ -99,6 +100,52 @@ Cypress.Commands.add('getUserWithToken', () => {
         const parsed = JSON.parse(token.toString());
         resolve(parsed);
       }
+    });
+  });
+});
+
+Cypress.Commands.add('cleanupUsers', () => {
+  cy.fixture('credentials/admin.json').then((credentials: UserLogin) => {
+    cy.request('POST', `${Cypress.env('API_URL')}/auth/login`, credentials).then((res) => {
+      const { accessToken } = res.body;
+      cy.request('GET', `${Cypress.env('API_URL')}/users`).then((res) => {
+        const users: UserAttributes[] = res.body;
+        cy.fixture('credentials/test.json').then((credentials: UserLogin) => {
+          const testUser = users.find((user) => user.username === credentials.username);
+          if (testUser) {
+            cy.request({
+              method: 'DELETE',
+              url: `${Cypress.env('API_URL')}/users/${testUser.username}`,
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            });
+          }
+        });
+      });
+    });
+  });
+});
+
+Cypress.Commands.add('cleanupBlogs', () => {
+  cy.fixture('credentials/admin.json').then((credentials: UserLogin) => {
+    cy.request('POST', `${Cypress.env('API_URL')}/auth/login`, credentials).then((res) => {
+      const { accessToken } = res.body;
+      cy.request('GET', `${Cypress.env('API_URL')}/blogs`).then((res) => {
+        const blogs = res.body;
+        cy.fixture('blogs/test.json').then(({ title }: BlogAttributes) => {
+          const testBlogs: BlogAttributes[] = blogs.filter((blog) => blog.title.includes(title));
+          testBlogs.forEach((blog) => {
+            cy.request({
+              method: 'DELETE',
+              url: `${Cypress.env('API_URL')}/blogs/${blog.id}`,
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            });
+          });
+        });
+      });
     });
   });
 });

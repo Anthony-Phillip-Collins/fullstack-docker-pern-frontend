@@ -16,6 +16,8 @@ declare global {
       createUser(data: UserCreateInput): Chainable<void>;
       persistUser(): Chainable<void>;
       getUser(): Chainable<UserAttributes>;
+      cleanupUsers(): Chainable<void>;
+      cleanupBlogs(): Chainable<void>;
     }
 
     interface Cypress {

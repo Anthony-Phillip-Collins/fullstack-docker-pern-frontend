@@ -1,4 +1,11 @@
+import { BlogAttributes } from '../../src/types/blog.type';
+
 const blogsSlug = '/blogs';
+let newTitle;
+
+before(() => {
+  cy.cleanupBlogs();
+});
 
 beforeEach(() => {
   cy.visit(blogsSlug);
@@ -13,17 +20,19 @@ afterEach(function onAfterEach() {
 describe('Blogs', () => {
   describe('Create', () => {
     it('should allow creating blogs when logged in', () => {
-      cy.get('[data-testid=blog]').filter(':contains("Test Blog")').should('not.exist');
-      Cypress.session.clearAllSavedSessions();
-      cy.loginAsAdmin(blogsSlug);
+      cy.fixture('blogs/test.json').then(({ title, author, url }: BlogAttributes) => {
+        cy.get('[data-testid=blog]').filter(`:contains("${title}")`).should('not.exist');
+        Cypress.session.clearAllSavedSessions();
+        cy.loginAsAdmin(blogsSlug);
 
-      cy.get('[aria-label="Add blog"]').click();
-      cy.get('[data-testid="blog-form"]').as('form').should('exist');
-      cy.get('@form').find('[name="title"]').type('Test Blog');
-      cy.get('@form').find('[name="author"]').type('Test Author');
-      cy.get('@form').find('[name="url"]').type('http://www.foobar.com');
-      cy.get('@form').find('[type="submit"]').click();
-      cy.contains('Blog Test Blog created');
+        cy.get('[aria-label="Add blog"]').click();
+        cy.get('[data-testid="blog-form"]').as('form').should('exist');
+        cy.get('@form').find('[name="title"]').type(title);
+        cy.get('@form').find('[name="author"]').type(author);
+        cy.get('@form').find('[name="url"]').type(url);
+        cy.get('@form').find('[type="submit"]').click();
+        cy.contains('Blog Test Blog created');
+      });
     });
   });
 
@@ -52,21 +61,23 @@ describe('Blogs', () => {
     it('should be able to add and remove bookmarks when logged in', () => {
       cy.loginAsAdmin(blogsSlug);
 
-      cy.get('[data-testid=blog]').filter(':contains("Test Blog")').as('blog');
-      cy.get('@blog').find('[aria-label="Add bookmark"]').as('addBookmark');
-      cy.get('@addBookmark').click();
-      cy.contains('Test Blog added to your bookmarks');
+      cy.fixture('blogs/test.json').then(({ title }: BlogAttributes) => {
+        cy.get('[data-testid=blog]').filter(`:contains("${title}")`).as('blog');
+        cy.get('@blog').find('[aria-label="Add bookmark"]').as('addBookmark');
+        cy.get('@addBookmark').click();
+        cy.contains(`${title} added to your bookmarks`);
 
-      cy.visit('/bookmarks');
-      cy.get('[data-testid=blog]').filter(':contains("Test Blog")');
+        cy.visit('/bookmarks');
+        cy.get('[data-testid=blog]').filter(`:contains("${title}")`);
 
-      cy.visit(blogsSlug);
-      cy.get('@blog').find('[aria-label="Remove bookmark"]').as('removeBookmark').should('exist');
-      cy.get('@removeBookmark').click();
-      cy.contains('Test Blog removed from your bookmarks');
+        cy.visit(blogsSlug);
+        cy.get('@blog').find('[aria-label="Remove bookmark"]').as('removeBookmark').should('exist');
+        cy.get('@removeBookmark').click();
+        cy.contains(`${title} removed from your bookmarks`);
 
-      cy.visit('/bookmarks');
-      cy.contains('Test Blog').should('not.exist');
+        cy.visit('/bookmarks');
+        cy.contains(title).should('not.exist');
+      });
     });
 
     it('should not allow bookmarking when not logged in', () => {
@@ -76,30 +87,32 @@ describe('Blogs', () => {
     });
 
     it('should to edit blogs that are owned', () => {
-      cy.get('[data-testid=blog]').filter(':contains("Test Blog")').as('blog').should('exist');
-      cy.loginAsAdmin(blogsSlug);
-
-      cy.get('@blog').find('[aria-label=Edit]').click();
-      cy.get('@blog').find('[data-testid="blog-heading"]').as('heading');
-      cy.get('@heading').then((heading) => {
-        heading.empty();
-        cy.wrap(heading).type('Test Blog Updated');
-        cy.get('@blog').find('[aria-label="Save"]').click();
-        cy.contains('Test Blog Updated saved');
-        cy.get('@heading').contains('Test Blog Updated');
+      cy.fixture('blogs/test.json').then(({ title }: BlogAttributes) => {
+        cy.get('[data-testid=blog]').filter(`:contains("${title}")`).as('blog').should('exist');
+        cy.loginAsAdmin(blogsSlug);
+        cy.get('@blog').find('[aria-label=Edit]').click();
+        cy.get('@blog').find('[data-testid="blog-heading"]').as('heading');
+        cy.get('@heading').then((heading) => {
+          heading.empty();
+          newTitle = `${title} Updated`;
+          cy.wrap(heading).type(newTitle);
+          cy.get('@blog').find('[aria-label="Save"]').click();
+          cy.contains(`${newTitle} saved`);
+          cy.get('@heading').contains(newTitle);
+        });
       });
     });
   });
 
   describe('Delete', () => {
     it('should be able to delete blogs that are owned', () => {
-      cy.get('[data-testid=blog]').filter(':contains("Test Blog Updated")').as('blog').should('exist');
+      cy.get('[data-testid=blog]').filter(`:contains("${newTitle}")`).as('blog').should('exist');
       cy.loginAsAdmin(blogsSlug);
       cy.get('@blog').find('[aria-label=Edit]').click();
       cy.get('@blog').find('[aria-label="Delete"]').click();
       cy.get('@blog').find('[aria-label="Confirm"]').click();
-      cy.contains('Test Blog Updated deleted');
-      cy.get('[data-testid=blog]').filter(':contains("Test Blog Updated")').should('not.exist');
+      cy.contains(`${newTitle} deleted`);
+      cy.get('[data-testid=blog]').filter(`:contains("${newTitle}")`).should('not.exist');
     });
   });
 });
