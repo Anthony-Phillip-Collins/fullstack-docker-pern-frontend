@@ -77,7 +77,7 @@ const Nav = () => {
     <>
       <Styled.NavContainer className="nav-container">
         <Styled.Brand>
-          <Styled.BrandLink href="https://anthonycollins.net" target="_blank" rel="noreferrer">
+          <Styled.BrandLink to="/">
             <ACLogo />
           </Styled.BrandLink>
         </Styled.Brand>

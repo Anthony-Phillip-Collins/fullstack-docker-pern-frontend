@@ -33,7 +33,7 @@ const Brand = styled.div`
   })}
 `;
 
-const BrandLink = styled.a`
+const BrandLink = styled(Link)`
   display: inline-flex;
 `;
 
