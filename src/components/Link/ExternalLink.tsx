@@ -5,6 +5,6 @@ export interface ExternalLinkProps extends React.AnchorHTMLAttributes<HTMLAnchor
   truncate?: boolean;
 }
 
-const ExternalLink = (props: ExternalLinkProps) => <ExternalLinkStyled {...props} target="_blank" />;
+const ExternalLink = (props: ExternalLinkProps) => <ExternalLinkStyled {...props} target="_blank" rel="noreferrer" />;
 
 export default ExternalLink;

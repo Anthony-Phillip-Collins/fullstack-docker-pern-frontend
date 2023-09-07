@@ -14,13 +14,13 @@ export const linkStyles = css`
     display: block;
     position: absolute;
     bottom: 0.3rem;
-    transform: scaleX(1) translateX(0%);
+    transform: scaleX(0) translateX(50%);
   }
 
   &:hover,
   &:focus {
     &::after {
-      transform: scaleX(0) translateX(50%);
+      transform: scaleX(1) translateX(0%);
     }
   }
 

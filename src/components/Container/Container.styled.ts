@@ -2,7 +2,7 @@ import { styled } from 'styled-components';
 
 const Container = styled.div`
   ${({ theme }) => ({
-    padding: `0 ${theme.spacing.xl}`,
+    padding: `0 ${theme.spacing.xxl}`,
   })}
 `;
 
