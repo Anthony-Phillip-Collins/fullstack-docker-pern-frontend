@@ -9,6 +9,7 @@ import Button from '../Button/Button';
 import Expander, { ExpanderRef } from '../Expander/Expander';
 import LoginFormExpander, { ExpanderContainerRef } from '../LoginForm/LoginFormExpander';
 import NavStyled from './Nav.styled';
+import ACLogo from '../ACLogo/ACLogo';
 
 interface NavItem {
   to: string;
@@ -75,53 +76,60 @@ const Nav = () => {
   return (
     <>
       <Styled.NavContainer className="nav-container">
-        <Styled.Toggle className="nav-toggle">
-          <Styled.ToggleButton
-            iconProps={{ icon: navOpen ? 'close' : 'menu', size: 'xl' }}
-            onClick={() => setNavOpen(!navOpen)}
-            noBorder
-          />
-        </Styled.Toggle>
+        <Styled.Brand>
+          <Styled.BrandLink href="https://anthonycollins.net" target="_blank" rel="noreferrer">
+            <ACLogo />
+          </Styled.BrandLink>
+        </Styled.Brand>
+        <Styled.Inner className="nav-container-inner">
+          <Styled.Toggle className="nav-toggle">
+            <Styled.ToggleButton
+              iconProps={{ icon: navOpen ? 'close' : 'menu', size: 'xl' }}
+              onClick={() => setNavOpen(!navOpen)}
+              noBorder
+            />
+          </Styled.Toggle>
 
-        <Expander open={navOpen} disabled={!isMobileWidth} ref={navExpander}>
-          <Styled.Nav>
-            <Styled.List>
-              {items.map(({ auth, to, label }) => {
-                if (auth && !user) {
-                  return null;
-                }
+          <Expander open={navOpen} disabled={!isMobileWidth} ref={navExpander}>
+            <Styled.Nav>
+              <Styled.List>
+                {items.map(({ auth, to, label }) => {
+                  if (auth && !user) {
+                    return null;
+                  }
 
-                const active = location.pathname === to;
+                  const active = location.pathname === to;
 
-                return (
-                  <Styled.ListItem key={to}>
-                    <Styled.Link to={to} active={active} tabIndex={active ? -1 : 0}>
-                      {label}
-                    </Styled.Link>
-                  </Styled.ListItem>
-                );
-              })}
-            </Styled.List>
-            <Styled.Config>
-              {user && (
-                <Styled.Info>
-                  Logged in as <strong>{user.name}</strong>
-                </Styled.Info>
-              )}
-              {user ? (
-                <Button onClick={() => onLogOut()} data-testid="logout-button">
-                  Log Out
-                </Button>
-              ) : (
-                !loginOpen && (
-                  <Button onClick={() => loginExpander.current?.expand()} data-testid="login-expand-button">
-                    Log In
+                  return (
+                    <Styled.ListItem key={to}>
+                      <Styled.Link to={to} active={active} tabIndex={active ? -1 : 0}>
+                        {label}
+                      </Styled.Link>
+                    </Styled.ListItem>
+                  );
+                })}
+              </Styled.List>
+              <Styled.Config>
+                {user && (
+                  <Styled.Info>
+                    Logged in as <strong>{user.name}</strong>
+                  </Styled.Info>
+                )}
+                {user ? (
+                  <Button onClick={() => onLogOut()} data-testid="logout-button">
+                    Log Out
                   </Button>
-                )
-              )}
-            </Styled.Config>
-          </Styled.Nav>
-        </Expander>
+                ) : (
+                  !loginOpen && (
+                    <Button onClick={() => loginExpander.current?.expand()} data-testid="login-expand-button">
+                      Log In
+                    </Button>
+                  )
+                )}
+              </Styled.Config>
+            </Styled.Nav>
+          </Expander>
+        </Styled.Inner>
       </Styled.NavContainer>
 
       <LoginFormExpander

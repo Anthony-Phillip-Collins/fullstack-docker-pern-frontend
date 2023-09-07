@@ -10,6 +10,31 @@ const NavContainer = styled(Container)`
   ${({ theme }) => ({
     backgroundColor: theme.colors.darkVariant,
   })}
+
+  /* NavContainerInner */
+  > :first-child {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+`;
+
+const Inner = styled.div`
+  flex-grow: 1;
+`;
+
+const Brand = styled.div`
+  display: flex;
+  align-items: center;
+  align-self: flex-start;
+  margin-right: 3rem;
+  ${({ theme }) => ({
+    padding: `${theme.spacing.xl} 0`,
+  })}
+`;
+
+const BrandLink = styled.a`
+  display: inline-flex;
 `;
 
 const Toggle = styled.div`
@@ -144,6 +169,9 @@ const NavLink = styled(Link).withConfig({
 
 const NavStyled = {
   NavContainer,
+  Inner,
+  Brand,
+  BrandLink,
   Nav,
   Toggle,
   ToggleButton,
