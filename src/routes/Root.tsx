@@ -33,7 +33,9 @@ const Root = () => {
 
   return (
     <>
-      <Nav />
+      <header>
+        <Nav />
+      </header>
       <Main>
         <Outlet />
         <NotificationContainer />
