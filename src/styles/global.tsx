@@ -19,6 +19,12 @@ export const GlobalStyle = createGlobalStyle<{ $whiteColor?: boolean }>`
     })}
   }
 
+  #root {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
   a{
     cursor: pointer;
     font-weight: 500;

@@ -6,6 +6,8 @@ import useAuth from '../hooks/useAuth';
 import useBlogs from '../hooks/useBlogs';
 import useReadings from '../hooks/useReadings';
 import useUsers from '../hooks/useUsers';
+import Footer from '../components/Footer/Footer';
+import Main from '../components/Main/Main';
 
 const Root = () => {
   const { init: initAuth } = useAuth();
@@ -32,8 +34,11 @@ const Root = () => {
   return (
     <>
       <Nav />
-      <Outlet />
-      <NotificationContainer />
+      <Main>
+        <Outlet />
+        <NotificationContainer />
+      </Main>
+      <Footer />
     </>
   );
 };

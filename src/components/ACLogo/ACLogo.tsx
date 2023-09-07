@@ -1,8 +1,17 @@
 import ACLogoStyled from './ACLogo.styled';
 
-const ACLogo = () => {
+interface Props extends React.SVGAttributes<SVGSVGElement> {
+  style?: React.CSSProperties;
+}
+
+const ACLogo = ({ style }: Props) => {
   return (
-    <ACLogoStyled xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" viewBox="0 0 1250 1250">
+    <ACLogoStyled
+      xmlns="http://www.w3.org/2000/svg"
+      xmlnsXlink="http://www.w3.org/1999/xlink"
+      viewBox="0 0 1250 1250"
+      style={style}
+    >
       <defs>
         <clipPath id="hl-mask">
           <circle cx="625" cy="625" r="620"></circle>
