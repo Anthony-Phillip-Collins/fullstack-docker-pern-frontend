@@ -108,22 +108,25 @@ const Blog = forwardRef(
 
     const closeCard = () => {
       cardRef?.current?.close();
+      cancel();
     };
 
     const save = () => {
       const update: BlogUpdate = {};
 
-      if (title && title.current && title.current.value) {
+      if (title && title.current) {
         update.title = title.current.value;
       }
 
-      if (author && author.current && author.current.value) {
+      if (author && author.current) {
         update.author = author.current.value;
       }
 
-      if (url && url.current && url.current.value) {
+      if (url && url.current) {
         update.url = url.current.value;
       }
+
+      console.log('save', update, Object.keys(update).length);
 
       if (Object.keys(update).length > 0) {
         const data: BlogAttributes = { ...blog, ...update };

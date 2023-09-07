@@ -38,6 +38,7 @@ const useInputErrors = <T extends Record<string, string>>({ errors: errorArray, 
   ): Record<Extract<keyof T, string>, string> => {
     const update = (key: keyof T) => {
       if (key === current) {
+        if (!errorArray) return '';
         return input[key] ? '' : state[key] || 'This field is mandatory.';
       } else {
         return state[key];
@@ -62,7 +63,7 @@ const useInputErrors = <T extends Record<string, string>>({ errors: errorArray, 
     ref.current = inputFields;
   }, [inputFields]);
 
-  const errorCallback = <T extends Record<string, string>>(): Record<Extract<keyof T, string>, string> => {
+  const updateErrors = <T extends Record<string, string>>(): Record<Extract<keyof T, string>, string> => {
     if (!errorArray) return initialErrors;
 
     const updated: Record<string, string> = { ...initialErrors };
@@ -78,11 +79,11 @@ const useInputErrors = <T extends Record<string, string>>({ errors: errorArray, 
     return updated;
   };
 
-  const updateErrorsOnError = useCallback(errorCallback, [errorArray, initialErrors]);
+  const setErrorsCallback = useCallback(updateErrors, [errorArray, initialErrors]);
 
   useEffect(() => {
-    setErrors(updateErrorsOnError() as T);
-  }, [updateErrorsOnError]);
+    setErrors(setErrorsCallback() as T);
+  }, [setErrorsCallback]);
 
   return { errors, hasErrors };
 };

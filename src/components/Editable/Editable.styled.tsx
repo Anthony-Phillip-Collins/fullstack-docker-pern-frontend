@@ -15,8 +15,8 @@ const Editable = styled(ContentEditable).withConfig({
       : {
           borderWidth: '1px 0 1px 0',
           borderStyle: 'dashed',
-          borderColor: error ? theme.colors.danger : 'rgba(255, 255, 255, 0.5)',
-          backgroundColor: error ? 'rgba(255, 0, 0, 0.1) !important' : 'rgba(255, 255, 255, 0.1) !important',
+          borderColor: error ? theme.colors.danger : 'rgba(255, 255, 255, 0.75)',
+          backgroundColor: error ? 'rgba(255, 0, 0, 0.2) !important' : 'rgba(255, 255, 255, 0.15) !important',
           padding: `${theme.spacing.md} !important`,
           flexGrow: '1',
           '&:focus': {

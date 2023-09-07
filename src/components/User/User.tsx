@@ -82,7 +82,7 @@ const User = forwardRef(
     const save = () => {
       const update: UserUpdateAsAdminInput = {};
 
-      if (name && name.current && name.current.value) {
+      if (name && name.current) {
         update.name = name.current.value;
       }
 
