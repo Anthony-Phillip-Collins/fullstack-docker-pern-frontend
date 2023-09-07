@@ -37,9 +37,13 @@ export const asyncHandlerAuth = async <T>(getPromise: () => Promise<T>) => {
   } catch (error: unknown) {
     const err = parseFrontendError(error);
     if (err?.name !== ErrorNames.TokenExpiredError) {
-      if (err?.name === ErrorNames.UserDisabled) {
-        authService.logOut();
+      if (err?.name === ErrorNames.UserDisabled || err?.name === ErrorNames.JsonWebTokenError) {
+        setTimeout(() => {
+          authService.logOut();
+          window.location.reload();
+        }, 2000);
       }
+
       throw err;
     }
   }
