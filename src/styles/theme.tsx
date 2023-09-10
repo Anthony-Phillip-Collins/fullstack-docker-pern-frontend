@@ -83,7 +83,7 @@ const fonts: Theme['fonts'] = {
 const icons: Theme['icons'] = {
   size: {
     sm: '1.6rem',
-    md: '2.0rem',
+    md: '1.9rem',
     lg: '2.4rem',
     xl: '3.0rem',
   },

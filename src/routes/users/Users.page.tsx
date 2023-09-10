@@ -48,7 +48,13 @@ const UsersPage = () => {
   if (!data) return null;
 
   const canFilter = authUser && data?.length > 1;
-  const filter = canFilter && <UsersFilter showAuthUser={showAuthUser} toggle={() => setShowAuthUser(!showAuthUser)} />;
+  const filter = canFilter && (
+    <UsersFilter
+      label={showAuthUser ? 'Show all:' : 'Show me: '}
+      showAuthUser={showAuthUser}
+      toggle={() => setShowAuthUser(!showAuthUser)}
+    />
+  );
   const users = authUser && showAuthUser ? data.filter((user) => authUser.id === user.id) : data;
 
   return (

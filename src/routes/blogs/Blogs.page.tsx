@@ -51,7 +51,11 @@ const BlogsPage = () => {
   const blogs = showMyBlogsOnly ? user?.blogs || [] : data;
   const canFilter = user?.blogs && user.blogs?.length > 0;
   const filter = canFilter && (
-    <BlogsFilter showMyBlogsOnly={showMyBlogsOnly} toggle={() => setShowMyBlogsOnly(!showMyBlogsOnly)} />
+    <BlogsFilter
+      label={showMyBlogsOnly ? 'Show all blogs:' : 'Show my blogs: '}
+      showMyBlogsOnly={showMyBlogsOnly}
+      toggle={() => setShowMyBlogsOnly(!showMyBlogsOnly)}
+    />
   );
 
   return (

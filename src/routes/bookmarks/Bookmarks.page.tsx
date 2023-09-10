@@ -19,6 +19,7 @@ const BookmarksPage = () => {
   const canFilter = read && unread && read.length > 0 && unread.length > 0;
   const filter = canFilter && (
     <BookmarksFilter
+      label="Filter read/unread:"
       showRead={showRead}
       showUnread={showUnread}
       toggleShowRead={() => setShowRead(!showRead)}

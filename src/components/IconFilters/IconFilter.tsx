@@ -1,13 +1,14 @@
 import { styled } from 'styled-components';
 
-interface Props extends React.HTMLAttributes<HTMLDivElement> {
+export interface IconFilterProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
+  label?: string;
 }
 
-const IconFilter = ({ children, ...props }: Props) => {
+const IconFilter = ({ children, label, ...props }: IconFilterProps) => {
   return (
     <StyledIconFilter {...props}>
-      <span>Filter: </span>
+      <span>{label || 'Filter:'}</span>
       {children}
     </StyledIconFilter>
   );

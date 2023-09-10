@@ -1,10 +1,11 @@
 import IconButton from '../IconButton/IconButton';
-import IconFilter from './IconFilter';
+import IconFilter, { IconFilterProps } from './IconFilter';
 
-interface FilterProps extends React.HTMLAttributes<HTMLDivElement> {
-  showAuthUser: boolean;
-  toggle: () => void;
-}
+type FilterProps = React.HTMLAttributes<HTMLDivElement> &
+  Pick<IconFilterProps, 'label'> & {
+    showAuthUser: boolean;
+    toggle: () => void;
+  };
 
 const UsersFilter = ({ showAuthUser, toggle, ...props }: FilterProps) => {
   return (

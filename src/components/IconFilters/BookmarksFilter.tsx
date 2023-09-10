@@ -1,12 +1,13 @@
 import IconButton from '../IconButton/IconButton';
-import IconFilter from './IconFilter';
+import IconFilter, { IconFilterProps } from './IconFilter';
 
-interface FilterProps extends React.HTMLAttributes<HTMLDivElement> {
-  showRead: boolean;
-  showUnread: boolean;
-  toggleShowRead: () => void;
-  toggleShowUnread: () => void;
-}
+type FilterProps = React.HTMLAttributes<HTMLDivElement> &
+  Pick<IconFilterProps, 'label'> & {
+    showRead: boolean;
+    showUnread: boolean;
+    toggleShowRead: () => void;
+    toggleShowUnread: () => void;
+  };
 
 const BookmarksFilter = ({ showRead, showUnread, toggleShowRead, toggleShowUnread, ...props }: FilterProps) => {
   return (
