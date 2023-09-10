@@ -5,6 +5,15 @@ export const GlobalStyle = createGlobalStyle<{ $whiteColor?: boolean }>`
     font-size: 62.5%; /* 62.5% of 16px = 10px */
   }
 
+  [role=tooltip] {
+    ${() => {
+      const display = window.navigator.maxTouchPoints > 0 ? 'none' : 'block';
+      return {
+        display,
+      };
+    }}
+  }
+
   body {
     margin: 0;
     padding: 0;
