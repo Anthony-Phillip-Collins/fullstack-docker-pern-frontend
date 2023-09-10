@@ -4,6 +4,7 @@ import { blogSlice } from './features/blog.slice';
 import { notificationSlice } from './features/notification.slice';
 import { readingSlice } from './features/reading.slice';
 import { userSlice } from './features/user.slice';
+import { likeSlice } from './features/like.slice';
 
 const store = configureStore({
   reducer: {
@@ -11,6 +12,7 @@ const store = configureStore({
     users: userSlice.reducer,
     auth: authSlice.reducer,
     readings: readingSlice.reducer,
+    likings: likeSlice.reducer,
     notification: notificationSlice.reducer,
   },
 });

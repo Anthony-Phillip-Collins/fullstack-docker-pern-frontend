@@ -84,7 +84,6 @@ const Blog = forwardRef(
     const [warning, setWarning] = useState(false);
     const enableEdit = !!(canEdit && (onSave || onDelete));
     const tabIndex = { tabIndex: warning ? -1 : 0 };
-    const canLike = false; // implement later
     const cardRef = useRef<CardRef>(null);
 
     const title = useRef<EditableRef>(null);
@@ -125,8 +124,6 @@ const Blog = forwardRef(
       if (url && url.current) {
         update.url = url.current.value;
       }
-
-      console.log('save', update, Object.keys(update).length);
 
       if (Object.keys(update).length > 0) {
         const data: BlogAttributes = { ...blog, ...update };
@@ -217,7 +214,7 @@ const Blog = forwardRef(
             />
           </Styled.Author>
           <Styled.Likes>
-            has <strong>{blog.likes}</strong> likes
+            has <strong data-testid="likes">{blog.likes}</strong> likes
           </Styled.Likes>
           {editable ? (
             <Editable
@@ -250,7 +247,7 @@ const Blog = forwardRef(
           <Readers readers={blog.readers} />
 
           <CardStyled.IconControls>
-            {canLike && (
+            {onLike && (
               <IconButton
                 iconProps={{ icon: liked ? 'unlike' : 'like' }}
                 onClick={likeHandler}

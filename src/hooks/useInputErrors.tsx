@@ -31,27 +31,30 @@ const useInputErrors = <T extends Record<string, string>>({ errors: errorArray, 
     setInitialErrors((state) => getInitialErrors(state));
   }, [getInitialErrors]);
 
-  const updateErrorsOnInput = <T extends Record<string, string>>(
-    input: T,
-    state: T,
-    current: keyof T,
-  ): Record<Extract<keyof T, string>, string> => {
-    const update = (key: keyof T) => {
-      if (key === current) {
-        if (!errorArray) return '';
-        return input[key] ? '' : state[key] || 'This field is mandatory.';
-      } else {
-        return state[key];
-      }
-    };
-    const keys = Object.keys(state);
-    const updated: Record<string, string> = {};
-    keys.forEach((key) => {
-      updated[key] = update(key);
-    });
-    const changed = keys.filter((key) => state[key] !== updated[key]).length > 0;
-    return changed ? updated : state;
-  };
+  const updateErrorsOnInput = useCallback(
+    <T extends Record<string, string>>(
+      input: T,
+      state: T,
+      current: keyof T,
+    ): Record<Extract<keyof T, string>, string> => {
+      const update = (key: keyof T) => {
+        if (key === current) {
+          if (!errorArray) return '';
+          return input[key] ? '' : state[key] || 'This field is mandatory.';
+        } else {
+          return state[key];
+        }
+      };
+      const keys = Object.keys(state);
+      const updated: Record<string, string> = {};
+      keys.forEach((key) => {
+        updated[key] = update(key);
+      });
+      const changed = keys.filter((key) => state[key] !== updated[key]).length > 0;
+      return changed ? updated : state;
+    },
+    [errorArray],
+  );
 
   useEffect(() => {
     Object.keys(inputFields).forEach((key) => {
@@ -61,7 +64,7 @@ const useInputErrors = <T extends Record<string, string>>({ errors: errorArray, 
     });
 
     ref.current = inputFields;
-  }, [inputFields]);
+  }, [inputFields, updateErrorsOnInput]);
 
   const updateErrors = <T extends Record<string, string>>(): Record<Extract<keyof T, string>, string> => {
     if (!errorArray) return initialErrors;

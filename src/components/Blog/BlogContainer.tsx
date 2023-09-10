@@ -7,8 +7,10 @@ import { BlogAttributes } from '../../types/blog.type';
 import { ReadingAttributes, ReadingCreation } from '../../types/reading.type';
 
 import { useRef, useState } from 'react';
+import likeThunk from '../../app/features/like.slice';
 import useAsyncHandler from '../../hooks/useAsyncHandler';
 import { routerUtils } from '../../routes';
+import { LikeCreation } from '../../types/like.type';
 import { Readings } from '../../types/user.type';
 import { isErrorResponse } from '../../types/utils/parsers/error.parser';
 import Blog, { BlogProps, BlogRef } from './Blog';
@@ -26,6 +28,7 @@ const BlogContainer = ({ children, blog, authUser, oneOfMany, ...props }: BlogCo
   const { notify } = useNotification();
   const { tryCatch } = useAsyncHandler();
   const bookmarked = authUser?.readings?.find((reading) => reading.id === blog?.id);
+  const liked = authUser?.likings?.find((liking) => liking.id === blog?.id);
   const canEdit = !!(authUser?.id === blog.owner?.id);
   const [error, setError] = useState<Error | null>();
   const blogRef = useRef<BlogRef>(null);
@@ -52,9 +55,22 @@ const BlogContainer = ({ children, blog, authUser, oneOfMany, ...props }: BlogCo
     reset();
   };
 
-  const onLike = (data: BlogAttributes) => {
-    // dispatch(blogThunk.likeOne(blog));
-    console.log('like', data.title);
+  const onLike = (blog: BlogAttributes) => {
+    if (!authUser) {
+      notify({ error: 'You need to be logged in to like a blog.' });
+      return;
+    }
+
+    const like: LikeCreation = {
+      blogId: blog.id,
+      userId: authUser.id,
+    };
+
+    if (liked) {
+      tryCatch(dispatch(likeThunk.deleteOne(liked.like.id)), `Removed like from ${blog.title}.`);
+    } else {
+      tryCatch(dispatch(likeThunk.createOne(like)), `Added like to ${blog.title}.`);
+    }
   };
 
   const onBookmark = async (data: BlogAttributes) => {
@@ -115,7 +131,14 @@ const BlogContainer = ({ children, blog, authUser, oneOfMany, ...props }: BlogCo
   if (!blog) return null;
 
   return (
-    <Blog {...blogProps} bookmarked={!!bookmarked} errors={error?.errors} ref={blogRef} data-testid="blog">
+    <Blog
+      {...blogProps}
+      bookmarked={!!bookmarked}
+      liked={!!liked}
+      errors={error?.errors}
+      ref={blogRef}
+      data-testid="blog"
+    >
       {children}
     </Blog>
   );

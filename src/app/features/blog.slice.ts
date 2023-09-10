@@ -1,11 +1,13 @@
 import { createAsyncThunk, createSelector, createSlice } from '@reduxjs/toolkit';
 import blogService from '../../services/blog.service';
-import { BlogAttributes, BlogCreation, BlogUpdate, ReadersAttributes } from '../../types/blog.type';
+import { BlogAttributes, BlogCreation, BlogUpdate, LikersAttributes, ReadersAttributes } from '../../types/blog.type';
+import { LikeAttributes } from '../../types/like.type';
 import { ReadingAttributes } from '../../types/reading.type';
 import { UserAttributes } from '../../types/user.type';
 import { serializeFrontendError } from '../../util/frontendErrorParser';
 import { RootState } from '../store';
 import { getAuthUser } from './auth.slice';
+import { getAllLikings } from './like.slice';
 import { getAllReadings } from './reading.slice';
 import { getAllUsers } from './user.slice';
 
@@ -72,6 +74,18 @@ export const blogSlice = createSlice({
   reducers: {
     clearBlogError: (state) => {
       state.error = null;
+    },
+    incrementLikes: (state, action) => {
+      const blog = state.all.find((blog) => blog.id === action.payload);
+      if (blog) {
+        blog.likes++;
+      }
+    },
+    decrementLikes: (state, action) => {
+      const blog = state.all.find((blog) => blog.id === action.payload);
+      if (blog) {
+        blog.likes--;
+      }
     },
   },
   extraReducers: (builder) => {
@@ -140,7 +154,11 @@ export const getOneBlog = (state: RootState): BlogAttributes | null => state.blo
 export const getBlogById = (state: RootState, id: BlogAttributes['id']) =>
   getAllBlogs(state).find((blog) => blog.id === id);
 
-const populateReadersToBlog = (readings: ReadingAttributes[], users: UserAttributes[], blog: BlogAttributes) => {
+const getReaders = (
+  blog: BlogAttributes,
+  users: UserAttributes[],
+  readings: ReadingAttributes[],
+): BlogAttributes['readers'] => {
   const readers = [] as BlogAttributes['readers'];
   readings
     .filter((reading) => reading.blogId === blog.id)
@@ -159,34 +177,69 @@ const populateReadersToBlog = (readings: ReadingAttributes[], users: UserAttribu
         }
       }
     });
+  return readers;
+};
 
+const getLikers = (
+  blog: BlogAttributes,
+  users: UserAttributes[],
+  likings: LikeAttributes[],
+): BlogAttributes['likers'] => {
+  const likers = [] as BlogAttributes['likers'];
+  likings
+    .filter((liking) => liking.blogId === blog.id)
+    .forEach((liking) => {
+      const user = users.find((user) => user.id === liking.userId);
+      if (user) {
+        const item: LikersAttributes = {
+          id: user.id,
+          name: user.name,
+          like: {
+            id: liking.id,
+          },
+        };
+        if (likers) {
+          likers.push(item);
+        }
+      }
+    });
+  return likers;
+};
+
+const populateReadersToBlog = (
+  blog: BlogAttributes,
+  users: UserAttributes[],
+  readings: ReadingAttributes[],
+  likings: LikeAttributes[],
+) => {
   const blogPopulated: BlogAttributes = {
     ...blog,
-    readers,
+    readers: getReaders(blog, users, readings),
+    likers: getLikers(blog, users, likings),
   };
 
   return blogPopulated;
 };
 
 export const getAllBlogsPopulated = createSelector(
-  [getAllBlogs, getAllUsers, getAllReadings],
-  (blogs, users, readings) => {
-    if (!blogs || !users || !readings) {
+  [getAllBlogs, getAllUsers, getAllReadings, getAllLikings],
+  (blogs, users, readings, likings) => {
+    if (!blogs || !users || !readings || !likings) {
       return [];
     }
     return blogs.map((blog) => {
-      return populateReadersToBlog(readings, users, blog);
+      return populateReadersToBlog(blog, users, readings, likings);
     });
   },
 );
 
 export const getOneBlogPopulated = createSelector(
-  [getAllReadings, getAllUsers, getOneBlog],
-  (readings, users, blog) => {
-    if (!users || !readings || !blog) {
+  [getOneBlog, getAllUsers, getAllReadings, getAllLikings],
+  (blog, users, readings, likings) => {
+    if (!blog || !users || !readings || !likings) {
       return null;
     }
-    return populateReadersToBlog(readings, users, blog);
+    return populateReadersToBlog(blog, users, readings, likings);
   },
 );
 
@@ -208,7 +261,23 @@ export const getBookmarksOfAuthUser = createSelector(
   },
 );
 
-export const { clearBlogError } = blogSlice.actions;
+export const getLikingsOfAuthUser = createSelector(
+  [getAllBlogsPopulated, getAllLikings, getAuthUser],
+  (blogs, likings, user) => {
+    if (!user || !blogs || !likings) {
+      return [];
+    }
+    const all = blogs.filter((blog) => {
+      return likings.find(({ userId, blogId }) => {
+        return user.id === userId && blog.id === blogId;
+      });
+    });
+
+    return all;
+  },
+);
+
+export const { clearBlogError, incrementLikes, decrementLikes } = blogSlice.actions;
 
 const blogThunk = {
   fetchAll,

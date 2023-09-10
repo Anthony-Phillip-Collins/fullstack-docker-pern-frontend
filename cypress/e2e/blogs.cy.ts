@@ -1,7 +1,7 @@
 import { BlogAttributes } from '../../src/types/blog.type';
 
 const blogsSlug = '/blogs';
-let newTitle;
+let newTitle: string;
 
 before(() => {
   cy.cleanupBlogs();
@@ -57,7 +57,7 @@ describe('Blogs', () => {
   });
 
   describe('Update', () => {
-    it('should be able to add and remove bookmarks when logged in', () => {
+    it('should allow adding and removing bookmarks when logged in', () => {
       cy.loginAsAdmin(blogsSlug);
 
       cy.fixture('blogs/test.json').then(({ title }: BlogAttributes) => {
@@ -65,6 +65,7 @@ describe('Blogs', () => {
         cy.get('@blog').find('[aria-label="Add bookmark"]').as('addBookmark');
         cy.get('@addBookmark').click();
         cy.contains(`${title} added to your bookmarks`);
+        cy.get('@blog').find('[aria-label="Add bookmark"]').should('not.exist');
 
         cy.visit('/bookmarks');
         cy.get('[data-testid=blog]').filter(`:contains("${title}")`);
@@ -73,6 +74,8 @@ describe('Blogs', () => {
         cy.get('@blog').find('[aria-label="Remove bookmark"]').as('removeBookmark').should('exist');
         cy.get('@removeBookmark').click();
         cy.contains(`${title} removed from your bookmarks`);
+        cy.get('@blog').find('[aria-label="Remove bookmark"]').should('not.exist');
+        cy.get('@blog').find('[aria-label="Add bookmark"]').should('exist');
 
         cy.visit('/bookmarks');
         cy.contains(title).should('not.exist');
@@ -99,6 +102,27 @@ describe('Blogs', () => {
           cy.contains(`${newTitle} saved`);
           cy.get('@heading').contains(newTitle);
         });
+      });
+    });
+
+    it('should allow liking blogs when logged in', () => {
+      cy.loginAsAdmin(blogsSlug);
+      cy.fixture('blogs/test.json').then(({ title }: BlogAttributes) => {
+        cy.get('[data-testid=blog]').filter(`:contains("${title}")`).as('blog').should('exist');
+        cy.get('@blog').find('[data-testid=likes]').as('likes').should('exist');
+        cy.get('@likes').contains('0');
+
+        cy.get('@blog').find('[aria-label="Add like"]').as('addLike').click();
+        cy.contains(`Added like to ${title}`);
+        cy.get('@likes').contains('1');
+        cy.get('@addLike').should('not.exist');
+        cy.get('@blog').find('[aria-label="Remove like"]').as('removeLike').should('exist');
+
+        cy.get('@removeLike').click();
+        cy.contains(`Removed like from ${title}`);
+        cy.get('@likes').contains('0');
+        cy.get('@removeLike').should('not.exist');
+        cy.get('@blog').find('[aria-label="Add like"]').as('addLike').should('exist');
       });
     });
   });
