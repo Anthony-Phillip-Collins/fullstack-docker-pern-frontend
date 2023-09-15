@@ -10,6 +10,7 @@ export const StyledButton = styled.button.withConfig({
   cursor: pointer;
   display: inline-block;
   text-decoration: none;
+  white-space: nowrap;
 
   ${(props) => {
     const { theme } = props;

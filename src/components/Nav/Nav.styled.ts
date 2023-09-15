@@ -27,9 +27,12 @@ const Brand = styled.div`
   display: flex;
   align-items: center;
   align-self: flex-start;
-  margin-right: 3rem;
+
   ${({ theme }) => ({
     padding: `${theme.spacing.xl} 0`,
+    ...mixins.media.md({
+      marginRight: '3rem',
+    }),
   })}
 `;
 
